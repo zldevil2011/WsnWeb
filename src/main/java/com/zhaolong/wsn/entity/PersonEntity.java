@@ -12,7 +12,7 @@ public class PersonEntity implements java.io.Serializable {
 	private Integer id;
 	private String username;
 	private String password;
-
+	
 	@Id
 	public Integer getId() {
 		return id;
