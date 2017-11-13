@@ -25,14 +25,11 @@ import com.zhaolong.wsn.service.PersonService;
 
 @Controller
 public class MainController {
-	
-	@Autowired
-	private PersonService personService;
-	
-	@RequestMapping(value = "test", method = RequestMethod.GET)
-	public String test() {
-		System.out.println("I am stupid ok ok oko ko ko ko ko ko k ok o ko ko kok o");
+
+	@RequestMapping(value = "index", method = RequestMethod.GET)
+	public String index() {
+		System.out.println("index tempalte");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
-		return "test";
+		return "index";
 	}	
 }
