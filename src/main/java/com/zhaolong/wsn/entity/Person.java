@@ -14,8 +14,11 @@ public class Person {
 
     @Column(name = "username")
     private String username;
+    
+    @Column(name = "password")
+    private String password;
 
-    @Column(name = "address")
+	@Column(name = "address")
     private String address;
 
     @Column(name = "phone")
@@ -23,6 +26,9 @@ public class Person {
 
     @Column(name = "remark")
     private String remark;
+    
+    @Column(name = "nodes")
+    private String nodes;
 
 	public Long getCreated() {
 		return created;
@@ -38,6 +44,14 @@ public class Person {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getAddress() {
@@ -63,7 +77,16 @@ public class Person {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
+	public String getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(String nodes) {
+		this.nodes = nodes;
+	}
     
+	
     
      
 }

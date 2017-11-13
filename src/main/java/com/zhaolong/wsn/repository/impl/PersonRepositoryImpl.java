@@ -21,6 +21,11 @@ public class PersonRepositoryImpl implements PersonRepository {
 		return (Person)getCurrentSession().load(Person.class,id);
 	}
 
+	public Person login(String username, String password) {
+		// TODO Auto-generated method stub
+		return (Person) getCurrentSession().createQuery("from Person where username=? and password=?").setParameter(0, username).setParameter(1, password).uniqueResult();
+	}
+	
 	public Person get(Long id) {
 		// TODO Auto-generated method stub
 		return (Person)getCurrentSession().get(Person.class,id);

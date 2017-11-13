@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <jsp:include page="base.jsp" flush="true"/><!--动态包含-->  
-<title>个人用户登陆</title>
+<title>个人用户注册</title>
 <style type="text/css">
 	body{
 		background:url("/WsnWeb/img/mainBackground.png") no-repeat;
 		background-size: 100% 100%;
 		background-attachment: fixed;
 	}
-	.login-container{
+	.register-container{
 		min-width: 400px;
 		text-align: center;
 		margin: 0 auto;
@@ -42,20 +42,23 @@
 </style>
 </head>
 <body>
-	<div class="login-container" id="formApp">
+	<div class="register-container" id="formApp">
 		<form action="/" onsubmit="return false;">
-			<h3>个人用户登陆</h3>
+			<h3>个人用户注册</h3>
 			<div class="input-group">
 				<label>用户名</label><input v-model="user.username" type="text">
 			</div>
 			<div class="input-group">
 				<label>密码</label><input v-model="user.password" type="password">
 			</div>
-			<div class="input-group" v-show="tip">
-				<label style="width:100%;color:red;">用户名或密码错误</label>
+			<div class="input-group">
+				<label>电话</label><input v-model="user.telephone" type="text">
+			</div>
+			<div class="input-group">
+				<label>地址</label><input v-model="user.address" type="text">
 			</div>
 			<div>
-				<button class="zl-btn btn btn-success btn-block" @click="checkLogin">登陆</button>
+				<button class="zl-btn btn btn-success btn-block" @click="checkLogin">注册</button>
 			</div>
 		</form>
 	</div>
@@ -73,7 +76,7 @@
 		  	methods:{
 		  		checkLogin: function(){
 		  			console.log(this.user);
-		  			this.$http.post('/WsnWeb/login', this.user, {
+		  			this.$http.post('/WsnWeb/register', this.user, {
 		  		        'headers': {
 		  		            'Content-Type': 'application/x-www-form-urlencoded'
 		  		        }

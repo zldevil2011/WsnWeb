@@ -2,6 +2,7 @@ package com.zhaolong.wsn.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import com.zhaolong.wsn.entity.Person;
 import com.zhaolong.wsn.repository.PersonRepository;
@@ -13,14 +14,21 @@ public class PersonServiceImpl implements PersonService{
 	@Autowired
     private PersonRepository personRepository;
 
-	public Long savePerson() {
+	public Long register(Person person) {
 		// TODO Auto-generated method stub
-		Person person = new Person();
-        person.setUsername("XRog");
-        person.setPhone("18381005946");
-        person.setAddress("chenDu");
-        person.setRemark("this is XRog");
+		System.out.println("zhaolong_debug");
+		System.out.println(person.getUsername());
         return personRepository.save(person);
+	}
+
+	public Person login(String username, String password) {
+		// TODO Auto-generated method stub
+		try {
+			return personRepository.login(username, password);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
 	}
 
 
