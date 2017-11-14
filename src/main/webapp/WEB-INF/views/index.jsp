@@ -95,6 +95,14 @@
 	.node-data .item .desc{
 		font-size: 12px;
 	}
+	.level-rank table{
+		color:#c4ced8;
+		width:100%;
+		text-align: center;
+	}
+	.level-rank table tr td{
+		padding: 3px;
+	}
 </style>
 </head>
 <body>
@@ -115,14 +123,14 @@
 				<input type="text" placeholder="请输入节点名称">
 			</div>
 			<div class="current-node">
-				<div style="margin:15px 0;">当前节点: 望华楼</div>
+				<div style="margin:15px 0;">当前节点: <span id="nodeName">望华楼</span></div>
 				<div class="node-data">
 					<div class="item">
-						38<br>
+						<p id="aqi">38</p>
 						<span class="desc">AQI指数</span>
 					</div>
 					<div class="item">
-						12<br>
+						<p id="level">12</p>
 						<span class="desc">全国排名</span>
 					</div>
 				</div>
@@ -134,6 +142,27 @@
 					<li>3号节点</li>
 					<li>4号节点</li>
 				</ul>
+			</div>
+			<div class="level-rank">
+				<table>
+					<thead>
+						<tr>
+							<td>排名</td>
+							<td>城市</td>
+							<td>省份</td>
+							<td>AQI</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -184,6 +213,12 @@
 	    this.clickFunc = function() {
 	        console.log(i);
 	        this.openInfoWindow(infoWindowArr[i]);
+	        var nodeName = document.querySelector("#nodeName");
+	        var aqi = document.querySelector("#aqi");
+	        var level = document.querySelector("#level");
+	        nodeName.innerHTML = "测试点" + i;
+	        aqi.innerHTML = parseInt(Math.random() * 100);
+	        level.innerHTML = parseInt(Math.random() * 100);
 	    }
 	}
 	var opts = {// 添加控制控件
