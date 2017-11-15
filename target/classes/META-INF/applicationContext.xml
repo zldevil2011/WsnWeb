@@ -17,7 +17,8 @@
 		<bean id="PersonServiceImpl" class="com.zhaolong.wsn.service.impl.PersonServiceImpl"></bean>
 		<bean id="PersonRepositoryImpl" class="com.zhaolong.wsn.repository.impl.PersonRepositoryImpl"></bean>
 		
-		
+		<bean id="DataServiceImpl" class="com.zhaolong.wsn.service.impl.DataServiceImpl"></bean>
+		<bean id="DataRepositoryImpl" class="com.zhaolong.wsn.repository.impl.DataRepositoryImpl"></bean>
 		<!--********************************************配置hibernate********************************************-->
 
 	    <!--扫描配置文件(这里指向的是之前配置的那个config.properties)-->
@@ -37,7 +38,7 @@
 	    <!--配置session工厂-->
 	    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 	        <property name="dataSource" ref="dataSource" />
-	        <property name="packagesToScan" value="com.zhaolong.wsn.entity" />
+	        <property name="packagesToScan" value="com.zhaolong.wsn.entity." />
 	        <property name="hibernateProperties">
 	            <props>
 	                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop> <!--hibernate根据实体自动生成数据库表-->

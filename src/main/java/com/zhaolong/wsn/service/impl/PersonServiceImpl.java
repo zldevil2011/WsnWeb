@@ -16,8 +16,6 @@ public class PersonServiceImpl implements PersonService{
 
 	public Long register(Person person) {
 		// TODO Auto-generated method stub
-		System.out.println("zhaolong_debug");
-		System.out.println(person.getUsername());
         return personRepository.save(person);
 	}
 
@@ -30,6 +28,5 @@ public class PersonServiceImpl implements PersonService{
 		}
 		return null;
 	}
-
 
 }
