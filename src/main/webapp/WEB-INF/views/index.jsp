@@ -160,7 +160,6 @@
 						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
 						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
 						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
 					</tbody>
 				</table>
 			</div>

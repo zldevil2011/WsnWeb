@@ -25,7 +25,6 @@ import com.zhaolong.wsn.service.PersonService;
 
 @Controller
 public class MainController {
-
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String index() {
 		System.out.println("index tempalte");
