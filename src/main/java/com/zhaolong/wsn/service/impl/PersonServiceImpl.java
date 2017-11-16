@@ -2,7 +2,6 @@ package com.zhaolong.wsn.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import com.zhaolong.wsn.entity.Person;
 import com.zhaolong.wsn.repository.PersonRepository;

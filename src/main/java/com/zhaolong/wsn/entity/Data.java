@@ -18,7 +18,11 @@ public class Data {
     @Column(name = "dataTime")
     private String dataTime;
     
-    @Column(name = "pm25")
+    @Column(name = "nodeId")
+    private Long nodeId;
+    
+
+	@Column(name = "pm25")
     private String pm25;
 
 	@Column(name = "pm10")
@@ -39,8 +43,8 @@ public class Data {
     @Column(name = "speed")
     private String speed;
     
-    @Column(name = "direciton")
-    private String direciton;
+    @Column(name = "direcition")
+    private String direcition;
     
     @Column(name = "humidity")
     private String humidity;
@@ -117,14 +121,6 @@ public class Data {
 		this.speed = speed;
 	}
 
-	public String getDireciton() {
-		return direciton;
-	}
-
-	public void setDireciton(String direciton) {
-		this.direciton = direciton;
-	}
-
 	public String getHumidity() {
 		return humidity;
 	}
@@ -133,5 +129,20 @@ public class Data {
 		this.humidity = humidity;
 	}
     
+	public Long getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	public String getDirecition() {
+		return direcition;
+	}
+
+	public void setDirecition(String direcition) {
+		this.direcition = direcition;
+	}
     
 }

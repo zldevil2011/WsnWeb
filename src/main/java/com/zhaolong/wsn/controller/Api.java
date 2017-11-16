@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.zhaolong.wsn.entity.Data;
-import com.zhaolong.wsn.repository.DataRepository;
 import com.zhaolong.wsn.service.DataService;
 
 @Controller
@@ -37,7 +36,7 @@ public class Api {
 		// TODO Auto-generated method stub
 		Data d = new Data();
 		d.setCo("12.3");
-		d.setDireciton("NS");
+		d.setDirecition("NS");
 		d.setNo2("33.33");
 		dataService.saveData(d);
 		response.setStatus(200);

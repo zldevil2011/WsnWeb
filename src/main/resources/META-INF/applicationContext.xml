@@ -19,6 +19,9 @@
 		
 		<bean id="DataServiceImpl" class="com.zhaolong.wsn.service.impl.DataServiceImpl"></bean>
 		<bean id="DataRepositoryImpl" class="com.zhaolong.wsn.repository.impl.DataRepositoryImpl"></bean>
+		
+		<bean id="NodeServiceImpl" class="com.zhaolong.wsn.service.impl.NodeServiceImpl"></bean>
+		<bean id="NodeRepositoryImpl" class="com.zhaolong.wsn.repository.impl.NodeRepositoryImpl"></bean>
 		<!--********************************************配置hibernate********************************************-->
 
 	    <!--扫描配置文件(这里指向的是之前配置的那个config.properties)-->
