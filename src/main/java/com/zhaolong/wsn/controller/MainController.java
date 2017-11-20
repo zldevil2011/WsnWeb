@@ -7,10 +7,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class MainController {
+	
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String index() {
 		System.out.println("index tempalte");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "index";
 	}	
+	
+	@RequestMapping(value = "register", method = RequestMethod.GET)
+	public String register() {
+		System.out.println("user register mapping!");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "register";
+	}
+	
+	@RequestMapping(value = "login", method = RequestMethod.GET)
+	public String login() {
+		System.out.println("user login mapping!");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "login";
+	}
+	
+	
 }

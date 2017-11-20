@@ -15,39 +15,39 @@ public class Data {
     @Column(name = "created")
     private Long created = System.currentTimeMillis();
 
-    @Column(name = "dataTime")
+    @Column(name = "dataTime", nullable=true)
     private String dataTime;
     
-    @Column(name = "nodeId")
+    @Column(name = "nodeId", nullable=true)
     private Long nodeId;
     
 
-	@Column(name = "pm25")
-    private String pm25;
+	@Column(name = "pm25", nullable=true)
+    private double pm25;
 
-	@Column(name = "pm10")
-    private String pm10;
+	@Column(name = "pm10", nullable=true)
+    private double pm10;
 
-    @Column(name = "so2")
-    private String so2;
+    @Column(name = "so2", nullable=true)
+    private double so2;
 
-    @Column(name = "no2")
-    private String no2;
+    @Column(name = "no2", nullable=true)
+    private double no2;
     
-    @Column(name = "o3")
-    private String o3;
+    @Column(name = "o3", nullable=true)
+    private double o3;
     
-    @Column(name = "co")
-    private String co;
+    @Column(name = "co", nullable=true)
+    private double co;
     
-    @Column(name = "speed")
-    private String speed;
+    @Column(name = "speed", nullable=true)
+    private double speed;
     
-    @Column(name = "direcition")
+    @Column(name = "direcition", nullable=true)
     private String direcition;
     
-    @Column(name = "humidity")
-    private String humidity;
+    @Column(name = "humidity", nullable=true)
+    private double humidity;
 
 	public Long getId() {
 		return id;
@@ -64,71 +64,78 @@ public class Data {
 	public void setDataTime(String dataTime) {
 		this.dataTime = dataTime;
 	}
+	public Long getCreated() {
+		return created;
+	}
 
-	public String getPm25() {
+	public void setCreated(Long created) {
+		this.created = created;
+	}
+
+	public double getPm25() {
 		return pm25;
 	}
 
-	public void setPm25(String pm25) {
+	public void setPm25(double pm25) {
 		this.pm25 = pm25;
 	}
 
-	public String getPm10() {
+	public double getPm10() {
 		return pm10;
 	}
 
-	public void setPm10(String pm10) {
+	public void setPm10(double pm10) {
 		this.pm10 = pm10;
 	}
 
-	public String getSo2() {
+	public double getSo2() {
 		return so2;
 	}
 
-	public void setSo2(String so2) {
+	public void setSo2(double so2) {
 		this.so2 = so2;
 	}
 
-	public String getNo2() {
+	public double getNo2() {
 		return no2;
 	}
 
-	public void setNo2(String no2) {
+	public void setNo2(double no2) {
 		this.no2 = no2;
 	}
 
-	public String getO3() {
+	public double getO3() {
 		return o3;
 	}
 
-	public void setO3(String o3) {
+	public void setO3(double o3) {
 		this.o3 = o3;
 	}
 
-	public String getCo() {
+	public double getCo() {
 		return co;
 	}
 
-	public void setCo(String co) {
+	public void setCo(double co) {
 		this.co = co;
 	}
 
-	public String getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(String speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 
-	public String getHumidity() {
+	public double getHumidity() {
 		return humidity;
 	}
 
-	public void setHumidity(String humidity) {
+	public void setHumidity(double humidity) {
 		this.humidity = humidity;
 	}
-    
+
 	public Long getNodeId() {
 		return nodeId;
 	}

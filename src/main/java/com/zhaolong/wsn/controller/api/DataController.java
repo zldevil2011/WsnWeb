@@ -1,4 +1,4 @@
-package com.zhaolong.wsn.controller;
+package com.zhaolong.wsn.controller.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,14 +17,14 @@ import com.zhaolong.wsn.service.DataService;
 
 @Controller
 @RequestMapping(value = "/api/*") 
-public class Api {
+public class DataController {
 	
 	@Autowired
 	private DataService dataService;
 	
 	@RequestMapping(value = "data_list", method = RequestMethod.GET)
 	public @ResponseBody List<Data> dataList(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("index tempalte api");
+		System.out.println("data_list api");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		List<Data> data = new ArrayList<Data>();
 		data = dataService.dataList();
@@ -34,10 +34,12 @@ public class Api {
 	@RequestMapping(value = "data_save", method = RequestMethod.GET)
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO Auto-generated method stub
+		System.out.println("data_save api");
 		Data d = new Data();
-		d.setCo("12.3");
+		d.setCo(12.3);
 		d.setDirecition("NS");
-		d.setNo2("33.33");
+		d.setNo2(33.33);
+		d.setNodeId((long) 10);
 		dataService.saveData(d);
 		response.setStatus(200);
 		PrintWriter pWriter = response.getWriter();

@@ -50,6 +50,8 @@
 		border-left: 1px solid #111111;
 		width: 310px;
 		min-height: 100%;
+		height: 100%;
+		overflow: scroll;
 	}
 	.search-input input{
 		width: 100%;
@@ -76,6 +78,8 @@
 	    padding: 10px;
 	    background-color: #303741;
 	    text-align: center;
+	    margin: 5px 1px;
+	    cursor:pointer;
 	}
 	.current-node{
 		color: #c4ced8;
@@ -116,31 +120,28 @@
 	</div>
 	<div class="body-container">
 		<div class="left-map" id="map">
-			右侧地图栏
+			左侧地图蓝
 		</div>
-		<div class="right-slide">
+		<div class="right-slide" id="right-data">
 			<div class="search-input">
 				<input type="text" placeholder="请输入节点名称">
 			</div>
 			<div class="current-node">
-				<div style="margin:15px 0;">当前节点: <span id="nodeName">望华楼</span></div>
+				<div style="margin:15px 0;">当前节点: <span id="nodeName">{{currendNode.nodeName}}</span></div>
 				<div class="node-data">
 					<div class="item">
-						<p id="aqi">38</p>
+						<p id="aqi">{{currendNode.AQI}}</p>
 						<span class="desc">AQI指数</span>
 					</div>
 					<div class="item">
-						<p id="level">12</p>
+						<p id="level">{{currendNode.rank}}</p>
 						<span class="desc">全国排名</span>
 					</div>
 				</div>
 			</div>
 			<div class="node-lists">
 				<ul style="padding: 0;">
-					<li>1号节点</li>
-					<li>2号节点</li>
-					<li>3号节点</li>
-					<li>4号节点</li>
+					<li v-for="node in nodeList" style="margin:5px, 0;">{{node.nodeName}}</li>
 				</ul>
 			</div>
 			<div class="level-rank">
@@ -149,85 +150,133 @@
 						<tr>
 							<td>排名</td>
 							<td>城市</td>
-							<td>省份</td>
+							<td>观测点</td>
 							<td>AQI</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
-						<tr><td>1</td><td>安徽</td><td>池州</td><td>123</td></tr>
+						<tr v-for="node in rankList"><td>{{node.rank}}</td><td>{{node.city}}</td><td>{{node.nodeName}}</td><td>{{node.AQI}}</td></tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<script>
-	var map = new BMap.Map("map", {
-        maxZoom : 19,
-        minZoom:1,
-        mapType : BMAP_NORMAL_MAP
-    });// 默认卫星地图BMAP_SATELLITE_MAP
-    map.setMapStyle({style:'midnight'});
-	var point = new BMap.Point(117.541916, 30.703908);// 地图的中心点
-	map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-	map.centerAndZoom(point, 13);
-	var point_list = [];
-	var maxResult = -1;
-	for(var i = 0; i < 10; ++i) {
-		var node = {};
-    	node["lng"] = 117.541916 + 0.0001 * i;
-    	node["lat"] = 30.703908 - 0.0001 * i;
-    	node["count"] = 30;
-    	if(node["count"] > maxResult){
-        	maxResult = node["count"] + 5;
-    	}
-    	point_list.push(node);
-	}
-	var markerArr = new Array();
-	var infoWindowArr = new Array();
-	for(var i = 0; i < 10; ++i) {
-    	var point = new BMap.Point(117.541916 + Math.random() * 0.1,  30.703908 - 0.01 * i);  // 创建点坐标
-    	var sContent =
-            "<div><h5>测试点"+i+"</h5>" +
-            "<h6>PM2.5:"+parseInt(Math.random() * 100)+"</h6>" +
-            "<h6>SO2:"+parseInt(Math.random() * 100)+"</h6>" +
-            "<h6>PM10:"+parseInt(Math.random() * 100)+"</h6>" +
-            "<h6>AQI:"+parseInt(Math.random() * 100)+"</h6><h6><a href='/historical_device_data_list/1'>查看历史数据</a></h6>" +
+		var rightData = new Vue({
+			el: "#right-data",
+			data: {
+				nodeList: '',
+				currendNode: {
+					"nodeName": "望华楼",
+					"AQI": 38,
+					"rank": 1
+				},
+				rankList: [{
+					"rank":1,
+					"city":"池州",
+					"nodeName":"池州刚",
+					"AQI":123
+				}]
+			},
+			created:function(){
+				this.init();
+			},
+			methods:{
+				init() {
+					this.$http.get('/WsnWeb/api/node_list').then(function(res){
+		  		    	console.log(res.data);
+		  				if(res.status != 200){
+		  					this.tip = true;
+		  				}else{
+		  					this.nodeList = res.data;
+		  				}
+		  			}, function(err){
+		  				if(err.status != 200){
+		  					this.tip = true;
+		  				}
+		  			});	
+					this.$http.get('/WsnWeb/api/node_rank').then(function(res){
+		  		    	console.log(res.data);
+		  				if(res.status != 200){
+		  					this.tip = true;
+		  				}else{
+		  					this.rankList = res.data;
+		  					if(res.data.length > 0){
+		  						this.currendNode = res.data[0];
+		  					}
+		  					loadMap(res.data);
+		  				}
+		  			}, function(err){
+		  				if(err.status != 200){
+		  					this.tip = true;
+		  				}
+		  			});	
+				}
+			}
+		})
+	function loadMap(rankList){
+		rankList = rankList || [];	
+		var nodeNum = rankList.length;
+		var map = new BMap.Map("map", {
+	        maxZoom : 19,
+	        minZoom:1,
+	        mapType : BMAP_NORMAL_MAP
+	    });// 默认卫星地图BMAP_SATELLITE_MAP
+	    map.setMapStyle({style:'midnight'});
+		var point = new BMap.Point(117.541916, 30.703908);// 地图的中心点
+		map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+		map.centerAndZoom(point, 13);
+		var point_list = [];
+		var maxResult = -1;
+		for(var i = 0; i < nodeNum; ++i) {
+			var node = {};
+    		node["lng"] = rankList[i].longitude;
+    		node["lat"] = rankList[i].latitude;
+    		point_list.push(node);
+		}
+		var markerArr = new Array();
+		var infoWindowArr = new Array();
+		for(var i = 0; i < nodeNum; ++i) {
+    		var point = new BMap.Point(rankList[i].longitude,  rankList[i].latitude);  // 创建点坐标
+    		var sContent =
+            "<div><h5>"+rankList[i].nodeName+"</h5>" +
+            "<h6>PM2.5 : "+rankList[i].AQI+"</h6>" +
+            "<h6>SO2 : "+rankList[i].So2+"</h6>" +
+            "<h6>PM10 : "+rankList[i].Pm10+"</h6>" +
+            "<h6>AQI : "+rankList[i].Pm25+"</h6><h6><a href='/historical_device_data_list/" + rankList[i].id+"'>查看历史数据</a></h6>" +
             "</div>";
-    	var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
-    	var marker = new BMap.Marker(point);
-    	infoWindowArr.push(infoWindow);
-    	markerArr.push(marker);
+    		var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+    		var marker = new BMap.Marker(point);
+    		infoWindowArr.push(infoWindow);
+    		markerArr.push(marker);
+		}
+		for(var i = 0; i < infoWindowArr.length; ++i){
+    		map.addOverlay(markerArr[i]);
+    		var ope = new markerClick(i);
+    		markerArr[i].addEventListener("click", ope.clickFunc);
+		}
+		
+		var opts = {// 添加控制控件
+				type : BMAP_NAVIGATION_CONTROL_SMALL,
+				showZoomInfo : true
+			};
+		map.addControl(new BMap.NavigationControl(opts));
+		map.enableScrollWheelZoom(); // 启动鼠标滚轮操作
+		map.enableContinuousZoom(); // 开启连续缩放效果
+		map.enableInertialDragging(); // 开启惯性拖拽效果
+		function markerClick(i){
+		    this.clickFunc = function() {
+		        this.openInfoWindow(infoWindowArr[i]);
+		       	// 更新右侧的当前节点的信息
+		        var nodeName = document.querySelector("#nodeName");
+		        var aqi = document.querySelector("#aqi");
+		        var level = document.querySelector("#level");
+		        nodeName.innerHTML = rankList[i].nodeName;
+		        aqi.innerHTML = rankList[i].AQI;
+		        level.innerHTML = rankList[i].rank;
+		    }
+		}
 	}
-	for(var i = 0; i < infoWindowArr.length; ++i){
-    	map.addOverlay(markerArr[i]);
-    	var ope = new markerClick(i);
-    	markerArr[i].addEventListener("click", ope.clickFunc);
-	}
-	function markerClick(i){
-	    this.clickFunc = function() {
-	        console.log(i);
-	        this.openInfoWindow(infoWindowArr[i]);
-	        var nodeName = document.querySelector("#nodeName");
-	        var aqi = document.querySelector("#aqi");
-	        var level = document.querySelector("#level");
-	        nodeName.innerHTML = "测试点" + i;
-	        aqi.innerHTML = parseInt(Math.random() * 100);
-	        level.innerHTML = parseInt(Math.random() * 100);
-	    }
-	}
-	var opts = {// 添加控制控件
-			type : BMAP_NAVIGATION_CONTROL_SMALL,
-			showZoomInfo : true
-		};
-	map.addControl(new BMap.NavigationControl(opts));
-	map.enableScrollWheelZoom(); // 启动鼠标滚轮操作
-	map.enableContinuousZoom(); // 开启连续缩放效果
-	map.enableInertialDragging(); // 开启惯性拖拽效果
 	</script>
 </body>
 </html>

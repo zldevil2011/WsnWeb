@@ -1,7 +1,7 @@
 package com.zhaolong.wsn.entity;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.zhaolong.wsn.controller;
+package com.zhaolong.wsn.controller.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,17 +16,11 @@ import com.zhaolong.wsn.entity.Person;
 import com.zhaolong.wsn.service.PersonService;
 
 @Controller
+@RequestMapping(value = "/api/*") 
 public class UserController {
 	
 	@Autowired
 	private PersonService personService;
-	
-	@RequestMapping(value = "register", method = RequestMethod.GET)
-	public String register() {
-		System.out.println("user register mapping!");
-		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
-		return "register";
-	}
 	
 	@RequestMapping(value = "register", method = RequestMethod.POST)
     public void register(HttpServletRequest request, HttpServletResponse response) 
@@ -49,12 +43,6 @@ public class UserController {
 		pWriter.println("success");
     }
 	
-	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public String login() {
-		System.out.println("user login mapping!");
-		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
-		return "login";
-	}
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public void login(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession)
 			throws IOException {

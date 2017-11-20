@@ -1,5 +1,7 @@
 package com.zhaolong.wsn.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.zhaolong.wsn.entity.Node;
@@ -14,5 +16,10 @@ public class NodeServiceImpl implements NodeService{
 	public Long addNode(Node node) {
 		// TODO Auto-generated method stub
 		return nodeRepository.save(node);
+	}
+
+	public List<Node> nodeList() {
+		// TODO Auto-generated method stub
+		return nodeRepository.findAll();
 	}
 }

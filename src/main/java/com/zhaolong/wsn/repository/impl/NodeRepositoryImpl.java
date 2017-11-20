@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.zhaolong.wsn.entity.Data;
 import com.zhaolong.wsn.entity.Node;
 import com.zhaolong.wsn.repository.NodeRepository;
 
@@ -29,7 +30,7 @@ public class NodeRepositoryImpl implements NodeRepository{
 
 	public List<Node> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return (List<Node>) getCurrentSession().createQuery("from Node").list();
 	}
 
 	public void persist(Node entity) {

@@ -33,6 +33,12 @@ public class Node {
     
     @Column(name = "address")
     private String address;
+    
+    @Column(name = "province")
+    private String province;
+    
+    @Column(name = "city")
+    private String city;
 
 	public Long getId() {
 		return id;
@@ -97,4 +103,22 @@ public class Node {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	
 }
