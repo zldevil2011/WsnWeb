@@ -23,6 +23,9 @@ import com.zhaolong.wsn.entity.Data;
 import com.zhaolong.wsn.entity.Node;
 import com.zhaolong.wsn.service.DataService;
 import com.zhaolong.wsn.service.NodeService;
+import com.zhaolong.wsn.util.ChineseCharToEn;
+
+import sun.java2d.cmm.kcms.KcmsServiceProvider;
 
 class NodeRank extends Node{
 	public int rank;
@@ -150,5 +153,26 @@ public class NodeController {
 		response.setStatus(200);
 		PrintWriter pWriter = response.getWriter();
 		pWriter.println("success");
+	}
+	
+	@RequestMapping(value = "node_location_list", method = RequestMethod.GET)
+	public @ResponseBody List<List<Node>> nodeLocationList(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		List<Node> nodeList = nodeService.nodeList();
+		List<List<Node>> resList = new ArrayList<List<Node>>();
+		int len = nodeList.size();
+		for(int j = 0; j < 26; ++j){
+			List<Node> tList = new ArrayList<Node>();
+			String tmp =String.valueOf((char)(65+j));
+			for(int i = 0; i < len; ++i){
+				String firstName = nodeList.get(i).getNodeName().substring(0, 1);
+				String firstNameChar = new ChineseCharToEn().getFirstLetter(firstName);	
+				if(firstNameChar.equals(tmp)){
+					tList.add(nodeList.get(i));
+				}
+			}
+			resList.add(tList);
+		}
+		return resList;
 	}
 }

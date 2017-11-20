@@ -36,6 +36,7 @@
     font-size: 24px;
     margin-top: 8px;
     color: #c8c8c8;
+    text-align:center;
 }
 .right-content{
 	float: left;
@@ -55,11 +56,14 @@
 	margin-bottom:0;
 	overflow:hidden;
 }
+.list-data .item a:hover{
+	background-color:rgba(0,0,0,0.1);
+}
 </style>
 </head>
 <body>
 <jsp:include page="headerMenu.jsp" flush="true"/><!--动态包含-->  
-<div class="body-container">
+<div class="body-container" id="node-list">
 	<div class="city-head">
 		选择节点
 	</div>
@@ -69,54 +73,76 @@
 	</div>
 	<hr>
 	<div class="search-head">
-		<span class="active">按地区</span><span>按节点</span>
+		<span v-bind:class="{ active: cityActive}" v-on:click="city=true;cityActive=true;nodeActive=false;">按地区</span><span v-bind:class="{ active: nodeActive}" v-on:click="city=false;cityActive=false;nodeActive=true;">按节点</span>
 	</div>
 	<div class="list-data">
-		<dl class="item">
+		<dl class="item" v-show="city">
 			<dt class="left-head">安徽池州</dt>
 			<dd class="right-content">
-				<a>望华楼</a>
-				<a>池州港</a>
-				<a>齐山医药</a>
-				<a>赛威机械</a>
-				<a>创业园</a>
-				<a>太平鸟</a>
+				<a v-for="node in nodeList">{{node.nodeName}}</a>
 			</dd>
 		</dl>
-		<dl class="item">
-			<dt class="left-head">A</dt>
+		<dl class="item" v-for="nodeList in charNodeList" v-show="!city">
+			<dt class="left-head">{{nodeList.tip}}</dt>
 			<dd class="right-content">
-				<a>望华楼</a>
-			</dd>
-		</dl>
-		<dl class="item">
-			<dt class="left-head">B</dt>
-			<dd class="right-content">
-				<a>池州港</a>
-			</dd>
-		</dl>
-		<dl class="item">
-			<dt class="left-head">C</dt>
-			<dd class="right-content">
-				<a>齐山医药</a>
-			</dd>
-		</dl>
-		<dl class="item">
-			<dt class="left-head">D</dt>
-			<dd class="right-content">
-				<a>赛威机械</a>
-			</dd>
-		</dl>
-		<dl class="item">
-			<dt class="left-head">E</dt>
-			<dd class="right-content">
-				<a>创业园</a>
+				<a v-for="node in nodeList.node_list">{{node.nodeName}}</a>
 			</dd>
 		</dl>
 	</div>
 </div>
 <script>
-		
+	var nodeList = new Vue({
+		el:"#node-list",
+		data:{
+			nodeList: '',
+			charNodeList: '',
+			city: true,
+			cityActive: true,
+			nodeActive: false
+		},
+		created:function(){
+			this.init();
+		},
+		methods:{
+			init:function(){
+				this.$http.get('/WsnWeb/api/node_list').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					this.nodeList = res.data;
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});
+				this.$http.get('/WsnWeb/api/node_location_list').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					this.charNodeList = [];
+	  					var data = res.data;
+	  					var len = 26;
+	  					for(let i = 0; i < len; ++i){
+	  						var t = String.fromCharCode(65+i);
+	  						var tmp = {};
+	  						tmp["tip"] = t;
+	  						tmp["node_list"] = data[i];
+	  						this.charNodeList.push(tmp);
+	  					}
+	  					console.log(this.charNodeList);
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});
+				
+			}
+		}
+	})	
 </script>
 </body>
 </html>
