@@ -22,3 +22,7 @@ html, body{
 .header ul li:hover{
 	background-color: rgba(108, 218, 173, 0.5);
 }
+.body-container{
+	position:relative;
+	margin-top: 70px;
+}

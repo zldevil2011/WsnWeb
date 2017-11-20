@@ -29,5 +29,11 @@ public class MainController {
 		return "login";
 	}
 	
+	@RequestMapping(value = "node_list", method = RequestMethod.GET)
+	public String nodeList() {
+		System.out.println("node_list tempalte");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "nodeList";
+	}
 	
 }
