@@ -140,9 +140,10 @@
 				</div>
 			</div>
 			<div class="node-lists">
-				<ul style="padding: 0;">
+				<ul style="padding: 0;margin-bottom: 0;">
 					<li v-for="node in nodeList" style="margin:5px, 0;">{{node.nodeName}}</li>
 				</ul>
+				<p style="font-size: 12px;text-align: right;cursor:pointer;">更多>><p>
 			</div>
 			<div class="level-rank">
 				<table>
@@ -158,6 +159,7 @@
 						<tr v-for="node in rankList"><td>{{node.rank}}</td><td>{{node.city}}</td><td>{{node.nodeName}}</td><td>{{node.AQI}}</td></tr>
 					</tbody>
 				</table>
+				<p style="font-size: 12px;text-align: right;cursor:pointer;color: #e9eaec;margin-top: 10px;">更多>><p>
 			</div>
 		</div>
 	</div>
@@ -167,16 +169,11 @@
 			data: {
 				nodeList: '',
 				currendNode: {
-					"nodeName": "望华楼",
-					"AQI": 38,
-					"rank": 1
+					"nodeName": "",
+					"AQI": '',
+					"rank": ''
 				},
-				rankList: [{
-					"rank":1,
-					"city":"池州",
-					"nodeName":"池州刚",
-					"AQI":123
-				}]
+				rankList: []
 			},
 			created:function(){
 				this.init();
