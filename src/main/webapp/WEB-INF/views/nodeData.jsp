@@ -45,6 +45,7 @@
 	<div class="node-info">
 		<div class="node-name">
 			望华楼 <span style="font-size:20px;color:#888;">监测点详细数据</span>
+			<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：2017-12-01 12:00:00</span>
 		</div>
 		<div class="p-list">
 			<span v-bind:class="{ active: parameter=='aqi'}" v-on:click="changeParameter('aqi')">AQI</span>
@@ -87,86 +88,123 @@
 	
 </div>
 <script>
-function paintToday(containerId, parameter, data){
-	$('#'+containerId+' #today-data').highcharts({
-    	chart: {
-        	type: 'spline'
-    	},
-    	title: {
-        	text: '最近24小时' + parameter+'变化趋势'
-    	},
-	    subtitle: {
-	        text: ''
-	    },
-	    xAxis: {
-	        type: 'datetime',
-	        title: {
-	            text: null
-	        }
-	    },
-	    yAxis: {
-	        title: {
-	            text: '浓度(ug/m3)'
-	        },
-	        min: 0
-	    },
-	    tooltip: {
-	        headerFormat: '<b>{series.name}</b><br>',
-	        pointFormat: '{point.x:%e. %b}: {point.y:.2f} ug/m3'
-	    },
-	    plotOptions: {
-	        spline: {
-	            marker: {
-	                enabled: true
-	            }
-	        }
-	    },
-	    series: [{
-	        name: parameter+'浓度',
-	        data: data
-	    }]
-	});
-}
-function paintMonth(containerId, parameter, data){ 
-	$('#'+containerId+' #month-data').highcharts({
-	    chart: {
-	        type: 'spline'
-	    },
-	    title: {
-	        text: '最近30天 '+parameter+'变化趋势'
-	    },
-	    subtitle: {
-	        text: ''
-	    },
-	    xAxis: {
-	        type: 'datetime',
-	        title: {
-	            text: null
-	        }
-	    },
-	    yAxis: {
-	        title: {
-	            text: '浓度(ug/m3)'
-	        },
-	        min: 0
-	    },
-	    tooltip: {
-	        headerFormat: '<b>{series.name}</b><br>',
-	        pointFormat: '{point.x:%e. %b}: {point.y:.2f} ug/m3'
-	    },
-	    plotOptions: {
-	        spline: {
-	            marker: {
-	                enabled: true
-	            }
-	        }
-	    },
-	    series: [{
-	        name: parameter+'浓度',
-	        data: data
-	    }]
-	});
-}
+	function paintToday(containerId, parameter, data){
+		$('#'+containerId+' #today-data').highcharts({
+	    	chart: {
+	        	type: 'spline'
+	    	},
+	    	title: {
+	        	text: '最近24小时' + parameter+'变化趋势'
+	    	},
+		    subtitle: {
+		        text: ''
+		    },
+		    xAxis: {
+		        type: 'datetime',
+		        title: {
+		            text: null
+		        }
+		    },
+		    yAxis: {
+		        title: {
+		            text: '浓度(ug/m3)'
+		        },
+		        min: 0
+		    },
+		    tooltip: {
+		        headerFormat: '<b>{series.name}</b><br>',
+		        pointFormat: '{point.x:%e. %b}: {point.y:.2f} ug/m3'
+		    },
+		    plotOptions: {
+		        spline: {
+		            marker: {
+		                enabled: true
+		            }
+		        }
+		    },
+		    series: [{
+		        name: parameter+'浓度',
+		        data: data
+		    }]
+		});
+	}
+	function paintMonth(containerId, parameter, data){ 
+		$('#'+containerId+' #month-data').highcharts({
+		    chart: {
+		        type: 'spline'
+		    },
+		    title: {
+		        text: '最近30天 '+parameter+'变化趋势'
+		    },
+		    subtitle: {
+		        text: ''
+		    },
+		    xAxis: {
+		        type: 'datetime',
+		        title: {
+		            text: null
+		        }
+		    },
+		    yAxis: {
+		        title: {
+		            text: '浓度(ug/m3)'
+		        },
+		        min: 0
+		    },
+		    tooltip: {
+		        headerFormat: '<b>{series.name}</b><br>',
+		        pointFormat: '{point.x:%e. %b}: {point.y:.2f} ug/m3'
+		    },
+		    plotOptions: {
+		        spline: {
+		            marker: {
+		                enabled: true
+		            }
+		        }
+		    },
+		    series: [{
+		        name: parameter+'浓度',
+		        data: data
+		    }]
+		});
+	}
+	paintToday("aqi", "AQI", createTodayData());
+	function createTodayData(){
+		var data = [];
+		for(let i = 0; i < 24; ++i){
+			var t = [Date.UTC(2017,10,1,i), parseFloat(Math.random()*100)];
+			data.push(t);
+		}
+		return data;
+	};
+	function createMonthData(){
+		var data = [];
+		for(let i = 0; i < 31; ++i){
+			var t = [Date.UTC(2017,10,i+1), parseFloat(Math.random()*100)];
+			data.push(t);
+		}
+		return data;
+	}
+	paintToday("aqi", "AQI", createTodayData());
+	paintMonth("aqi", "AQI", createMonthData());
+	
+	paintToday("pm25", "PM2.5", createTodayData());
+	paintMonth("pm25", "PM2.5", createMonthData());
+	
+	paintToday("pm10", "PM10", createTodayData());
+	paintMonth("pm10", "PM10", createMonthData());
+
+	paintToday("so2", "SO2", createTodayData());
+	paintMonth("so2", "SO2", createMonthData());
+
+	paintToday("no2", "NO2", this.createTodayData());
+	paintMonth("no2", "NO2", this.createMonthData());
+
+	paintToday("o3", "O3", this.createTodayData());
+	paintMonth("o3", "O3", this.createMonthData());
+
+	paintToday("co", "CO", this.createTodayData());
+	paintMonth("co", "CO", this.createMonthData());
 	var nodeData = new Vue({
 		el:"#node-data",
 		data:{
@@ -177,46 +215,9 @@ function paintMonth(containerId, parameter, data){
 		},
 		methods:{
 			init:function(){
-				paintToday("aqi", "AQI", this.createTodayData());
-				paintMonth("aqi", "AQI", this.createMonthData());
-				
-				paintToday("pm25", "PM2.5", this.createTodayData());
-				paintMonth("pm25", "PM2.5", this.createMonthData());
-				
-				paintToday("pm10", "PM10", this.createTodayData());
-				paintMonth("pm10", "PM10", this.createMonthData());
-
-				paintToday("so2", "SO2", this.createTodayData());
-				paintMonth("so2", "SO2", this.createMonthData());
-
-				paintToday("no2", "NO2", this.createTodayData());
-				paintMonth("no2", "NO2", this.createMonthData());
-
-				paintToday("o3", "O3", this.createTodayData());
-				paintMonth("o3", "O3", this.createMonthData());
-
-				paintToday("co", "CO", this.createTodayData());
-				paintMonth("co", "CO", this.createMonthData());
 			},
 			changeParameter:function(pm){
 				this.parameter = pm;
-				
-			},
-			createTodayData:function(){
-				var data = [];
-				for(let i = 0; i < 24; ++i){
-					var t = [Date.UTC(2017,10,1,i), parseFloat(Math.random()*100)];
-					data.push(t);
-				}
-				return data;
-			},
-			createMonthData:function a(){
-				var data = [];
-				for(let i = 0; i < 31; ++i){
-					var t = [Date.UTC(2017,10,i+1), parseFloat(Math.random()*100)];
-					data.push(t);
-				}
-				return data;
 			}
 		}
 	});
