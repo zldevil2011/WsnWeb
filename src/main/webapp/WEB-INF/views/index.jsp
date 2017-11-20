@@ -112,7 +112,7 @@
 				<ul style="padding: 0;margin-bottom: 0;">
 					<li v-for="node in nodeList" style="margin:5px, 0;">{{node.nodeName}}</li>
 				</ul>
-				<p style="font-size: 12px;text-align: right;cursor:pointer;">更多>><p>
+				<p style="font-size: 12px;text-align: right;cursor:pointer;" onclick="window.location.href='/WsnWeb/node_list/'">更多>><p>
 			</div>
 			<div class="level-rank">
 				<table>
