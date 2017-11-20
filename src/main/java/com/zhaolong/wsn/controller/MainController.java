@@ -36,4 +36,9 @@ public class MainController {
 		return "nodeList";
 	}
 	
+	@RequestMapping(value = "node_data", method = RequestMethod.GET)
+	public String nodeData() {
+		return "nodeData";
+	}
+	
 }
