@@ -22,6 +22,10 @@
 		
 		<bean id="NodeServiceImpl" class="com.zhaolong.wsn.service.impl.NodeServiceImpl"></bean>
 		<bean id="NodeRepositoryImpl" class="com.zhaolong.wsn.repository.impl.NodeRepositoryImpl"></bean>
+		
+		<bean id="NewsServiceImpl" class="com.zhaolong.wsn.service.impl.NewsServiceImpl"></bean>
+		<bean id="NewsRepositoryImpl" class="com.zhaolong.wsn.repository.impl.NewsRepositoryImpl"></bean>
+		
 		<!--********************************************配置hibernate********************************************-->
 
 	    <!--扫描配置文件(这里指向的是之前配置的那个config.properties)-->

@@ -16,10 +16,10 @@
     color: #888;
 }
 .right-news-list .news-list ul{
-	-webkit-padding-start:0;
+	-webkit-padding-start:20px;
 }
 .right-news-list .news-list ul li{
-	list-style: none;
+	list-style: unset;
 	margin-top: 10px;
 }
 .left-news-list{
@@ -35,7 +35,12 @@
 	border-bottom: 1px dotted gray;
 	padding: 10px;
 	box-sizing: border-box;
+	cursor:pointer;
 }
+.left-news-list .news-list .news:hover{
+	background-color:rgba(236, 236, 230, 0.2);
+}
+
 .left-news-list .news-list .news .right-news-info .news-title{
 	font-size: 16px;
 	padding: 5px 0;
@@ -56,8 +61,10 @@
 				<li>郑州前5个月才27个好天 市领导分包各区治理雾霾</li>
 				<li>郑州前5个月才27个好天 市领导分包各区治理雾霾</li>
 				<li>郑州前5个月才27个好天 市领导分包各区治理雾霾</li>
+				<li style="text-align:right;">更多>></li>
 			</ul>
 		</div>
+		
 	</div>
 	<div class="left-news-list">
 		<div class="left-head">最新新闻</div>
