@@ -11,7 +11,7 @@
 	height:50px;
 	line-height: 50px;
 	font-size:24px;
-	background-color: #57b382;
+	background-color: rgba(87, 179, 130, 0.2);
 	text-indent:10px;
 }
 .search-head{
