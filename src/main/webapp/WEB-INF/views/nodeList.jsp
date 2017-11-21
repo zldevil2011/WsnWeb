@@ -42,7 +42,7 @@
 	float: left;
     display: inline;
     padding: 6px 0px 15px 0px;
-    margin-top: 8px;
+    margin-top: 10px;
     margin-bottom: 0;
 }
 .right-content a{
@@ -50,6 +50,7 @@
     margin-top: 5px;
     margin-right: 1px;
     cursor:pointer;
+    text-decoration:none;
 }
 .list-data .item{
 	display: block;
