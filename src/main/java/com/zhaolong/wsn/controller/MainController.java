@@ -36,9 +36,15 @@ public class MainController {
 		return "nodeList";
 	}
 	
+	// 节点的详细数据
 	@RequestMapping(value = "node_data", method = RequestMethod.GET)
 	public String nodeData() {
 		return "nodeData";
 	}
 	
+	// 节点的排名数据
+	@RequestMapping(value = "node_rank", method = RequestMethod.GET)
+	public String node() {
+		return "nodeRank";
+	}
 }
