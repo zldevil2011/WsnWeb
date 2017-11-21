@@ -128,7 +128,7 @@
 						<tr v-for="node in rankList"><td>{{node.rank}}</td><td>{{node.city}}</td><td>{{node.nodeName}}</td><td>{{node.AQI}}</td></tr>
 					</tbody>
 				</table>
-				<p style="font-size: 12px;text-align: right;cursor:pointer;color: #e9eaec;margin-top: 10px;">更多>><p>
+				<p style="font-size: 12px;text-align: right;cursor:pointer;color: #e9eaec;margin-top: 10px;" onclick="window.location.href='/WsnWeb/node_rank/'">更多>><p>
 			</div>
 		</div>
 	</div>
