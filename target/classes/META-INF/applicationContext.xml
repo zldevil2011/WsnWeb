@@ -14,6 +14,9 @@
             <!-- 扫描时跳过 @Controller 注解的JAVA类（控制器） -->
             <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         </context:component-scan>
+        <bean id="InformationServiceImpl" class="com.zhaolong.wsn.service.impl.InformationServiceImpl"></bean>
+		<bean id="InformationRepositoryImpl" class="com.zhaolong.wsn.repository.impl.InformationRepositoryImpl"></bean>
+        
 		<bean id="PersonServiceImpl" class="com.zhaolong.wsn.service.impl.PersonServiceImpl"></bean>
 		<bean id="PersonRepositoryImpl" class="com.zhaolong.wsn.repository.impl.PersonRepositoryImpl"></bean>
 		
@@ -23,9 +26,9 @@
 		<bean id="NodeServiceImpl" class="com.zhaolong.wsn.service.impl.NodeServiceImpl"></bean>
 		<bean id="NodeRepositoryImpl" class="com.zhaolong.wsn.repository.impl.NodeRepositoryImpl"></bean>
 		
-		<bean id="NewsServiceImpl" class="com.zhaolong.wsn.service.impl.NewsServiceImpl"></bean>
-		<bean id="NewsRepositoryImpl" class="com.zhaolong.wsn.repository.impl.NewsRepositoryImpl"></bean>
-		
+		<!-- <bean id="InformationServiceImpl" class="com.zhaolong.wsn.service.impl.InformationServiceImpl"></bean>
+		<bean id="InformationRepositoryImpl" class="com.zhaolong.wsn.repository.impl.InformationRepositoryImpl"></bean>
+		 -->
 		<!--********************************************配置hibernate********************************************-->
 
 	    <!--扫描配置文件(这里指向的是之前配置的那个config.properties)-->

@@ -31,9 +31,9 @@
     color: #888;
 }
 .left-news-list .news-list .news{
-	height: 170px;
+	height: 160px;
 	border-bottom: 1px dotted gray;
-	padding: 10px;
+	padding: 25px 10px;
 	box-sizing: border-box;
 	cursor:pointer;
 }
@@ -53,14 +53,12 @@
 </head>
 <body>
 <jsp:include page="headerMenu.jsp" flush="true"/><!--动态包含-->  
-<div class="body-container" id="node-list" style="margin-top: 100px;">
+<div class="body-container" id="news-list" style="margin-top: 100px;">
 	<div class="right-news-list">
 		<div class="right-head">热门新闻</div>
 		<div class="news-list">
 			<ul>
-				<li>郑州前5个月才27个好天 市领导分包各区治理雾霾</li>
-				<li>郑州前5个月才27个好天 市领导分包各区治理雾霾</li>
-				<li>郑州前5个月才27个好天 市领导分包各区治理雾霾</li>
+				<li v-for="news in hotNews">{{news.title}}</li>
 				<li style="text-align:right;">更多>></li>
 			</ul>
 		</div>
@@ -69,55 +67,16 @@
 	<div class="left-news-list">
 		<div class="left-head">最新新闻</div>
 		<div class="news-list">
-			<div class="news">
+			<div class="news" v-for="news in latestNews">
 				<div class="left-img" style="float:left;width:150px;border-radius:5px;">
-					<img src="http://www.pm25.com/data/attached/image/20160317/20160317132832_13122.jpg" width = "150" height="150" style="border-radius:15px;">
+					<img v-bind:src="news.headImg" width = "150" height="110" style="border-radius:15px;">
 				</div>
 				<div class="right-news-info"  style="margin-left:160px;">
 					<div class="news-title">
-						绿萝、吊兰、芦荟摆再多都没用！吸甲醛、PM2.5，效果最好居然是它！
+						{{news.title}} <span style="color:gray;font-size:12px;">-- {{news.author}}</span>
 					</div>
 					<div class="news-desc">
-						很多人喜欢买一些植物放在家里，办公室里。可是，你知道什么植物净化空气的效率最高吗？绿萝？吊兰？芦荟？No No No！答案竟然是……卖个关子，请往下看。
-					</div>
-				</div>
-			</div>
-			<div class="news">
-				<div class="left-img" style="float:left;width:150px;border-radius:5px;">
-					<img src="http://www.pm25.com/data/attached/image/20160317/20160317132832_13122.jpg" width = "150" height="150" style="border-radius:15px;">
-				</div>
-				<div class="right-news-info"  style="margin-left:160px;">
-					<div class="news-title">
-						绿萝、吊兰、芦荟摆再多都没用！吸甲醛、PM2.5，效果最好居然是它！
-					</div>
-					<div class="news-desc">
-						很多人喜欢买一些植物放在家里，办公室里。可是，你知道什么植物净化空气的效率最高吗？绿萝？吊兰？芦荟？No No No！答案竟然是……卖个关子，请往下看。
-					</div>
-				</div>
-			</div>
-			<div class="news">
-				<div class="left-img" style="float:left;width:150px;border-radius:5px;">
-					<img src="http://www.pm25.com/data/attached/image/20160317/20160317132832_13122.jpg" width = "150" height="150" style="border-radius:15px;">
-				</div>
-				<div class="right-news-info"  style="margin-left:160px;">
-					<div class="news-title">
-						绿萝、吊兰、芦荟摆再多都没用！吸甲醛、PM2.5，效果最好居然是它！
-					</div>
-					<div class="news-desc">
-						很多人喜欢买一些植物放在家里，办公室里。可是，你知道什么植物净化空气的效率最高吗？绿萝？吊兰？芦荟？No No No！答案竟然是……卖个关子，请往下看。
-					</div>
-				</div>
-			</div>
-			<div class="news">
-				<div class="left-img" style="float:left;width:150px;border-radius:5px;">
-					<img src="http://www.pm25.com/data/attached/image/20160317/20160317132832_13122.jpg" width = "150" height="150" style="border-radius:15px;">
-				</div>
-				<div class="right-news-info"  style="margin-left:160px;">
-					<div class="news-title">
-						绿萝、吊兰、芦荟摆再多都没用！吸甲醛、PM2.5，效果最好居然是它！
-					</div>
-					<div class="news-desc">
-						很多人喜欢买一些植物放在家里，办公室里。可是，你知道什么植物净化空气的效率最高吗？绿萝？吊兰？芦荟？No No No！答案竟然是……卖个关子，请往下看。
+						{{news.description}}
 					</div>
 				</div>
 			</div>
@@ -126,7 +85,33 @@
 	
 </div>
 <script>
-	
+	var newsList = new Vue({
+		el: "#news-list",
+		data: {
+			hotNews:'',
+			latestNews:''
+		},
+		created:function(){
+			this.init();
+		},
+		methods:{
+			init:function(){
+				this.$http.get('/WsnWeb/api/information_list').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					this.hotNews = res.data;
+	  					this.latestNews = res.data;
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});
+			}
+		}
+	})
 </script>
 </body>
 </html>

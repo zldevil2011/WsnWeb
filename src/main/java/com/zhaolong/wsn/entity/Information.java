@@ -1,14 +1,15 @@
 package com.zhaolong.wsn.entity;
-import javax.persistence.Column;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "News")
-public class News {
+@Table(name = "Information")
+public class Information {
+	
 	@Id
     @GeneratedValue
     private Long id;
@@ -16,15 +17,14 @@ public class News {
     @Column(name = "created")
     private Long created = System.currentTimeMillis();
 
-    @Column(name = "createTime", nullable=true)
-    private String createTime;
+    @Column(name = "createdTime", nullable=true)
+    private String createdTime;
     
     @Column(name = "title", nullable=true)
     private String title;
-    
 
-	@Column(name = "desc", nullable=true)
-    private String desc;
+	@Column(name = "description", nullable=true)
+    private String description;
 
 	@Column(name = "headImg", nullable=true)
     private String headImg;
@@ -60,12 +60,12 @@ public class News {
 		this.created = created;
 	}
 
-	public String getCreateTime() {
-		return createTime;
+	public String getCreatedTime() {
+		return createdTime;
 	}
 
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
+	public void setCreatedTime(String createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public String getTitle() {
@@ -76,12 +76,12 @@ public class News {
 		this.title = title;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getHeadImg() {

@@ -6,10 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.zhaolong.wsn.entity.News;
-import com.zhaolong.wsn.repository.NewsRepository;
+import com.zhaolong.wsn.entity.Information;
+import com.zhaolong.wsn.repository.InformationRepository;
 
-public class NewsRepositoryImpl implements NewsRepository {
+public class InformationRepositoryImpl implements InformationRepository {
 
 	@Autowired
     private SessionFactory sessionFactory;
@@ -17,32 +17,32 @@ public class NewsRepositoryImpl implements NewsRepository {
         return this.sessionFactory.openSession();
     }
 	
-	public News load(Long id) {
+	public Information load(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public News get(Long id) {
+	public Information get(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public List<News> findAll() {
+	public List<Information> findAll() {
 		// TODO Auto-generated method stub
-		return (List<News>) getCurrentSession().createQuery("from News").list();
+		return (List<Information>) getCurrentSession().createQuery("from Information").list();
 	}
 
-	public void persist(News entity) {
+	public void persist(Information entity) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public Long save(News entity) {
+	public Long save(Information entity) {
 		// TODO Auto-generated method stub
-		return null;
+		return (Long)getCurrentSession().save(entity);
 	}
 
-	public void saveOrUpdate(News entity) {
+	public void saveOrUpdate(Information entity) {
 		// TODO Auto-generated method stub
 		
 	}
