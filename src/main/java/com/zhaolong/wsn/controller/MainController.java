@@ -1,6 +1,8 @@
 package com.zhaolong.wsn.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -37,8 +39,9 @@ public class MainController {
 	}
 	
 	// 节点的详细数据
-	@RequestMapping(value = "node_data", method = RequestMethod.GET)
-	public String nodeData() {
+	@RequestMapping(value = "node_data/{node_id}", method = RequestMethod.GET)
+	public String nodeData(@PathVariable("node_id") int node_id, ModelMap map) {
+		map.put("node_id", node_id);
 		return "nodeData";
 	}
 	

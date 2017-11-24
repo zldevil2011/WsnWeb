@@ -1,5 +1,8 @@
 package com.zhaolong.wsn.entity;
 
+import java.sql.Date;
+import java.sql.Time;
+
 import javax.persistence.Column;
 
 import javax.persistence.Entity;
@@ -17,8 +20,11 @@ public class Data {
     @Column(name = "created")
     private Long created = System.currentTimeMillis();
 
+    @Column(name = "dataDate", nullable=true)
+    private Date dataDate;
+    
     @Column(name = "dataTime", nullable=true)
-    private String dataTime;
+    private Time dataTime;
     
     @Column(name = "nodeId", nullable=true)
     private Long nodeId;
@@ -50,6 +56,9 @@ public class Data {
     
     @Column(name = "humidity", nullable=true)
     private double humidity;
+    
+    @Column(name = "aqi", nullable=true)
+    private double aqi;
 
 	public Long getId() {
 		return id;
@@ -59,19 +68,36 @@ public class Data {
 		this.id = id;
 	}
 
-	public String getDataTime() {
-		return dataTime;
-	}
-
-	public void setDataTime(String dataTime) {
-		this.dataTime = dataTime;
-	}
 	public Long getCreated() {
 		return created;
 	}
 
 	public void setCreated(Long created) {
 		this.created = created;
+	}
+
+	public Date getDataDate() {
+		return dataDate;
+	}
+
+	public void setDataDate(Date dataDate) {
+		this.dataDate = dataDate;
+	}
+
+	public Time getDataTime() {
+		return dataTime;
+	}
+
+	public void setDataTime(Time dataTime) {
+		this.dataTime = dataTime;
+	}
+
+	public Long getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(Long nodeId) {
+		this.nodeId = nodeId;
 	}
 
 	public double getPm25() {
@@ -130,6 +156,14 @@ public class Data {
 		this.speed = speed;
 	}
 
+	public String getDirecition() {
+		return direcition;
+	}
+
+	public void setDirecition(String direcition) {
+		this.direcition = direcition;
+	}
+
 	public double getHumidity() {
 		return humidity;
 	}
@@ -138,20 +172,13 @@ public class Data {
 		this.humidity = humidity;
 	}
 
-	public Long getNodeId() {
-		return nodeId;
+	public double getAqi() {
+		return aqi;
 	}
 
-	public void setNodeId(Long nodeId) {
-		this.nodeId = nodeId;
+	public void setAqi(double aqi) {
+		this.aqi = aqi;
 	}
-
-	public String getDirecition() {
-		return direcition;
-	}
-
-	public void setDirecition(String direcition) {
-		this.direcition = direcition;
-	}
+	
     
 }

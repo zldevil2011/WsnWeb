@@ -1,5 +1,6 @@
 package com.zhaolong.wsn.repository.impl;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -30,6 +31,19 @@ public class DataRepositoryImpl implements DataRepository{
 		// TODO Auto-generated method stub
 		return (List<Data>) getCurrentSession().createQuery("from Data").list();
 	}
+	
+	public List<Data> findAllById(Long nodeId) {
+		// 通过节点ID获取该节点的数据
+		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId).list();
+	}
+	public List<Data> findAllByIdTime(Long nodeId, Date today) {
+		// TODO Auto-generated method stub
+		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " and dataDate ='" + today+"'").list();
+	}
+	public List<Data> findAllByTimeRange(Long nodeId, Date startDay, Date endDay) {
+		// TODO Auto-generated method stub
+		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " and dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+	}
 
 	public void persist(Data entity) {
 		// TODO Auto-generated method stub
@@ -56,5 +70,4 @@ public class DataRepositoryImpl implements DataRepository{
 		// TODO Auto-generated method stub
 		getCurrentSession().flush();
 	}
-
 }
