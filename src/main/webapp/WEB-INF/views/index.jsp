@@ -209,7 +209,7 @@
             "<h6>PM2.5 : "+rankList[i].AQI+"</h6>" +
             "<h6>SO2 : "+rankList[i].So2+"</h6>" +
             "<h6>PM10 : "+rankList[i].Pm10+"</h6>" +
-            "<h6>AQI : "+rankList[i].Pm25+"</h6><h6><a href='/historical_device_data_list/" + rankList[i].id+"'>查看历史数据</a></h6>" +
+            "<h6>AQI : "+rankList[i].Pm25+"</h6><h6><a href='/WsnWeb/node_data/" + rankList[i].id+"'>查看历史数据</a></h6>" +
             "</div>";
     		var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
     		var marker = new BMap.Marker(point);
