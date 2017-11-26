@@ -153,11 +153,10 @@
 	</div>
 	</div>
 </div>
-
 <script>
 	var nodeId = '${node_id}';
 	console.log(nodeId);
-	function createTodayData(){
+	/* function createTodayData(){
 		var data = [];
 		for(let i = 0; i < 24; ++i){
 			var t = [Date.UTC(2017,10,1,i), parseFloat(Math.random()*100)];
@@ -192,7 +191,7 @@
 	paintMonth("o3", "O3", this.createMonthData());
 
 	paintToday("co", "CO", this.createTodayData());
-	paintMonth("co", "CO", this.createMonthData());
+	paintMonth("co", "CO", this.createMonthData()); */
 	var nodeData = new Vue({
 		el:"#node-data",
 		data:{
@@ -204,11 +203,34 @@
 		methods:{
 			init:function(){
 				this.$http.get('/WsnWeb/api/data_list/' + nodeId).then(function(res){
-	  		    	console.log(res.data);
 	  				if(res.status != 200){
 	  					this.tip = true;
 	  				}else{
+	  					let data = res.data;
+	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（今日的小时数据）
 	  					$("#pm25").css("display", "block");
+	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
+	  					var len = data.length;
+	  					// 首先构造一个UTC的时间数组，对应今日的小时机制
+	  					let timeList = [];
+	  					let today = new Date();
+	  					let year = today.getFullYear();
+	  					let month = today.getMonth();
+	  					let day = today.getDate();
+	  					for(let i = 0; i < data[7].length; ++i){
+	  						let t = Date.UTC(year,month,day, data[7][i]);
+	  						timeList.push(t);
+	  					}
+	  					for(let i = 0; i < len - 1; ++i){
+	  						let pName = pList[i];
+	  						let dLen = data[i].length;
+	  						let pData = [];
+	  						for(let j = 0; j < dLen; ++j){
+	  							let t = [timeList[j], data[i][j]];
+	  							pData.push(t);
+	  						}
+	  						paintToday(pName, pName.toUpperCase(), pData);
+	  					}
 	  				}
 	  			}, function(err){
 	  				if(err.status != 200){
@@ -218,7 +240,6 @@
 			},
 			changeParameter:function(pm){
 				this.parameter = pm;
-				console.log($("#"+pm).siblings());
 				$("#"+pm).siblings().css("display", "none");
 				$("#"+pm).css("display", "block");
 			}
