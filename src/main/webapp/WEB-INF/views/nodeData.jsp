@@ -202,11 +202,12 @@
 		},
 		methods:{
 			init:function(){
-				this.$http.get('/WsnWeb/api/data_list/' + nodeId).then(function(res){
+				this.$http.get('/WsnWeb/api/data_list/' + nodeId + "?dataType=day").then(function(res){
 	  				if(res.status != 200){
 	  					this.tip = true;
 	  				}else{
 	  					let data = res.data;
+	  					console.log(data);
 	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（今日的小时数据）
 	  					$("#pm25").css("display", "block");
 	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
@@ -230,6 +231,41 @@
 	  							pData.push(t);
 	  						}
 	  						paintToday(pName, pName.toUpperCase(), pData);
+	  					}
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});
+				this.$http.get('/WsnWeb/api/data_list/' + nodeId + "?dataType=month").then(function(res){
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					let data = res.data;
+	  					console.log(data);
+	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（最近的30天日期）
+	  					$("#pm25").css("display", "block");
+	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
+	  					var len = data.length;
+	  					// 首先构造一个UTC的时间数组，对应三十天的日期
+	  					let timeList = [];
+	  					let today = new Date();
+	  					let year = today.getFullYear();
+	  					let month = today.getMonth();
+	  					for(let i = 0; i < data[7].length; ++i){
+	  						let t = Date.UTC(year,data[8][i],data[7][i]);
+	  						timeList.push(t);
+	  					}
+	  					for(let i = 0; i < len - 2; ++i){
+	  						let pName = pList[i];
+	  						let dLen = data[i].length;
+	  						let pData = [];
+	  						for(let j = 0; j < dLen; ++j){
+	  							let t = [timeList[j], data[i][j]];
+	  							pData.push(t);
+	  						}
+	  						paintMonth(pName, pName.toUpperCase(), pData);
 	  					}
 	  				}
 	  			}, function(err){
