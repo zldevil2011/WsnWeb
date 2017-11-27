@@ -36,7 +36,12 @@ public class DataServiceImpl implements DataService{
 
 	public List<Data> dataList(Long nodeId, Date startDay, Date endDay) {
 		// TODO Auto-generated method stub
-		return dataRepository.findAllByTimeRange(nodeId, startDay, endDay);
+		return dataRepository.findAllByIdTimeRange(nodeId, startDay, endDay);
+	}
+
+	public List<Data> dataList(Date startDay, Date endDay) {
+		// TODO Auto-generated method stub
+		return dataRepository.findAllByTimeRange(startDay, endDay);
 	}
 
 }

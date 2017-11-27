@@ -161,7 +161,7 @@
 		  					this.tip = true;
 		  				}
 		  			});	
-					this.$http.get('/WsnWeb/api/node_rank').then(function(res){
+					this.$http.get('/WsnWeb/api/index_node_rank').then(function(res){
 		  		    	console.log(res.data);
 		  				if(res.status != 200){
 		  					this.tip = true;

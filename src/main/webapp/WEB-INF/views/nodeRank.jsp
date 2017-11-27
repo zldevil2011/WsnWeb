@@ -58,11 +58,7 @@
 				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
 			</thead>
 			<tbody>
-				<tr><td>1</td><td>优</td><td>望华楼</td><td>123</td><td>33</td></tr>
-				<tr><td>2</td><td>优</td><td>望华楼</td><td>123</td><td>33</td></tr>
-				<tr><td>3</td><td>优</td><td>望华楼</td><td>123</td><td>33</td></tr>
-				<tr><td>4</td><td>优</td><td>望华楼</td><td>123</td><td>33</td></tr>
-				<tr><td>5</td><td>优</td><td>望华楼</td><td>123</td><td>33</td></tr>
+				<tr v-for="node in todayNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'yesterday'">
@@ -70,11 +66,7 @@
 				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
 			</thead>
 			<tbody>
-				<tr><td>1</td><td>优</td><td>池州港</td><td>123</td><td>33</td></tr>
-				<tr><td>2</td><td>优</td><td>池州港</td><td>123</td><td>33</td></tr>
-				<tr><td>3</td><td>优</td><td>池州港</td><td>123</td><td>33</td></tr>
-				<tr><td>4</td><td>优</td><td>池州港</td><td>123</td><td>33</td></tr>
-				<tr><td>5</td><td>优</td><td>池州港</td><td>123</td><td>33</td></tr>
+				<tr v-for="node in yesterdayNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'week'">
@@ -82,11 +74,7 @@
 				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
 			</thead>
 			<tbody>
-				<tr><td>1</td><td>优</td><td>太平鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>2</td><td>优</td><td>太平鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>3</td><td>优</td><td>太平鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>4</td><td>优</td><td>太平鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>5</td><td>优</td><td>太平鸟</td><td>123</td><td>33</td></tr>
+				<tr v-for="node in weekNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'month'">
@@ -94,11 +82,7 @@
 				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
 			</thead>
 			<tbody>
-				<tr><td>1</td><td>优</td><td>青鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>2</td><td>优</td><td>青鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>3</td><td>优</td><td>青鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>4</td><td>优</td><td>青鸟</td><td>123</td><td>33</td></tr>
-				<tr><td>5</td><td>优</td><td>青鸟</td><td>123</td><td>33</td></tr>
+				<tr v-for="node in monthNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
 			</tbody>
 		</table>
 	</div>
@@ -107,14 +91,68 @@
 var nodeRank = new Vue({
 	el: "#node-rank",
 	data: {
-		"parameter":"today"
+		"parameter":"today",
+		"todayNodes":"",
+		"yesterdayNodes":"",
+		"weekNodes":"",
+		"monthNodes":"",
 	},
 	created:function(){
-		
+		this.init();
 	},
 	methods:{
 		changeParameter:function(pm){
 			this.parameter = pm;
+		},
+		init:function(){
+			this.$http.get('/WsnWeb/api/ranking_list?dataType=day').then(function(res){
+  		    	console.log(res.data);
+  				if(res.status != 200){
+  					this.tip = true;
+  				}else{
+  					this.todayNodes = res.data;
+  				}
+  			}, function(err){
+  				if(err.status != 200){
+  					this.tip = true;
+  				}
+  			});	
+			this.$http.get('/WsnWeb/api/ranking_list?dataType=yesterday').then(function(res){
+  		    	console.log(res.data);
+  				if(res.status != 200){
+  					this.tip = true;
+  				}else{
+  					this.yesterdayNodes = res.data;
+  				}
+  			}, function(err){
+  				if(err.status != 200){
+  					this.tip = true;
+  				}
+  			});	
+			this.$http.get('/WsnWeb/api/ranking_list?dataType=week').then(function(res){
+  		    	console.log(res.data);
+  				if(res.status != 200){
+  					this.tip = true;
+  				}else{
+  					this.weekNodes = res.data;
+  				}
+  			}, function(err){
+  				if(err.status != 200){
+  					this.tip = true;
+  				}
+  			});	
+			this.$http.get('/WsnWeb/api/ranking_list?dataType=month').then(function(res){
+  		    	console.log(res.data);
+  				if(res.status != 200){
+  					this.tip = true;
+  				}else{
+  					this.monthNodes = res.data;
+  				}
+  			}, function(err){
+  				if(err.status != 200){
+  					this.tip = true;
+  				}
+  			});	
 		}
 	}
 });

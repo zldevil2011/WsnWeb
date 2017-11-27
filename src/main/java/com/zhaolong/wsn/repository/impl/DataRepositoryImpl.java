@@ -40,11 +40,14 @@ public class DataRepositoryImpl implements DataRepository{
 		// TODO Auto-generated method stub
 		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " and dataDate ='" + today+"'").list();
 	}
-	public List<Data> findAllByTimeRange(Long nodeId, Date startDay, Date endDay) {
+	public List<Data> findAllByIdTimeRange(Long nodeId, Date startDay, Date endDay) {
 		// TODO Auto-generated method stub
 		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " and dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
 	}
-
+	public List<Data> findAllByTimeRange(Date startDay, Date endDay) {
+		// TODO Auto-generated method stub
+		return (List<Data>) getCurrentSession().createQuery("from Data where dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+	}
 	public void persist(Data entity) {
 		// TODO Auto-generated method stub
 		getCurrentSession().persist(entity);

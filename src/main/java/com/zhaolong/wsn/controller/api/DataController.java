@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zhaolong.wsn.entity.Data;
+import com.zhaolong.wsn.entity.Node;
 import com.zhaolong.wsn.service.DataService;
+import com.zhaolong.wsn.service.NodeService;
+
+import lombok.SneakyThrows;
 
 @Controller
 @RequestMapping(value = "/api/*") 
@@ -36,6 +41,10 @@ public class DataController {
 	@Autowired
 	private DataService dataService;
 	
+	@Autowired
+	private NodeService nodeService;
+	
+	// 获取每个节点的当日数据和最近一月的日平均数据
 	@RequestMapping(value = "data_list/{node_id}", method = RequestMethod.GET)
 	public @ResponseBody List<ArrayList<Double>> dataList(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
 		String requestType = "day";
@@ -189,7 +198,222 @@ public class DataController {
 		}else{
 			return new ArrayList<ArrayList<Double>>();
 		}
-		
+	}
+	// 获取排名数据，针对所有的安装节点，按照今日，昨日，一周，一月分别计算当天，昨天，一周，一月的平均AQI指数并返回
+	@RequestMapping(value = "ranking_list", method = RequestMethod.GET)
+	public @ResponseBody List<NodeRank> rankingList(HttpServletRequest request, HttpServletResponse response) {
+		String requestType = "day";
+		List<NodeRank> rankList = new ArrayList<NodeRank>();
+		try{
+			requestType = request.getQueryString().split("=")[1];
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(requestType.equals("day")){
+			// 按照今日数据排序的时候，需要对每个节点获取今日的数据，然后计算平均值，按照平均值进行排序
+			// 首先获取所有的节点数据
+			List<Node> nodeList = nodeService.nodeList();
+			// 然后获取今日的节点的数据
+			List<Data> dataList = new ArrayList<Data>();
+			Date date = new Date();
+			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+			Calendar calendar = new GregorianCalendar();  
+			calendar.setTime(today);  
+			calendar.add(calendar.DATE, 1);  
+			java.sql.Date tomorrow = new java.sql.Date(calendar.getTime().getTime());
+			dataList = dataService.dataList(today, tomorrow);
+			
+			int len = nodeList.size();
+			int dataLen = dataList.size();
+			for(int i = 0; i < len; ++i){
+				for(int j = 0; j < dataLen; ++j){
+					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
+						Node node = nodeList.get(i);
+						Data data = dataList.get(j);
+						NodeRank nodeRank = new NodeRank();
+						nodeRank.setAddress(node.getAddress());
+						nodeRank.setAQI((double)Math.round(data.getAqi()*100)/100);
+						nodeRank.setCity(node.getCity());
+						nodeRank.setCreated(node.getCreated());
+						nodeRank.setId(node.getId());
+						nodeRank.setInstallTime(node.getInstallTime());
+						nodeRank.setLatitude(node.getLatitude());
+						nodeRank.setLongitude(node.getLongitude());
+						nodeRank.setNodeName(node.getNodeName());
+						nodeRank.setOnline(node.getOnline());
+						nodeRank.setProvince(node.getProvince());
+						nodeRank.setSo2(data.getSo2());
+						nodeRank.setPm25((double)Math.round(data.getPm25()*100)/100);
+						nodeRank.setPm10(data.getPm10());
+						rankList.add(nodeRank);
+						break;
+					}
+				}
+			}
+			Collections.sort(rankList, new SortByAqi());
+			int rankLen = rankList.size();
+			for (int i = 0; i < rankLen; ++i) {
+				rankList.get(i).setRank(i+1);
+				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+		    }
+			return rankList;
+		}else if(requestType.equals("yesterday")){
+			// 按照昨日数据排序的时候，需要对每个节点获取昨日的数据，然后计算平均值，按照平均值进行排序
+			// 首先获取所有的节点数据
+			List<Node> nodeList = nodeService.nodeList();
+			// 然后获取昨日的节点的数据
+			List<Data> dataList = new ArrayList<Data>();
+			Date date = new Date();
+			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+			Calendar calendar = new GregorianCalendar();  
+			calendar.setTime(today);  
+			calendar.add(calendar.DATE, -1);  
+			java.sql.Date yesterday = new java.sql.Date(calendar.getTime().getTime());
+			dataList = dataService.dataList(yesterday, today);
+			
+			int len = nodeList.size();
+			int dataLen = dataList.size();
+			for(int i = 0; i < len; ++i){
+				double aqiSum = 0;
+				int cnt = 0;
+				for(int j = 0; j < dataLen; ++j){
+					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
+						Data data = dataList.get(j);
+						aqiSum += data.getAqi();
+						cnt += 1;
+					}
+				}
+				Node node = nodeList.get(i);
+				NodeRank nodeRank = new NodeRank();
+				nodeRank.setAddress(node.getAddress());
+				nodeRank.setCity(node.getCity());
+				nodeRank.setCreated(node.getCreated());
+				nodeRank.setId(node.getId());
+				nodeRank.setInstallTime(node.getInstallTime());
+				nodeRank.setLatitude(node.getLatitude());
+				nodeRank.setLongitude(node.getLongitude());
+				nodeRank.setNodeName(node.getNodeName());
+				nodeRank.setOnline(node.getOnline());
+				nodeRank.setProvince(node.getProvince());
+				if(cnt > 0){
+					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
+				}else{
+					nodeRank.setAQI(0);
+				}
+				rankList.add(nodeRank);
+			}
+			Collections.sort(rankList, new SortByAqi());
+			int rankLen = rankList.size();
+			for (int i = 0; i < rankLen; ++i) {
+				rankList.get(i).setRank(i+1);
+				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+		    }
+			return rankList;
+		}else if(requestType.equals("week")){
+			// 按照一周数据排序的时候，需要对每个节点获取最近一周的数据，然后计算平均值，按照平均值进行排序
+			// 首先获取所有的节点数据
+			List<Node> nodeList = nodeService.nodeList();
+			// 然后获取最近一周的节点的数据
+			List<Data> dataList = new ArrayList<Data>();
+			Date date = new Date();
+			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+			Calendar calendar = new GregorianCalendar();  
+			calendar.setTime(today);  
+			calendar.add(calendar.DATE, -7);  
+			java.sql.Date yesterday = new java.sql.Date(calendar.getTime().getTime());
+			dataList = dataService.dataList(yesterday, today);
+			int len = nodeList.size();
+			int dataLen = dataList.size();
+			for(int i = 0; i < len; ++i){
+				double aqiSum = 0;
+				int cnt = 0;
+				for(int j = 0; j < dataLen; ++j){
+					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
+						Data data = dataList.get(j);
+						aqiSum += data.getAqi();
+						cnt += 1;
+					}
+				}
+				Node node = nodeList.get(i);
+				NodeRank nodeRank = new NodeRank();
+				nodeRank.setAddress(node.getAddress());
+				nodeRank.setCity(node.getCity());
+				nodeRank.setCreated(node.getCreated());
+				nodeRank.setId(node.getId());
+				nodeRank.setInstallTime(node.getInstallTime());
+				nodeRank.setLatitude(node.getLatitude());
+				nodeRank.setLongitude(node.getLongitude());
+				nodeRank.setNodeName(node.getNodeName());
+				nodeRank.setOnline(node.getOnline());
+				nodeRank.setProvince(node.getProvince());
+				if(cnt > 0){
+					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
+				}else{
+					nodeRank.setAQI(0);
+				}
+				rankList.add(nodeRank);
+			}
+			Collections.sort(rankList, new SortByAqi());
+			int rankLen = rankList.size();
+			for (int i = 0; i < rankLen; ++i) {
+				rankList.get(i).setRank(i+1);
+				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+		    }
+			return rankList;
+		}else if(requestType.equals("month")){
+			// 按照一月数据排序的时候，需要对每个节点获取最近一月的数据，然后计算平均值，按照平均值进行排序
+			// 首先获取所有的节点数据
+			List<Node> nodeList = nodeService.nodeList();
+			// 然后获取最近一月的节点的数据
+			List<Data> dataList = new ArrayList<Data>();
+			Date date = new Date();
+			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+			Calendar calendar = new GregorianCalendar();  
+			calendar.setTime(today);  
+			calendar.add(calendar.DATE, -30);  
+			java.sql.Date yesterday = new java.sql.Date(calendar.getTime().getTime());
+			dataList = dataService.dataList(yesterday, today);
+			int len = nodeList.size();
+			int dataLen = dataList.size();
+			for(int i = 0; i < len; ++i){
+				double aqiSum = 0;
+				int cnt = 0;
+				for(int j = 0; j < dataLen; ++j){
+					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
+						Data data = dataList.get(j);
+						aqiSum += data.getAqi();
+						cnt += 1;
+					}
+				}
+				Node node = nodeList.get(i);
+				NodeRank nodeRank = new NodeRank();
+				nodeRank.setAddress(node.getAddress());
+				nodeRank.setCity(node.getCity());
+				nodeRank.setCreated(node.getCreated());
+				nodeRank.setId(node.getId());
+				nodeRank.setInstallTime(node.getInstallTime());
+				nodeRank.setLatitude(node.getLatitude());
+				nodeRank.setLongitude(node.getLongitude());
+				nodeRank.setNodeName(node.getNodeName());
+				nodeRank.setOnline(node.getOnline());
+				nodeRank.setProvince(node.getProvince());
+				if(cnt > 0){
+					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
+				}else{
+					nodeRank.setAQI(0);
+				}
+				rankList.add(nodeRank);
+			}
+			Collections.sort(rankList, new SortByAqi());
+			int rankLen = rankList.size();
+			for (int i = 0; i < rankLen; ++i) {
+				rankList.get(i).setRank(i+1);
+				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+		    }
+			return rankList;
+		}else{
+			return null;
+		}
 	}
 	@RequestMapping(value = "data_save", method = RequestMethod.GET)
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -219,14 +443,31 @@ public class DataController {
 		PrintWriter pWriter = response.getWriter();
 		pWriter.println("success");
 	}
+	
+	public String getDesc(double aqi){
+		if(aqi <= 0){
+			return "无数据";
+		}
+		if(aqi < 50){
+			return "优";
+		}else if(aqi < 100){
+			return "良";
+		}else if(aqi < 150){
+			return "轻度污染";
+		}else if(aqi < 200){
+			return "中度污染";
+		}else if(aqi < 300){
+			return "重度污染";
+		}else if(aqi > 300){
+			return "严重污染";
+		}
+		return "无数据";
+	}
 }
 @JsonIgnoreProperties
-class RetData{
-	double value;
-	int year;
-	int month;
-	int day;
-	int hour;
-	int minute;
-	int second;
+class Ranking{
+	String desc;
+	String name;
+	double aqi;
+	double pm25;
 }

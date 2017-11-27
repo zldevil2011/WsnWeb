@@ -8,5 +8,6 @@ import com.zhaolong.wsn.entity.Data;
 public interface DataRepository extends DomainRepository<Data,Long>{
 	List<Data> findAllById(Long nodeId);
 	List<Data> findAllByIdTime(Long nodeId, Date today);
-	List<Data> findAllByTimeRange(Long nodeId, Date startDay, Date endDay);
+	List<Data> findAllByIdTimeRange(Long nodeId, Date startDay, Date endDay);
+	List<Data> findAllByTimeRange(Date startDay, Date endDay);
 }

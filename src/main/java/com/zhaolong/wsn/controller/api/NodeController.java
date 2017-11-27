@@ -30,6 +30,7 @@ class NodeRank extends Node{
 	public double So2;
 	public double Pm25;
 	public double Pm10;
+	public String DataDesc;
 	public int getRank() {
 		return rank;
 	}
@@ -59,6 +60,12 @@ class NodeRank extends Node{
 	}
 	public void setPm10(double pm10) {
 		Pm10 = pm10;
+	}
+	public String getDataDesc() {
+		return DataDesc;
+	}
+	public void setDataDesc(String dataDesc) {
+		DataDesc = dataDesc;
 	}
 	
 }
@@ -92,8 +99,8 @@ public class NodeController {
 		return nodeList;
 	}
 	
-	@RequestMapping(value = "node_rank", method = RequestMethod.GET)
-	public @ResponseBody List<NodeRank> nodeRank(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "index_node_rank", method = RequestMethod.GET)
+	public @ResponseBody List<NodeRank> indexNodeRank(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		List<NodeRank> rankList = new ArrayList<NodeRank>();
 		List<Node> nodeList = nodeService.nodeList();
