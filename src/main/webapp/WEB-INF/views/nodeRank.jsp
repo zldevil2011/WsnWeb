@@ -44,7 +44,7 @@
 <div class="body-container" style="margin-top:100px;" id="node-rank">
 	<div class="rank-head">
 		排行 <span style="font-size:20px;color:#888;">各站点详细数据</span>
-		<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：2017-12-01 12:00:00</span>
+		<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：{{updateTime}}</span>
 	</div>
 	<div class="p-list">
 		<span v-bind:class="{ active: parameter=='today'}" v-on:click="changeParameter('today')">今日排名</span>
@@ -88,6 +88,21 @@
 	</div>
 </div>
 <script>
+Date.prototype.MyFormat = function (fmt) { //author: meizz
+  var o = {
+    "M+": this.getMonth() + 1, //月份
+    "d+": this.getDate(), //日
+    "h+": this.getHours(), //小时
+    "m+": this.getMinutes(), //分
+    "s+": this.getSeconds(), //秒
+    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+    "S": this.getMilliseconds() //毫秒
+  };
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+  for (var k in o)
+  if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+  return fmt;
+}
 var nodeRank = new Vue({
 	el: "#node-rank",
 	data: {
@@ -96,6 +111,7 @@ var nodeRank = new Vue({
 		"yesterdayNodes":"",
 		"weekNodes":"",
 		"monthNodes":"",
+		"updateTime":"",
 	},
 	created:function(){
 		this.init();
@@ -105,6 +121,7 @@ var nodeRank = new Vue({
 			this.parameter = pm;
 		},
 		init:function(){
+			this.updateTime = new Date().MyFormat("yyyy-MM-dd hh:mm:ss");
 			this.$http.get('/WsnWeb/api/ranking_list?dataType=day').then(function(res){
   		    	console.log(res.data);
   				if(res.status != 200){
