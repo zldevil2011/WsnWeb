@@ -295,13 +295,13 @@ public class DataController {
 					}
 				}
 			}
-			Collections.sort(rankList, new SortByAqi());
-			int rankLen = rankList.size();
-			for (int i = 0; i < rankLen; ++i) {
-				rankList.get(i).setRank(i+1);
-				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
-		    }
-			return rankList;
+//			Collections.sort(rankList, new SortByAqi());
+//			int rankLen = rankList.size();
+//			for (int i = 0; i < rankLen; ++i) {
+//				rankList.get(i).setRank(i+1);
+//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//		    }
+//			return rankList;
 		}else if(requestType.equals("yesterday")){
 			// 按照昨日数据排序的时候，需要对每个节点获取昨日的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
@@ -347,13 +347,13 @@ public class DataController {
 				}
 				rankList.add(nodeRank);
 			}
-			Collections.sort(rankList, new SortByAqi());
-			int rankLen = rankList.size();
-			for (int i = 0; i < rankLen; ++i) {
-				rankList.get(i).setRank(i+1);
-				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
-		    }
-			return rankList;
+//			Collections.sort(rankList, new SortByAqi());
+//			int rankLen = rankList.size();
+//			for (int i = 0; i < rankLen; ++i) {
+//				rankList.get(i).setRank(i+1);
+//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//		    }
+//			return rankList;
 		}else if(requestType.equals("week")){
 			// 按照一周数据排序的时候，需要对每个节点获取最近一周的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
@@ -398,13 +398,13 @@ public class DataController {
 				}
 				rankList.add(nodeRank);
 			}
-			Collections.sort(rankList, new SortByAqi());
-			int rankLen = rankList.size();
-			for (int i = 0; i < rankLen; ++i) {
-				rankList.get(i).setRank(i+1);
-				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
-		    }
-			return rankList;
+//			Collections.sort(rankList, new SortByAqi());
+//			int rankLen = rankList.size();
+//			for (int i = 0; i < rankLen; ++i) {
+//				rankList.get(i).setRank(i+1);
+//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//		    }
+//			return rankList;
 		}else if(requestType.equals("month")){
 			// 按照一月数据排序的时候，需要对每个节点获取最近一月的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
@@ -449,16 +449,29 @@ public class DataController {
 				}
 				rankList.add(nodeRank);
 			}
-			Collections.sort(rankList, new SortByAqi());
-			int rankLen = rankList.size();
-			for (int i = 0; i < rankLen; ++i) {
-				rankList.get(i).setRank(i+1);
-				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
-		    }
-			return rankList;
+//			Collections.sort(rankList, new SortByAqi());
+//			int rankLen = rankList.size();
+//			for (int i = 0; i < rankLen; ++i) {
+//				rankList.get(i).setRank(i+1);
+//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//		    }
+//			return rankList;
 		}else{
-			return null;
+			// 不合法参数
 		}
+		int rankLen = rankList.size();
+		for (int i = 0; i < rankList.size(); ++i) {
+			if(rankList.get(i).AQI <= 0){
+				rankList.remove(i);
+				i --;
+			}
+		}
+		Collections.sort(rankList, new SortByAqi());
+		for (int i = 0; i < rankList.size(); ++i) {
+			rankList.get(i).setRank(i+1);
+			rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+	    }
+		return rankList;
 	}
 	@RequestMapping(value = "data_save", method = RequestMethod.GET)
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
