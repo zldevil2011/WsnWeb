@@ -110,7 +110,7 @@
 			</div>
 			<div class="node-lists">
 				<ul style="padding: 0;margin-bottom: 0;">
-					<li v-for="node in nodeList" style="margin:5px, 0;">{{node.nodeName}}</li>
+					<li v-for="node in nodeList" style="margin:5px, 0;" @click="openNodeData(node.id)">{{node.nodeName}}</li>
 				</ul>
 				<p style="font-size: 12px;text-align: right;cursor:pointer;" onclick="window.location.href='/WsnWeb/node_list/'">更多>><p>
 			</div>
@@ -133,65 +133,68 @@
 		</div>
 	</div>
 	<script>
-		var rightData = new Vue({
-			el: "#right-data",
-			data: {
-				nodeList: '',
-				currendNode: {
-					"nodeName": "",
-					"AQI": '',
-					"rank": ''
-				},
-				rankList: []
+	var map = new BMap.Map("map", {
+        maxZoom : 19,
+        minZoom:1,
+        mapType : BMAP_NORMAL_MAP
+    });// 默认卫星地图BMAP_SATELLITE_MAP
+    map.setMapStyle({style:'midnight'});
+	var point = new BMap.Point(117.541916, 30.703908);// 地图的中心点
+	map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+	map.centerAndZoom(point, 13);
+	var rightData = new Vue({
+		el: "#right-data",
+		data: {
+			nodeList: '',
+			currendNode: {
+				"nodeName": "",
+				"AQI": '',
+				"rank": ''
 			},
-			created:function(){
-				this.init();
+			rankList: []
+		},
+		created:function(){
+			this.init();
+		},
+		methods:{
+			init() {
+				this.$http.get('/WsnWeb/api/node_list').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					this.nodeList = res.data;
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});	
+				this.$http.get('/WsnWeb/api/index_node_rank').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					this.rankList = res.data;
+	  					if(res.data.length > 0){
+	  						this.currendNode = res.data[0];
+	  					}
+	  					loadMap(res.data);
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});	
 			},
-			methods:{
-				init() {
-					this.$http.get('/WsnWeb/api/node_list').then(function(res){
-		  		    	console.log(res.data);
-		  				if(res.status != 200){
-		  					this.tip = true;
-		  				}else{
-		  					this.nodeList = res.data;
-		  				}
-		  			}, function(err){
-		  				if(err.status != 200){
-		  					this.tip = true;
-		  				}
-		  			});	
-					this.$http.get('/WsnWeb/api/index_node_rank').then(function(res){
-		  		    	console.log(res.data);
-		  				if(res.status != 200){
-		  					this.tip = true;
-		  				}else{
-		  					this.rankList = res.data;
-		  					if(res.data.length > 0){
-		  						this.currendNode = res.data[0];
-		  					}
-		  					loadMap(res.data);
-		  				}
-		  			}, function(err){
-		  				if(err.status != 200){
-		  					this.tip = true;
-		  				}
-		  			});	
-				}
+			openNodeData(nodeId){
+				window.location.href='/WsnWeb/node_data/' + nodeId;
 			}
-		})
+		}
+	})
 	function loadMap(rankList){
 		rankList = rankList || [];	
 		var nodeNum = rankList.length;
-		var map = new BMap.Map("map", {
-	        maxZoom : 19,
-	        minZoom:1,
-	        mapType : BMAP_NORMAL_MAP
-	    });// 默认卫星地图BMAP_SATELLITE_MAP
-	    map.setMapStyle({style:'midnight'});
-		var point = new BMap.Point(117.541916, 30.703908);// 地图的中心点
-		map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-		map.centerAndZoom(point, 13);
 		var point_list = [];
 		var maxResult = -1;
 		for(var i = 0; i < nodeNum; ++i) {
