@@ -79,23 +79,23 @@
 <div class="body-container" style="margin-top:100px;">
 	<div class="node-info" id="node-data">
 		<div class="node-name">
-			望华楼<span style="font-size:20px;color:#888;">监测点详细数据</span><span style="font-size:12px;color:#888;margin-right: 26px;display: inline-block;cursor:pointer;" onclick="window.location.href='/WsnWeb/node_list/'">更多>></span>
+			{{node_info.nodeName}}<span style="font-size:20px;color:#888;">监测点详细数据</span><span style="font-size:12px;color:#888;margin-right: 26px;display: inline-block;cursor:pointer;" onclick="window.location.href='/WsnWeb/node_list/'">更多>></span>
 			<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：2017-12-01 12:00:00</span>
 		</div>
 		<div class="main-data">
 			<div class="item data-circle">
 				<div class="data">
-					<span style="position: relative;top: 57px;font-size: 18px;">AQI指数<br>218</span>
+					<span style="position: relative;top: 57px;font-size: 18px;">AQI指数<br>{{latestData.aqi}}</span>
 				</div>
 			</div>
 			<div class="item data-circle">
 				<div class="data">
-					<span style="position: relative;top: 57px;font-size: 18px;">PM2.5<br>55</span>
+					<span style="position: relative;top: 57px;font-size: 18px;">PM2.5<br>{{latestData.pm25}}</span>
 				</div>
 			</div>
 			<div class="item data-circle">
 				<div class="data">
-					<span style="position: relative;top: 57px;font-size: 18px;">PM10<br>122</span>
+					<span style="position: relative;top: 57px;font-size: 18px;">PM10<br>{{latestData.pm10}}</span>
 				</div>
 			</div>
 			<div class="right-tip item">
@@ -104,12 +104,12 @@
                     0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;50&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;300&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;500
                 </div>
                 <div style="font-size: 12px;opacity: 0.5;padding-top: 5px;">
-                    <span class="level2_color"><b>良</b></span>
+                    <span class="level2_color"><b>{{latestData.level}}</b></span>
                 </div>
                 <div style="color:#7db364;text-align: left;">健康影响:</div>
-                <div style="text-align: left;">空气质量可接受，但某些污染物可能对极少数异常敏感人群健康有较弱影响</div><br>
+                <div style="text-align: left;">{{latestData.conclusion}}</div><br>
                 <div style="color:#7db364;text-align: left;">温馨提示:</div>
-                <div style="text-align: left;">极少数异常敏感人群应减少户外活动</div>
+                <div style="text-align: left;">{{latestData.advice}}</div>
 			</div>
 		</div>
 		<div class="p-list">
@@ -195,13 +195,58 @@
 	var nodeData = new Vue({
 		el:"#node-data",
 		data:{
-			parameter:"pm25"
+			parameter:"pm25",
+			node_info: "",
+			latestData: ""
 		},
 		created:function(){
 			this.init();
 		},
 		methods:{
 			init:function(){
+				//获取该节点的信息
+				this.node_info = {
+					"nodeName": "无数据"
+				};
+				this.latestData = {
+					"aqi": "无数据",
+					"pm25": "无数据",
+					"pm10": "无数据",
+					"level": "无数据",
+					"conclusion": "无数据",
+					"advice": "无数据",
+				};
+				this.$http.get('/WsnWeb/api/node_info/' + nodeId).then(function(res){
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					let data = res.data;
+	  					this.node_info = data;
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});
+				// 获取该节点的最新的数据信息
+				this.$http.get('/WsnWeb/api/node_latest_data/' + nodeId).then(function(res){
+					console.log(res);
+	  				if(res.status != 200){
+	  					this.tip = true;
+	  				}else{
+	  					let data = res.data;
+	  					console.log(data == "");
+	  					if(data == ""){
+	  					}else{
+	  						this.latestData = data;
+	  					}
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					this.tip = true;
+	  				}
+	  			});
+				// 获取该数据点当天的数据
 				this.$http.get('/WsnWeb/api/data_list/' + nodeId + "?dataType=day").then(function(res){
 	  				if(res.status != 200){
 	  					this.tip = true;
@@ -238,6 +283,7 @@
 	  					this.tip = true;
 	  				}
 	  			});
+				// 获取该数据点最近一个月的日平均数据
 				this.$http.get('/WsnWeb/api/data_list/' + nodeId + "?dataType=month").then(function(res){
 	  				if(res.status != 200){
 	  					this.tip = true;

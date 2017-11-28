@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -179,4 +180,10 @@ public class NodeController {
 		}
 		return resList;
 	}
+	@RequestMapping(value = "node_info/{node_id}", method = RequestMethod.GET)
+	public @ResponseBody Node nodeInfo(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
+		// TODO Auto-generated method stub
+		return nodeService.nodeInfo(node_id);
+	}
+	
 }

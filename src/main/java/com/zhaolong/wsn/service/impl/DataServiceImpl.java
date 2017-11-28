@@ -44,4 +44,10 @@ public class DataServiceImpl implements DataService{
 		return dataRepository.findAllByTimeRange(startDay, endDay);
 	}
 
+	public Data latestData(Long nodeId) {
+		// TODO Auto-generated method stub
+		Data data = dataRepository.findLatestById(nodeId);
+		return data;
+	}
+
 }

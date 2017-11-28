@@ -80,7 +80,7 @@
 		<dl class="item" v-show="city">
 			<dt class="left-head">安徽池州</dt>
 			<dd class="right-content">
-				<a v-for="node in nodeList">{{node.nodeName}}</a>
+				<a v-for="node in nodeList" v-bind:href="'/WsnWeb/node_data/'+node.id">{{node.nodeName}}</a>
 			</dd>
 		</dl>
 		<dl class="item" v-for="nodeList in charNodeList" v-show="!city">

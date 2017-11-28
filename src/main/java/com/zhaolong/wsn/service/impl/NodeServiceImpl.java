@@ -22,4 +22,9 @@ public class NodeServiceImpl implements NodeService{
 		// TODO Auto-generated method stub
 		return nodeRepository.findAll();
 	}
+	
+	public Node nodeInfo(Long nodeId) {
+		// TODO Auto-generated method stub
+		return nodeRepository.get(nodeId);
+	}
 }

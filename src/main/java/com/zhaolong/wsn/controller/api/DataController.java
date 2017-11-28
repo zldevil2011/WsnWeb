@@ -44,6 +44,11 @@ public class DataController {
 	@Autowired
 	private NodeService nodeService;
 	
+	// 获取某一个节点的最新的一条数据
+	@RequestMapping(value = "node_latest_data/{node_id}", method = RequestMethod.GET)
+	public @ResponseBody Data nodeLatetData(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
+		return dataService.latestData(node_id);
+	}
 	// 获取每个节点的当日数据和最近一月的日平均数据
 	@RequestMapping(value = "data_list/{node_id}", method = RequestMethod.GET)
 	public @ResponseBody List<ArrayList<Double>> dataList(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
@@ -463,11 +468,4 @@ public class DataController {
 		}
 		return "无数据";
 	}
-}
-@JsonIgnoreProperties
-class Ranking{
-	String desc;
-	String name;
-	double aqi;
-	double pm25;
 }

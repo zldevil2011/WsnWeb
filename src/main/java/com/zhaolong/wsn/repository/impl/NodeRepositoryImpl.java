@@ -25,7 +25,7 @@ public class NodeRepositoryImpl implements NodeRepository{
 
 	public Node get(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		return (Node) getCurrentSession().get(Node.class,id);
 	}
 
 	public List<Node> findAll() {

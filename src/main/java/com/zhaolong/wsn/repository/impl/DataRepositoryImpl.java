@@ -73,4 +73,13 @@ public class DataRepositoryImpl implements DataRepository{
 		// TODO Auto-generated method stub
 		getCurrentSession().flush();
 	}
+	public Data findLatestById(Long nodeId) {
+		// TODO Auto-generated method stub
+		try{
+			return (Data)getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " order by dataDate desc").list().get(0);
+		}catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+	}
 }

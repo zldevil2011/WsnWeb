@@ -7,4 +7,5 @@ import com.zhaolong.wsn.entity.Node;
 public interface NodeService {
 	Long addNode(Node node);
 	List<Node> nodeList();
+	Node nodeInfo(Long nodeId);
 }
