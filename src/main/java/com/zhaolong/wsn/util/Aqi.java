@@ -6,12 +6,8 @@ import java.util.List;
 public class Aqi {
 	private String[] pList = {"so2", "no2", "pm10", "co", "o3", "pm25"};
 	private double[] transform_factor = {2949.276785714286, 2054.017857142857, 1, 1.2504464285714287, 2142.7767857142856, 1};
-	private List<Double> IAQI_24 = new ArrayList<Double>();
-	private List<Double> IAQI_1 = new ArrayList<Double>();
 	private double AQI_24 = 0;
 	private double AQI_1 = 0;
-	private String Main_Pollute_24;
-	private String Main_Pollute_1;
 	private double[][][] fix_value_24 = {
 			{{0.0,1.0},{50,1.0/2},{150,2.0/13},{475,2.0/13},{800,1.0/8},{1600,1.0/5},{2100, 5.0/26}},
 			{{0.0,5.0/4},{40,5.0/4},{80,1.0/2},{180,1.0/2},{280,10.0/57},{565,20.0/37},{750, 10.0/19}},
@@ -28,5 +24,71 @@ public class Aqi {
 			{{0.0,5.0/16},{160,5.0/4},{200,1.0/2},{300,1.0/2},{400,1.0/4},{800,1.0/2},{1000, 1.0/2}},
 			{{0.0,10.0/7},{35,5.0/4},{75,5.0/4},{115,10.0/7},{150,1.0},{250,1.0},{350, 2.0/3}},
 		};
-
+	private double[] startPoint = {400,300,200,150,100,50,0};
+	// 计算小时级别的每个特征的对应的值
+	public void getHourItemAqi(double[] data){
+		// data示例：[30,10,112,4,12,50] 分别代表该数据记录的"so2", "no2", "pm10", "co", "o3", "pm25"
+		int dLen = data.length;
+		for(int i = 0; i < dLen; ++i){
+			data[i] = data[i] / this.transform_factor[i];
+		}
+		List<Double> HourItemAqiList = new ArrayList<Double>();
+		for(int i = 0; i < dLen; ++i){
+			double val = data[i];
+			double[][] tmpData = this.fix_value_1[i];
+			int len = tmpData.length;
+			int cnt = -1;
+			for(int j = len - 1; j >= 0; --j){
+				cnt += 1;
+				if(val >= tmpData[j][0]){
+					double tmp = (val - tmpData[j][0]) * tmpData[j][1] + this.startPoint[cnt];
+					HourItemAqiList.add(tmp);
+					break;
+				}
+			}
+		}
+		double HourAqi = -1;
+		for(int i = 0; i < HourItemAqiList.size(); ++i){
+			if(HourItemAqiList.get(i) > HourAqi){
+				HourAqi = HourItemAqiList.get(i);
+			}
+		}
+		this.AQI_1 = HourAqi;
+	}
+	// 计算每日的每个特征的对应的值
+	public void getDayItemAqi(double[] data){
+		// data示例：[30,10,112,4,12,50] 分别代表该数据记录的"so2", "no2", "pm10", "co", "o3", "pm25"
+		int dLen = data.length;
+		for(int i = 0; i < dLen; ++i){
+			data[i] = data[i] / this.transform_factor[i];
+		}
+		List<Double> DayItemAqiList = new ArrayList<Double>();
+		for(int i = 0; i < dLen; ++i){
+			double val = data[i];
+			double[][] tmpData = this.fix_value_24[i];
+			int len = tmpData.length;
+			int cnt = -1;
+			for(int j = len - 1; j >= 0; --j){
+				cnt += 1;
+				if(val >= tmpData[j][0]){
+					double tmp = (val - tmpData[j][0]) * tmpData[j][1] + this.startPoint[cnt];
+					DayItemAqiList.add(tmp);
+					break;
+				}
+			}
+		}
+		double Aqi = -1;
+		for(int i = 0; i < DayItemAqiList.size(); ++i){
+			if(DayItemAqiList.get(i) > Aqi){
+				Aqi = DayItemAqiList.get(i);
+			}
+		}
+		this.AQI_24 = Aqi;
+	}
+	public static void main(String[] args) {
+		Aqi aqi = new Aqi();
+		double[] data = {32, 53, 294, 2, 33, 158};
+		aqi.getHourItemAqi(data);
+		System.out.println(aqi.AQI_1);
+	}
 }
