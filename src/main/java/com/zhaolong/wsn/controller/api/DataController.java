@@ -320,11 +320,13 @@ public class DataController {
 			int dataLen = dataList.size();
 			for(int i = 0; i < len; ++i){
 				double aqiSum = 0;
+				double pm25Sum = 0;
 				int cnt = 0;
 				for(int j = 0; j < dataLen; ++j){
 					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
 						Data data = dataList.get(j);
 						aqiSum += data.getAqi();
+						pm25Sum += data.getPm25();
 						cnt += 1;
 					}
 				}
@@ -342,6 +344,7 @@ public class DataController {
 				nodeRank.setProvince(node.getProvince());
 				if(cnt > 0){
 					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
+					nodeRank.setPm25((double)Math.round(pm25Sum/cnt*100)/100);
 				}else{
 					nodeRank.setAQI(0);
 				}
@@ -371,11 +374,13 @@ public class DataController {
 			int dataLen = dataList.size();
 			for(int i = 0; i < len; ++i){
 				double aqiSum = 0;
+				double pm25Sum = 0;
 				int cnt = 0;
 				for(int j = 0; j < dataLen; ++j){
 					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
 						Data data = dataList.get(j);
 						aqiSum += data.getAqi();
+						pm25Sum += data.getPm25();
 						cnt += 1;
 					}
 				}
@@ -393,6 +398,7 @@ public class DataController {
 				nodeRank.setProvince(node.getProvince());
 				if(cnt > 0){
 					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
+					nodeRank.setPm25((double)Math.round(pm25Sum/cnt*100)/100);
 				}else{
 					nodeRank.setAQI(0);
 				}
@@ -422,11 +428,13 @@ public class DataController {
 			int dataLen = dataList.size();
 			for(int i = 0; i < len; ++i){
 				double aqiSum = 0;
+				double pm25Sum = 0;
 				int cnt = 0;
 				for(int j = 0; j < dataLen; ++j){
 					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
 						Data data = dataList.get(j);
 						aqiSum += data.getAqi();
+						pm25Sum += data.getPm25();
 						cnt += 1;
 					}
 				}
@@ -444,6 +452,7 @@ public class DataController {
 				nodeRank.setProvince(node.getProvince());
 				if(cnt > 0){
 					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
+					nodeRank.setPm25((double)Math.round(pm25Sum/cnt*100)/100);
 				}else{
 					nodeRank.setAQI(0);
 				}
