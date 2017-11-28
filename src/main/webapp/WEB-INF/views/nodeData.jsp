@@ -80,7 +80,7 @@
 	<div class="node-info" id="node-data">
 		<div class="node-name">
 			{{node_info.nodeName}}<span style="font-size:20px;color:#888;">监测点详细数据</span><span style="font-size:12px;color:#888;margin-right: 26px;display: inline-block;cursor:pointer;" onclick="window.location.href='/WsnWeb/node_list/'">更多>></span>
-			<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：2017-12-01 12:00:00</span>
+			<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：{{latestData.updateTime}}</span>
 		</div>
 		<div class="main-data">
 			<div class="item data-circle">
@@ -209,6 +209,7 @@
 					"nodeName": "无数据"
 				};
 				this.latestData = {
+					"updateTime": "无数据",	
 					"aqi": "无数据",
 					"pm25": "无数据",
 					"pm10": "无数据",

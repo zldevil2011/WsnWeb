@@ -33,7 +33,36 @@ import com.zhaolong.wsn.service.DataService;
 import com.zhaolong.wsn.service.NodeService;
 
 import lombok.SneakyThrows;
-
+class NodeData extends Data{
+	public String level;
+	public String conclusion;
+	public String advice;
+	public String updateTime;
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	public String getConclusion() {
+		return conclusion;
+	}
+	public void setConclusion(String conclusion) {
+		this.conclusion = conclusion;
+	}
+	public String getAdvice() {
+		return advice;
+	}
+	public void setAdvice(String advice) {
+		this.advice = advice;
+	}
+	public String getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+}
 @Controller
 @RequestMapping(value = "/api/*") 
 public class DataController {
@@ -46,8 +75,19 @@ public class DataController {
 	
 	// 获取某一个节点的最新的一条数据
 	@RequestMapping(value = "node_latest_data/{node_id}", method = RequestMethod.GET)
-	public @ResponseBody Data nodeLatetData(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
-		return dataService.latestData(node_id);
+	public @ResponseBody NodeData nodeLatetData(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
+		Data data = dataService.latestData(node_id);
+		NodeData nData = new NodeData();
+		if(data != null){
+			nData.setPm25((double)Math.round(data.getPm25()*100)/100);
+			nData.setPm10((double)Math.round(data.getPm10()*100)/100);
+			nData.setAqi((double)Math.round(data.getAqi()*100)/100);
+			nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+			nData.setLevel(getDesc(data.getAqi()));
+			nData.setConclusion(getConclusion(data.getAqi()));
+			nData.setAdvice(getAdvice(data.getAqi()));
+		}
+		return nData;
 	}
 	// 获取每个节点的当日数据和最近一月的日平均数据
 	@RequestMapping(value = "data_list/{node_id}", method = RequestMethod.GET)
@@ -465,6 +505,44 @@ public class DataController {
 			return "重度污染";
 		}else if(aqi > 300){
 			return "严重污染";
+		}
+		return "无数据";
+	}
+	public String getConclusion(double aqi){
+		if(aqi <= 0){
+			return "无数据";
+		}
+		if(aqi < 50){
+			return "空气质量令人满意，基本无空气污染";
+		}else if(aqi < 100){
+			return "空气质量可接受，但某些污染物可能对极少数异常敏感人群健康有较弱影响";
+		}else if(aqi < 150){
+			return "易感人群症状有轻度加剧，健康人群出现刺激状况";
+		}else if(aqi < 200){
+			return "进一步加剧易感人群症状，可能对健康人群心脏，呼吸系统有影响";
+		}else if(aqi < 300){
+			return "心脏病和肺病患者症状显著加剧，运动耐受力降低，健康人群普遍出现症状";
+		}else if(aqi > 300){
+			return "健康人群运动耐受力降低，有明显强烈症状，提前出现某些疾病";
+		}
+		return "无数据";
+	}
+	public String getAdvice(double aqi){
+		if(aqi <= 0){
+			return "无数据";
+		}
+		if(aqi < 50){
+			return "各类人群可正常活动";
+		}else if(aqi < 100){
+			return "极少数异常敏感人群应减少户外活动";
+		}else if(aqi < 150){
+			return "儿童，老年人及心脏病，呼吸系统疾病患者应减少长时间，高强度的户外训练";
+		}else if(aqi < 200){
+			return "儿童，老年人及心脏病，呼吸系统疾病患者避免长时间，高强度的户外训练，一般人群适量减少户外运动";
+		}else if(aqi < 300){
+			return "儿童，老年人及心脏病，呼吸系统疾病患者应停留在室内，停止户外运动，一般人群减少户外运动";
+		}else if(aqi > 300){
+			return "儿童，老年人和病人应当留在室内，避免体力消耗，一般人群应避免户外运动";
 		}
 		return "无数据";
 	}
