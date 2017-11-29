@@ -30,35 +30,35 @@ public class Data {
     private Long nodeId;
     
 
-	@Column(name = "pm25", nullable=true)
-    private double pm25;
+	@Column(name = "pm25")
+    private Double pm25;
 
-	@Column(name = "pm10", nullable=true)
-    private double pm10;
+	@Column(name = "pm10")
+    private Double pm10;
 
-    @Column(name = "so2", nullable=true)
-    private double so2;
+    @Column(name = "so2")
+    private Double so2;
 
-    @Column(name = "no2", nullable=true)
-    private double no2;
+    @Column(name = "no2")
+    private Double no2;
     
-    @Column(name = "o3", nullable=true)
-    private double o3;
+    @Column(name = "o3")
+    private Double o3;
     
-    @Column(name = "co", nullable=true)
-    private double co;
+    @Column(name = "co")
+    private Double co;
     
-    @Column(name = "speed", nullable=true)
-    private double speed;
+    @Column(name = "speed")
+    private Double speed;
     
-    @Column(name = "direction", nullable=true)
+    @Column(name = "direction")
     private String direction;
     
-    @Column(name = "humidity", nullable=true)
-    private double humidity;
+    @Column(name = "humidity")
+    private Double humidity;
     
-    @Column(name = "aqi", nullable=true)
-    private double aqi;
+    @Column(name = "aqi")
+    private Double aqi;
 
 	public Long getId() {
 		return id;
@@ -100,85 +100,85 @@ public class Data {
 		this.nodeId = nodeId;
 	}
 
-	public double getPm25() {
+	public Double getPm25() {
 		return pm25;
 	}
 
-	public void setPm25(double pm25) {
+	public void setPm25(Double pm25) {
 		this.pm25 = pm25;
 	}
 
-	public double getPm10() {
+	public Double getPm10() {
 		return pm10;
 	}
 
-	public void setPm10(double pm10) {
+	public void setPm10(Double pm10) {
 		this.pm10 = pm10;
 	}
 
-	public double getSo2() {
+	public Double getSo2() {
 		return so2;
 	}
 
-	public void setSo2(double so2) {
+	public void setSo2(Double so2) {
 		this.so2 = so2;
 	}
 
-	public double getNo2() {
+	public Double getNo2() {
 		return no2;
 	}
 
-	public void setNo2(double no2) {
+	public void setNo2(Double no2) {
 		this.no2 = no2;
 	}
 
-	public double getO3() {
+	public Double getO3() {
 		return o3;
 	}
 
-	public void setO3(double o3) {
+	public void setO3(Double o3) {
 		this.o3 = o3;
 	}
 
-	public double getCo() {
+	public Double getCo() {
 		return co;
 	}
 
-	public void setCo(double co) {
+	public void setCo(Double co) {
 		this.co = co;
 	}
 
-	public double getSpeed() {
+	public Double getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(double speed) {
+	public void setSpeed(Double speed) {
 		this.speed = speed;
 	}
 
-	public String getDirecition() {
+	public String getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direcition) {
-		this.direction = direcition;
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 
-	public double getHumidity() {
+	public Double getHumidity() {
 		return humidity;
 	}
 
-	public void setHumidity(double humidity) {
+	public void setHumidity(Double humidity) {
 		this.humidity = humidity;
 	}
 
-	public double getAqi() {
+	public Double getAqi() {
 		return aqi;
 	}
 
-	public void setAqi(double aqi) {
+	public void setAqi(Double aqi) {
 		this.aqi = aqi;
 	}
-	
+    
     
 }

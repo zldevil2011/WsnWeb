@@ -129,13 +129,41 @@ public class DataController {
 					Data tmp = datas.get(i);
 					if(tmp.getDataTime().getHours() == tTime.getHours()){
 						tCnt += 1;
-						tPm25Sum += tmp.getPm25();
-						tPm10Sum += tmp.getPm10();
-						tSo2Sum += tmp.getSo2();
-						tNo2Sum += tmp.getNo2();
-						tO3Sum += tmp.getO3();
-						tCoSum += tmp.getCo();
-						tAqiSum += tmp.getAqi();
+						try{
+							tPm25Sum += tmp.getPm25();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tPm10Sum += tmp.getPm10();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tSo2Sum += tmp.getSo2();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tNo2Sum += tmp.getNo2();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tO3Sum += tmp.getO3();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tCoSum += tmp.getCo();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tAqiSum += tmp.getAqi();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
 					}
 					if(tmp.getDataTime().getHours() > tTime.getHours()){
 						break;
@@ -198,13 +226,41 @@ public class DataController {
 					Data tmpData = datas.get(i);
 					if(tmpData.getDataDate().getMonth() == tmpDay.getMonth() && tmpData.getDataDate().getDate() == tmpDay.getDate()){
 						tCnt += 1;
-						tPm25Sum += tmpData.getPm25();
-						tPm10Sum += tmpData.getPm10();
-						tSo2Sum += tmpData.getSo2();
-						tNo2Sum += tmpData.getNo2();
-						tO3Sum += tmpData.getO3();
-						tCoSum += tmpData.getCo();
-						tAqiSum += tmpData.getAqi();
+						try{
+							tPm25Sum += tmpData.getPm25();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tPm10Sum += tmpData.getPm10();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tSo2Sum += tmpData.getSo2();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tNo2Sum += tmpData.getNo2();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tO3Sum += tmpData.getO3();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tCoSum += tmpData.getCo();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						try{
+							tAqiSum += tmpData.getAqi();
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
 					}
 					if(tmpData.getDataDate().after(tmpDay)){
 						break;
