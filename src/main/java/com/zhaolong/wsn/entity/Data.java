@@ -51,8 +51,8 @@ public class Data {
     @Column(name = "speed", nullable=true)
     private double speed;
     
-    @Column(name = "direcition", nullable=true)
-    private String direcition;
+    @Column(name = "direction", nullable=true)
+    private String direction;
     
     @Column(name = "humidity", nullable=true)
     private double humidity;
@@ -157,11 +157,11 @@ public class Data {
 	}
 
 	public String getDirecition() {
-		return direcition;
+		return direction;
 	}
 
-	public void setDirecition(String direcition) {
-		this.direcition = direcition;
+	public void setDirection(String direcition) {
+		this.direction = direcition;
 	}
 
 	public double getHumidity() {
