@@ -19,54 +19,84 @@ public class DataRepositoryImpl implements DataRepository{
     }
 	public Data load(Long id) {
 		// TODO Auto-generated method stub
-		return (Data)getCurrentSession().load(Data.class,id);
+		Session currentSession = getCurrentSession();
+		Data res = (Data)currentSession.load(Data.class,id);
+		currentSession.close();
+		return res;
 	}
 
 	public Data get(Long id) {
 		// TODO Auto-generated method stub
-		return (Data)getCurrentSession().get(Data.class,id);
+		Session currentSession = getCurrentSession();
+		Data res = (Data)currentSession.get(Data.class,id);
+		currentSession.close();
+		return res;
 	}
 
 	public List<Data> findAll() {
 		// TODO Auto-generated method stub
-		return (List<Data>) getCurrentSession().createQuery("from Data").list();
+		Session currentSession = getCurrentSession();
+		List<Data> res = (List<Data>) currentSession.createQuery("from Data").list();
+		currentSession.close();
+		return res;
 	}
 	
 	public List<Data> findAllById(Long nodeId) {
 		// 通过节点ID获取该节点的数据
-		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId).list();
+		Session currentSession = getCurrentSession();
+		List<Data> res = (List<Data>) currentSession.createQuery("from Data where nodeId = " + nodeId).list();
+		currentSession.close();
+		return res;
 	}
 	public List<Data> findAllByIdTime(Long nodeId, Date today) {
 		// TODO Auto-generated method stub
-		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " and dataDate ='" + today+"'").list();
+		Session currentSession = getCurrentSession();
+		List<Data> res = (List<Data>) currentSession.createQuery("from Data where nodeId = " + nodeId + " and dataDate ='" + today+"'").list();
+		currentSession.close();
+		return res;
 	}
 	public List<Data> findAllByIdTimeRange(Long nodeId, Date startDay, Date endDay) {
 		// TODO Auto-generated method stub
-		return (List<Data>) getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " and dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+		Session currentSession = getCurrentSession();
+		List<Data> res = (List<Data>)currentSession.createQuery("from Data where nodeId = " + nodeId + " and dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+		currentSession.close();
+		return res;
 	}
 	public List<Data> findAllByTimeRange(Date startDay, Date endDay) {
 		// TODO Auto-generated method stub
-		return (List<Data>) getCurrentSession().createQuery("from Data where dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+		Session currentSession = getCurrentSession();
+		List<Data> res = (List<Data>) currentSession.createQuery("from Data where dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+		currentSession.close();
+		return res;
 	}
 	public void persist(Data entity) {
 		// TODO Auto-generated method stub
-		getCurrentSession().persist(entity);
+		Session currentSession = getCurrentSession();
+		currentSession.persist(entity);
+		currentSession.close();
 	}
 
 	public Long save(Data entity) {
 		// TODO Auto-generated method stub
-		return (Long)getCurrentSession().save(entity);
+		Session currentSession = getCurrentSession();
+		Long res = (Long)currentSession.save(entity);
+		currentSession.close();
+		return res;
 	}
 
 	public void saveOrUpdate(Data entity) {
 		// TODO Auto-generated method stub
-		getCurrentSession().saveOrUpdate(entity);
+		Session currentSession = getCurrentSession();
+		currentSession.saveOrUpdate(entity);
+		currentSession.close();
 	}
 
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
 		Data data = load(id);
-        getCurrentSession().delete(data);
+		Session currentSession = getCurrentSession();
+		currentSession.delete(data);
+		currentSession.close();
 	}
 
 	public void flush() {
@@ -76,7 +106,10 @@ public class DataRepositoryImpl implements DataRepository{
 	public Data findLatestById(Long nodeId) {
 		// TODO Auto-generated method stub
 		try{
-			return (Data)getCurrentSession().createQuery("from Data where nodeId = " + nodeId + " order by dataDate desc").list().get(0);
+			Session currentSession = getCurrentSession();
+			Data res = (Data)currentSession.createQuery("from Data where nodeId = " + nodeId + " order by dataDate desc").list().get(0);
+			currentSession.close();
+			return res;
 		}catch (Exception e) {
 			// TODO: handle exception
 			return null;

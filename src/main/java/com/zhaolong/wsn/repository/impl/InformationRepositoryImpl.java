@@ -29,7 +29,10 @@ public class InformationRepositoryImpl implements InformationRepository {
 
 	public List<Information> findAll() {
 		// TODO Auto-generated method stub
-		return (List<Information>) getCurrentSession().createQuery("from Information").list();
+		Session currentSession = getCurrentSession();
+		List<Information> res = (List<Information>)currentSession.createQuery("from Information").list();
+		currentSession.close();
+		return res;
 	}
 
 	public void persist(Information entity) {

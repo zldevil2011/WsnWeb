@@ -25,12 +25,18 @@ public class NodeRepositoryImpl implements NodeRepository{
 
 	public Node get(Long id) {
 		// TODO Auto-generated method stub
-		return (Node) getCurrentSession().get(Node.class,id);
+		Session currentSession = getCurrentSession();
+		Node res = (Node) currentSession.get(Node.class,id);
+		currentSession.close();
+		return res;
 	}
 
 	public List<Node> findAll() {
 		// TODO Auto-generated method stub
-		return (List<Node>) getCurrentSession().createQuery("from Node").list();
+		Session currentSession = getCurrentSession();
+		List<Node> res = (List<Node>) currentSession.createQuery("from Node").list();
+		currentSession.close();
+		return res;
 	}
 
 	public void persist(Node entity) {
@@ -40,7 +46,10 @@ public class NodeRepositoryImpl implements NodeRepository{
 
 	public Long save(Node entity) {
 		// TODO Auto-generated method stub
-		return (Long)getCurrentSession().save(entity);
+		Session currentSession = getCurrentSession();
+		Long res = (Long)getCurrentSession().save(entity);
+		currentSession.close();
+		return res;
 	}
 
 	public void saveOrUpdate(Node entity) {

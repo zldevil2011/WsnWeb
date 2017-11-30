@@ -148,8 +148,12 @@
 		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
 	</div>
 	<div class="graph" id="aqi">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;">
+			<img alt="" src="/WsnWeb/img/loading.gif" style="position:relative;top:110px;left:50%;" v-show="loadingToday">
+		</div>
+		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;">
+			<img alt="" src="/WsnWeb/img/loading.gif" style="position:relative;top:120px;left:50%;" v-show="loadingMonth">
+		</div>
 	</div>
 	</div>
 </div>
@@ -195,9 +199,11 @@
 	var nodeData = new Vue({
 		el:"#node-data",
 		data:{
-			parameter:"pm25",
+			parameter:"aqi",
 			node_info: "",
-			latestData: ""
+			latestData: "",
+			loadingToday: true,
+			loadingMonth: true
 		},
 		created:function(){
 			this.init();
@@ -217,6 +223,7 @@
 					"conclusion": "无数据",
 					"advice": "无数据",
 				};
+				$("#aqi").css("display", "block");
 				this.$http.get('/WsnWeb/api/node_info/' + nodeId).then(function(res){
 	  				if(res.status != 200){
 	  					this.tip = true;
@@ -252,10 +259,10 @@
 	  				if(res.status != 200){
 	  					this.tip = true;
 	  				}else{
+	  					this.loadingToday = false;
 	  					let data = res.data;
 	  					console.log(data);
 	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（今日的小时数据）
-	  					$("#pm25").css("display", "block");
 	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
 	  					var len = data.length;
 	  					// 首先构造一个UTC的时间数组，对应今日的小时机制
@@ -289,10 +296,10 @@
 	  				if(res.status != 200){
 	  					this.tip = true;
 	  				}else{
+	  					this.loadingMonth = false;
 	  					let data = res.data;
 	  					console.log(data);
 	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（最近的30天日期）
-	  					$("#pm25").css("display", "block");
 	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
 	  					var len = data.length;
 	  					// 首先构造一个UTC的时间数组，对应三十天的日期

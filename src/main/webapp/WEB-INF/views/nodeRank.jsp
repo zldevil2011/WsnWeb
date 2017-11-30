@@ -59,6 +59,7 @@
 			</thead>
 			<tbody>
 				<tr v-for="node in todayNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
+				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingToday"></td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'yesterday'">
@@ -67,6 +68,7 @@
 			</thead>
 			<tbody>
 				<tr v-for="node in yesterdayNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
+				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingYesterday"></td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'week'">
@@ -75,6 +77,7 @@
 			</thead>
 			<tbody>
 				<tr v-for="node in weekNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
+				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingWeek"></td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'month'">
@@ -83,8 +86,10 @@
 			</thead>
 			<tbody>
 				<tr v-for="node in monthNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
+				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingMonth"></td></tr>
 			</tbody>
 		</table>
+		
 	</div>
 </div>
 <script>
@@ -112,6 +117,10 @@ var nodeRank = new Vue({
 		"weekNodes":"",
 		"monthNodes":"",
 		"updateTime":"",
+		"loadingToday":true,
+		"loadingYesterday": true,
+		"loadingWeek": true,
+		"loadingMonth": true
 	},
 	created:function(){
 		this.init();
@@ -122,54 +131,67 @@ var nodeRank = new Vue({
 		},
 		init:function(){
 			this.updateTime = new Date().MyFormat("yyyy-MM-dd hh:mm:ss");
-			this.$http.get('/WsnWeb/api/ranking_list?dataType=day').then(function(res){
-  		    	console.log(res.data);
-  				if(res.status != 200){
-  					this.tip = true;
-  				}else{
-  					this.todayNodes = res.data;
-  				}
-  			}, function(err){
-  				if(err.status != 200){
-  					this.tip = true;
-  				}
-  			});	
-			this.$http.get('/WsnWeb/api/ranking_list?dataType=yesterday').then(function(res){
-  		    	console.log(res.data);
-  				if(res.status != 200){
-  					this.tip = true;
-  				}else{
-  					this.yesterdayNodes = res.data;
-  				}
-  			}, function(err){
-  				if(err.status != 200){
-  					this.tip = true;
-  				}
-  			});	
-			this.$http.get('/WsnWeb/api/ranking_list?dataType=week').then(function(res){
-  		    	console.log(res.data);
-  				if(res.status != 200){
-  					this.tip = true;
-  				}else{
-  					this.weekNodes = res.data;
-  				}
-  			}, function(err){
-  				if(err.status != 200){
-  					this.tip = true;
-  				}
-  			});	
-			this.$http.get('/WsnWeb/api/ranking_list?dataType=month').then(function(res){
-  		    	console.log(res.data);
-  				if(res.status != 200){
-  					this.tip = true;
-  				}else{
-  					this.monthNodes = res.data;
-  				}
-  			}, function(err){
-  				if(err.status != 200){
-  					this.tip = true;
-  				}
-  			});	
+			var $that = this;
+			new Promise(function(resolve, reject){
+				$that.$http.get('/WsnWeb/api/ranking_list?dataType=day').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					$that.tip = true;
+	  				}else{
+	  					$that.loadingToday = false;
+	  					$that.todayNodes = res.data;
+	  					resolve();
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					$that.tip = true;
+	  				}
+	  			});	
+			}).then(function(resolve){
+				$that.$http.get('/WsnWeb/api/ranking_list?dataType=yesterday').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					$that.tip = true;
+	  				}else{
+	  					$that.loadingYesterday = false;
+	  					$that.yesterdayNodes = res.data;
+	  					resolve();
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					$that.tip = true;
+	  				}
+	  			});	
+			}).then(function(resolve){
+				$that.$http.get('/WsnWeb/api/ranking_list?dataType=week').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					$that.tip = true;
+	  				}else{
+	  					$that.loadingWeek = false;
+	  					$that.weekNodes = res.data;
+	  					resolve();
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					$that.tip = true;
+	  				}
+	  			});	
+			}).then(function(resolve){
+				$that.$http.get('/WsnWeb/api/ranking_list?dataType=month').then(function(res){
+	  		    	console.log(res.data);
+	  				if(res.status != 200){
+	  					$that.tip = true;
+	  				}else{
+	  					$that.loadingMonth = false;
+	  					$that.monthNodes = res.data;
+	  				}
+	  			}, function(err){
+	  				if(err.status != 200){
+	  					$that.tip = true;
+	  				}
+	  			});	
+			});
 		}
 	}
 });
