@@ -95,6 +95,9 @@
 			左侧地图蓝
 		</div>
 		<div class="right-slide" id="right-data">
+			<div style="text-align: right;position: absolute;top:0;right: 1px;">
+				<a href="/WsnWeb/indexList/">列表模式</a>
+			</div>
 			<div class="search-input">
 				<input type="text" placeholder="请输入节点名称">
 			</div>
