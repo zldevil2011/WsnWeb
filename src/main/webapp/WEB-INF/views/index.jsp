@@ -17,6 +17,9 @@
 		width: 100%;
 		height: 100%;
 	}
+	#map label{
+		max-width:unset;
+	}
 	.right-slide{
 		padding: 20px 10px;
 		position: absolute;
@@ -217,6 +220,8 @@
     		var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
     		var marker = new BMap.Marker(point);
     		infoWindowArr.push(infoWindow);
+    		var label = new BMap.Label(rankList[i].id,{offset:new BMap.Size(20,-10)});
+    		marker.setLabel(label);
     		markerArr.push(marker);
 		}
 		for(var i = 0; i < infoWindowArr.length; ++i){

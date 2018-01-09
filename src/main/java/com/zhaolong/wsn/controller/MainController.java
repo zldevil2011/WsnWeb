@@ -15,7 +15,14 @@ public class MainController {
 		System.out.println("index tempalte");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "index";
-	}	
+	}
+	
+	@RequestMapping(value = "indexList", method = RequestMethod.GET)
+	public String indexList() {
+		System.out.println("index tempalte");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "indexList";
+	}
 	
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register() {
