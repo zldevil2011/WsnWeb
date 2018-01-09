@@ -63,10 +63,10 @@
 		<div class="device-list">
 			<ul>
 				<li>
-					<span>名称</span><span class="time">安装日期</span><span>状态</span><span>PM2.5(ug/m3)</span><span>PM10(ug/m3)</span><span>NO2(ug/m3)</span><span>CO(ug/m3)</span><span>SO2(ug/m3)</span><span>O3(ug/m3)</span>
+					<span>名称</span><span class="time">安装日期</span><span>状态</span><span>最新数据日期</span><span>数据量</span>
 				</li>
 				<li v-for="node in nodeList">
-					<span>{{node.nodeName}}</span><span class="time">{{node.installTime}}</span><span>{{node.province}}</span><span>{{node.pm25}}</span><span>{{node.pm10}}</span><span>{{node.so2}}</span><span>{{node.so2}}</span><span>{{node.so2}}</span><span>{{node.so2}}</span>
+					<span>{{node.nodeName}}</span><span class="time">{{node.installTime}}</span><span>{{node.province}}</span><span>{{node.installTime}}</span><span>{{node.pm10}}</span>
 				</li>
 				<li>
 					<span style="text-align: right;padding-right: 20px;"><a href="/WsnWeb/node_list/"> 更多>></a></span>

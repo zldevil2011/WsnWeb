@@ -23,6 +23,13 @@ public class MainController {
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "indexList";
 	}
+
+	@RequestMapping(value = "realDataList", method = RequestMethod.GET)
+	public String realDataList() {
+		System.out.println("realDataList tempalte");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "realDataList";
+	}
 	
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register() {
