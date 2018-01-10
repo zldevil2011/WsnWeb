@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8"%>
-<jsp:include page="base.jsp" flush="true"/><!--动态包含-->  
+<#include "base.ftl"/>
 <title>节点列表</title>
 <style type="text/css">
 .body-container{
@@ -63,7 +62,7 @@
 </style>
 </head>
 <body>
-<jsp:include page="headerMenu.jsp" flush="true"/><!--动态包含-->  
+<#include "headerMenu.ftl"/>
 <div class="body-container" id="node-list">
 	<div class="city-head">
 		选择节点

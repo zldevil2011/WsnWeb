@@ -1,18 +1,61 @@
-<beans xmlns="http://www.springframework.org/schema/beans" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:context="http://www.springframework.org/schema/context" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
     xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
-<!-- 启动注解驱动的spring MVC功能,注册请求url和注解POJO类方法的映射-->
-<mvc:annotation-driven />
-<!-- 对模型视图名称的解析,在请求时模型视图名称添加前后缀 -->
-<context:component-scan base-package="com.zhaolong.wsn.controller" />
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/views/" />      <!-- 前缀 -->
-		<property name="suffix" value=".jsp" />   <!-- 后缀 -->
+	<!-- 启动注解驱动的spring MVC功能,注册请求url和注解POJO类方法的映射-->
+	<mvc:annotation-driven />
+	<!-- 对模型视图名称的解析,在请求时模型视图名称添加前后缀 -->
+	<context:component-scan base-package="com.zhaolong.wsn.controller" />
+	<!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+		<!--<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />-->
+		<!--<property name="prefix" value="/WEB-INF/views/" />      &lt;!&ndash; 前缀 &ndash;&gt;-->
+		<!--<property name="suffix" value=".ftl" />   &lt;!&ndash; 后缀 &ndash;&gt;-->
+	<!--</bean>-->
+	<!--这里是对静态资源的映射-->
+	<mvc:resources mapping="/js/**" location="/WEB-INF/resources/js/" />
+	<mvc:resources mapping="/css/**" location="/WEB-INF/resources/css/" />
+	<mvc:resources mapping="/img/**" location="/WEB-INF/resources/img/" />
+
+	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="WEB-INF/views/" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="number_format">0.##</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+			</props>
+		</property>
 	</bean>
-<!--这里是对静态资源的映射-->
-<mvc:resources mapping="/js/**" location="/WEB-INF/resources/js/" />
-<mvc:resources mapping="/css/**" location="/WEB-INF/resources/css/" />
-<mvc:resources mapping="/img/**" location="/WEB-INF/resources/img/" />
+	<!-- freemarker视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<!-- 此变量值为pageContext.request, 页面使用方法：rc.contextPath -->
+		<property name="requestContextAttribute" value="rc" />
+	</bean>
+
+	<!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding">
+			<value>UTF-8</value>
+		</property>
+		<property name="maxUploadSize">
+			<value>32505856</value><!-- 上传文件大小限制为31M，31*1024*1024 -->
+		</property>
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+	</bean>
+	<!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->
+	<!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的，而且此时还没有进入到Controller方法中 -->
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到/WEB-INF/template/error_fileupload.jsp页面 -->
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_fileupload</prop>
+			</props>
+		</property>
+	</bean>
 </beans>

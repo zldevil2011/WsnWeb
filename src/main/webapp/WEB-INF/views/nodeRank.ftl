@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8"%>
-<jsp:include page="base.jsp" flush="true"/><!--动态包含-->  
+<#include "base.ftl"/>
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>节点排名</title>
@@ -40,7 +39,7 @@
 </style>
 </head>
 <body>
-<jsp:include page="headerMenu.jsp" flush="true"/><!--动态包含-->  
+<#include "headerMenu.ftl"/>
 <div class="body-container" style="margin-top:100px;" id="node-rank">
 	<div class="rank-head">
 		排行 <span style="font-size:20px;color:#888;">各站点详细数据</span>
