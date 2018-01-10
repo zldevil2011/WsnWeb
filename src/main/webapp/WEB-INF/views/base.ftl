@@ -1,3 +1,4 @@
+<#import './lib/util.ftl' as utilHelper>
 <html>
 <head>
     <meta charset="utf-8">
@@ -9,3 +10,4 @@
     <script src="/WsnWeb/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.bootcss.com/vue-resource/1.3.4/vue-resource.min.js"></script>
+    <link rel="stylesheet" href="${utilHelper.getCssUrl('project')}"/>

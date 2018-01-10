@@ -1,0 +1,10 @@
+.index-container .father {
+  background: yellow;
+}
+.index-container .child {
+  background: blue;
+}
+.index-container tell-me {
+  font-size: 14px;
+  color: red;
+}
