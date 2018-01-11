@@ -5,6 +5,10 @@ import java.io.PrintWriter;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
@@ -601,6 +605,9 @@ public class DataController {
 		List<NodeData> nodeDataList = new ArrayList<NodeData>();
 		// 对于需要获取的数据区间，先给一个默认值，即今天的日期
 		Date date = new Date();
+		LocalDate jStartDay = LocalDate.now();
+		LocalDate jEndDay = LocalDate.now().minus(1, ChronoUnit.DAYS);
+		System.out.println("LocalDateTime:" + jStartDay);
 		java.sql.Date startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDay);
@@ -614,9 +621,18 @@ public class DataController {
 			System.out.println("requestType :" + requestType);
 			System.out.println("startTime :" + startTime);
 			System.out.println("endTime :" + endTime);
-			startDay = (java.sql.Date) dateFormat.parse(startTime);
-			endDay = (java.sql.Date) dateFormat.parse(endTime);
+			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());;
+			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+			System.out.println("ABC-00000");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			System.out.println("ABC-00001");
+			jStartDay = LocalDate.parse(startTime, formatter);
+			System.out.println("ABC-00002");
+			jEndDay = LocalDate.parse(endTime, formatter);
+			System.out.println("ABC-1: " + jStartDay);
+			System.out.println("ABC-2: " + jEndDay);
 		}catch (Exception e) {
+			System.out.println(e);
 			// TODO: handle exception
 		}
 		System.out.println("requestType :" + requestType.equals("all"));
@@ -639,12 +655,22 @@ public class DataController {
 				nodeDataList.add(nodeData);
 			}
 		}else if(requestType.equals("hour")){
-
+			// 此时获取该节点的指定日期的的小时平均的数据
+			// 按照日期从选择的结束日期的前一天的23点开始倒计时计算获取对应的一小时之内的数据平均值
+			while(endDay.after(startDay)){
+				Calendar tmpCalendar = new GregorianCalendar();
+				tmpCalendar.setTime(endDay);
+				tmpCalendar.add(tmpCalendar.HOUR, -1);
+				java.sql.Date beforeEndDay = new java.sql.Date(calendar.getTime().getTime());
+				System.out.println(beforeEndDay + ":" + endDay);
+				endDay = beforeEndDay;
+			}
 		}else if(requestType.equals("day")){
 
 		}else{
 			// 不合法参数
 		}
+		Collections.reverse(nodeDataList);
 		return nodeDataList;
 	}
 

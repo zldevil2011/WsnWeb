@@ -87,20 +87,20 @@
 	</div>
 	<div id="node-historical-data" class="node-historical-data">
         <div class="search-box">
-            <form class="form-inline">
+            <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
                     <label for="province">时间</label>
-                    <input type="date" class="form-control" id="startTime">
-                    <input type="date" class="form-control" id="endTime">
+                    <input type="date" class="form-control" id="startTime" v-model="search_info.startTime">
+                    <input type="date" class="form-control" id="endTime" v-model="search_info.endTime">
                 </div>
                 <div class="form-group">
-                <select class="form-control select-100">
-                    <option>所有数据</option>
-                    <option>小时数据</option>
-                    <option>日均数据</option>
+                <select class="form-control select-100" v-model="search_info.requestType">
+                    <option value="all">所有数据</option>
+                    <option value="hour">小时数据</option>
+                    <option value="day">日均数据</option>
                 </select>
 				</div>
-                <button type="submit" class="btn btn-success btn-100" style="margin-left: 10px;padding: 5px 12px;">查找</button>
+                <button type="submit" class="btn btn-success btn-100" style="margin-left: 10px;padding: 5px 12px;" @click="getHistoricalData">查找</button>
             </form>
         </div>
         <div class="table-container">
@@ -420,6 +420,12 @@
         },
         methods: {
             init: function () {
+                this.loadData();
+            },
+            getHistoricalData: function(){
+                this.loadData();
+			},
+			loadData: function(){
                 this.$http.post('/WsnWeb/api/node_historical_data/' + nodeId, this.search_info ,{
                     'headers': {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -435,7 +441,7 @@
                         this.tip = true;
                     }
                 });
-            }
+			}
         }
 	})
 </script>
