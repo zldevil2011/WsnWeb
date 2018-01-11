@@ -17,7 +17,7 @@
 					<label for="name">名称</label>
 					<input type="text" class="form-control" id="name" placeholder="站点名称">
 				</div>
-				<button type="submit" class="btn btn-default">查找</button>
+				<button type="submit" class="btn btn-success btn-100">查找</button>
 			</form>
 		</div>
 		<div class="device-real-data">
@@ -40,10 +40,10 @@
 				<tbody>
 				<tr v-for="(data,index) in nodeList">
 					<th scope="row">{{index}}</th>
-					<td>{{data.status}}</td>
-					<td>{{data.address}}</td>
-					<td>{{data.name}}</td>
-					<td>{{data.time}}</td>
+					<td>{{data.dataStatus == 0 ? '正常' : data.dataStatus == 1 ? '异常' : '超标'}}</td>
+					<td>{{data.nodeAddress}}</td>
+					<td>{{data.nodeName}}</td>
+					<td>{{data.updateTime}}</td>
 					<td>{{data.pm25}}</td>
 					<td>{{data.pm10}}</td>
 					<td>{{data.so2}}</td>
@@ -61,7 +61,7 @@
         el: "#real-data",
         data: {
             nodeList: [{
-                status:'正常',
+                dataStatus:'正常',
 				address:'安徽池州',
 				name:'岐山医药',
 				pm25:'13',
@@ -77,7 +77,18 @@
         },
 		methods:{
             init:function(){
-
+                this.$http.get('/WsnWeb/api/node_latest_data_list').then(function(res){
+                    console.log(res.data);
+                    if(res.status != 200){
+                        this.tip = true;
+                    }else{
+                        this.nodeList = res.data;
+                    }
+                }, function(err){
+                    if(err.status != 200){
+                        this.tip = true;
+                    }
+                });
 			}
 		}
     });

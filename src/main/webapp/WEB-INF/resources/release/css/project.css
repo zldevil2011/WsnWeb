@@ -106,7 +106,27 @@
   text-align: center;
   padding: 10px 0;
 }
-.realDataList-body-container .table tr {
+.realDataList-body-container .search-box {
+  background-color: #e2e2d5;
+  padding: 10px 10px 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.realDataList-body-container .search-box .form-control {
+  background-color: rgba(255, 255, 255, 0.8);
+  margin: 0 5px;
+}
+.realDataList-body-container .search-box label {
+  margin: 0 5px;
+}
+.realDataList-body-container .search-box .btn-100 {
+  width: 100px;
+}
+.realDataList-body-container .table {
+  font-size: 12px;
+}
+.realDataList-body-container .table tr td,
+.realDataList-body-container .table tr th {
   text-align: center;
 }
 .nodeRank-body-container .p-list {

@@ -34,10 +34,24 @@ import com.zhaolong.wsn.service.NodeService;
 
 import lombok.SneakyThrows;
 class NodeData extends Data{
+	public String nodeName;
+	public String nodeAddress;
 	public String level;
 	public String conclusion;
 	public String advice;
 	public String updateTime;
+	public String getNodeName() {
+		return nodeName;
+	}
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+	public String getNodeAddress() {
+		return nodeAddress;
+	}
+	public void setNodeAddress(String nodeAddress) {
+		this.nodeAddress = nodeAddress;
+	}
 	public String getLevel() {
 		return level;
 	}
@@ -72,7 +86,35 @@ public class DataController {
 	
 	@Autowired
 	private NodeService nodeService;
-	
+
+	// 获取所有设备的最新的一条数据（有多少个设备就对应多少条数据）
+	@RequestMapping(value = "node_latest_data_list", method = RequestMethod.GET)
+	public @ResponseBody List<NodeData> nodeLatetDataList(HttpServletRequest request, HttpServletResponse response) {
+		List<Node> nodeList = nodeService.nodeList();
+		List<NodeData> nodeData = new ArrayList<NodeData>();
+		for(int i = 0; i < nodeList.size(); ++i){
+			Data data = dataService.latestData(nodeList.get(i).getId());
+			NodeData nData = new NodeData();
+			if(data != null){
+				nData.setNodeName(nodeList.get(i).getNodeName());
+				nData.setNodeAddress(nodeList.get(i).getProvince() + nodeList.get(i).getCity());
+				nData.setPm25((double)Math.round(data.getPm25()*100)/100);
+				nData.setPm10((double)Math.round(data.getPm10()*100)/100);
+				nData.setSo2((double)Math.round(data.getSo2()*100)/100);
+				nData.setNo2((double)Math.round(data.getNo2()*100)/100);
+				nData.setCo((double)Math.round(data.getCo()*100)/100);
+				nData.setO3((double)Math.round(data.getO3()*100)/100);
+				nData.setAqi((double)Math.round(data.getAqi()*100)/100);
+				nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+				nData.setLevel(getDesc(data.getAqi()));
+				nData.setConclusion(getConclusion(data.getAqi()));
+				nData.setAdvice(getAdvice(data.getAqi()));
+			}
+			nodeData.add(nData);
+		}
+		return nodeData;
+	}
+
 	// 获取某一个节点的最新的一条数据
 	@RequestMapping(value = "node_latest_data/{node_id}", method = RequestMethod.GET)
 	public @ResponseBody NodeData nodeLatetData(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
@@ -542,9 +584,9 @@ public class DataController {
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO Auto-generated method stub
 		System.out.println("data_save api");
-		for(int i = 26; i <= 30; ++i){
+		for(int i = 1; i <= 30; ++i){
 			for(int j = 0; j < 24; ++j){
-				java.sql.Date dataDate = new java.sql.Date(2017, 10, i);
+				java.sql.Date dataDate = new java.sql.Date(118, 0, i); // year的值是用实际数字减去1900
 				Time dataTime = new Time(j, 0, 0);
 				System.out.println("data_save: "+dataDate + " " + dataTime);
 				Data d = new Data();

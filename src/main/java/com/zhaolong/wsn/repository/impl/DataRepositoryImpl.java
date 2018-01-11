@@ -107,7 +107,8 @@ public class DataRepositoryImpl implements DataRepository{
 		// TODO Auto-generated method stub
 		try{
 			Session currentSession = getCurrentSession();
-			Data res = (Data)currentSession.createQuery("from Data where nodeId = " + nodeId + " order by dataDate desc").list().get(0);
+
+			Data res = (Data)currentSession.createQuery("from Data where nodeId = " + nodeId + " order by dataDate desc").setMaxResults(10).list().get(0);
 			currentSession.close();
 			return res;
 		}catch (Exception e) {
