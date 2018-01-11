@@ -330,8 +330,8 @@
 }
 .nodeData-body-container .node-historical-data {
   border: 1px solid #bce8f1;
-  min-height: 100px;
-  max-height: 600px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 .nodeData-body-container .node-historical-data .search-box {
   background-color: #e2e2d5;
@@ -353,6 +353,8 @@
   width: 100px;
 }
 .nodeData-body-container .node-historical-data .table-container {
+  min-height: 100px;
+  max-height: 600px;
   overflow: scroll;
 }
 .nodeData-body-container .node-historical-data .table-container .table {

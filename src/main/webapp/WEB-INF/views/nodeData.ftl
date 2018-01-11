@@ -119,16 +119,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(data,index) in nodeList">
+                <tr v-for="(data,index) in nodeDataList">
                     <th scope="row">{{index+1}}</th>
                     <td>{{data.dataStatus == 0 ? '正常' : data.dataStatus == 1 ? '异常' : '超标'}}</td>
                     <td>{{data.updateTime}}</td>
-                    <td>{{data.pm25}}</td>
-                    <td>{{data.pm10}}</td>
-                    <td>{{data.so2}}</td>
-                    <td>{{data.no2}}</td>
-                    <td>{{data.co}}</td>
-                    <td>{{data.o3}}</td>
+                    <td>{{data.pm25 | keepTwoNum}}</td>
+                    <td>{{data.pm10 | keepTwoNum}}</td>
+                    <td>{{data.so2 | keepTwoNum}}</td>
+                    <td>{{data.no2 | keepTwoNum}}</td>
+                    <td>{{data.co | keepTwoNum}}</td>
+                    <td>{{data.o3 | keepTwoNum}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -140,7 +140,6 @@
 </div>
 <script>
 	var nodeId = '${node_id}';
-	console.log(nodeId);
 	/* function createTodayData(){
 		var data = [];
 		for(let i = 0; i < 24; ++i){
@@ -219,12 +218,12 @@
 	  			});
 				// 获取该节点的最新的数据信息
 				this.$http.get('/WsnWeb/api/node_latest_data/' + nodeId).then(function(res){
-					console.log(res);
+//					console.log(res);
 	  				if(res.status != 200){
 	  					this.tip = true;
 	  				}else{
 	  					let data = res.data;
-	  					console.log(data == "");
+//	  					console.log(data == "");
 	  					if(data == ""){
 	  					}else{
 	  						this.latestData = data;
@@ -242,7 +241,7 @@
 	  				}else{
 	  					this.loadingToday = false;
 	  					let data = res.data;
-	  					console.log(data);
+//	  					console.log(data);
 	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（今日的小时数据）
 	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
 	  					var len = data.length;
@@ -279,7 +278,7 @@
 	  				}else{
 	  					this.loadingMonth = false;
 	  					let data = res.data;
-	  					console.log(data);
+//	  					console.log(data);
 	  					// 获取8条数据，分别对应七项采集的数据，最后一项是时间安排（最近的30天日期）
 	  					var pList = ["pm25", "pm10", "so2", "no2", "o3", "co", "aqi"];
 	  					var len = data.length;
@@ -396,6 +395,49 @@
 		    }]
 		});
 	}
+</script>
+<script>
+    Vue.http.options.emulateJSON = true;
+    var nodeId = '${node_id}';
+	var nodeHistoricalData = new Vue({
+		el:"#node-historical-data",
+		data:{
+            nodeDataList: '',
+			search_info: {
+                requestType: 'all',
+                startTime: '2018-01-11',
+                endTime: '2018-01-12'
+			}
+		},
+        created:function(){
+            this.init();
+        },
+        filters: {
+            keepTwoNum: function(value){
+                value = Number(value);
+                return value.toFixed(2);
+            }
+        },
+        methods: {
+            init: function () {
+                this.$http.post('/WsnWeb/api/node_historical_data/' + nodeId, this.search_info ,{
+                    'headers': {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(res){
+                    if(res.status != 200){
+                        this.tip = true;
+                    }else{
+                        this.nodeDataList = res.data;
+                    }
+                }, function(err){
+                    if(err.status != 200){
+                        this.tip = true;
+                    }
+                });
+            }
+        }
+	})
 </script>
 </body>
 </html>

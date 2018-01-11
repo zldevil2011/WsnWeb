@@ -611,6 +611,7 @@ public class DataController {
 			requestType=request.getParameter("requestType");
 			String startTime=request.getParameter("startTime");
 			String endTime=request.getParameter("endTime");
+			System.out.println("requestType :" + requestType);
 			System.out.println("startTime :" + startTime);
 			System.out.println("endTime :" + endTime);
 			startDay = (java.sql.Date) dateFormat.parse(startTime);
@@ -618,13 +619,22 @@ public class DataController {
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
+		System.out.println("requestType :" + requestType.equals("all"));
 		if(requestType.equals("all")){
+			System.out.println("requestType is all :" + requestType.equals("all"));
 			// 获取该节点的所有数据，将Data类型的数据拷贝到NodeData
 			List<Data> tmpList = dataService.dataList(node_id, startDay, endDay);
 			int dataLen = tmpList.size();
 			for(int i = 0; i < dataLen; ++i){
 				Data data = tmpList.get(i);
-				NodeData nodeData = (NodeData) data;
+				NodeData nodeData = new NodeData();
+				nodeData.setDataStatus(data.getDataStatus());
+				nodeData.setPm25(data.getPm25());
+				nodeData.setPm10(data.getPm10());
+				nodeData.setSo2(data.getSo2());
+				nodeData.setNo2(data.getSo2());
+				nodeData.setCo(data.getCo());
+				nodeData.setO3(data.getO3());
 				nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
 				nodeDataList.add(nodeData);
 			}
