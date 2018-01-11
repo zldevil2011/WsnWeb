@@ -6,90 +6,10 @@
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=2E92C953574c3fa5f86de9c14501c0ea"></script>
  -->
 <title>首页</title>
-<style type="text/css">
-	.body-container{
-		position:relative;
-		margin-top: 70px;
-	}
-	.left-map{
-		background-color:#262734;
-		width: 100%;
-		height: 100%;
-	}
-	#map label{
-		max-width:unset;
-	}
-	.right-slide{
-		padding: 20px 10px;
-		position: absolute;
-		top: 0;
-		right: 0;
-		background-color:#1f202b;
-		border-left: 1px solid #111111;
-		width: 310px;
-		min-height: 100%;
-		height: 100%;
-		overflow: scroll;
-	}
-	.search-input input{
-		width: 100%;
-		background: #303741;
-	    padding: 15px;
-	    border: none;
-	    height: 22px;
-	    display: inline;
-	    text-indent: 15px;
-	    color: #fff;
-	    outline: none;
-	}
-	.node-lists{
-		margin-top:20px;
-		color: #c4ced8;
-		margin-bottom: 20px;
-		border-bottom: #252731 solid 3px;
-	}
-	.node-lists ul li{
-		display: inline-block;
-	    box-sizing: border-box;
-	    width: 49%;
-	    overflow: hidden;
-	    padding: 10px;
-	    background-color: #303741;
-	    text-align: center;
-	    margin: 5px 1px;
-	    cursor:pointer;
-	}
-	.current-node{
-		color: #c4ced8;
-		margin-bottom: 20px;
-		border-bottom: #252731 solid 3px;
-	}
-	
-	.node-data{
-		display: flex;
-	}
-	.node-data .item{
-		flex: 1;
-		border: 1px solid #4c4e56;
-		font-size: 40px;
-		text-align: center;
-	}
-	.node-data .item .desc{
-		font-size: 12px;
-	}
-	.level-rank table{
-		color:#c4ced8;
-		width:100%;
-		text-align: center;
-	}
-	.level-rank table tr td{
-		padding: 3px;
-	}
-</style>
 </head>
 <body>
 	<#include "headerMenu.ftl"/>
-	<div class="body-container">
+	<div class="index-body-container body-container">
 		<div class="left-map" id="map">
 			左侧地图蓝
 		</div>

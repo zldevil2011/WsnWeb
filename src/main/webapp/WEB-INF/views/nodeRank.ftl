@@ -3,44 +3,12 @@
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>节点排名</title>
 <style type="text/css">
-.body-container{
-	width: 80%;
-	margin: 0 auto;
-}
-.p-list{
-	display: flex;
-	background-color:#ececec;
-}
-.p-list span{
-	flex:1;
-	text-align: center;
-	border-right: 1px solid #cecdcd;
-	height: 40px;
-	line-height: 40px;
-	border-bottom: #57b382 solid 4px;
-	cursor:pointer;
-}
-.p-list span:hover{
-	background-color: rgba(87, 179, 130, 0.3);
-}
-.p-list span.active{
-	background-color: #57b382;
-}
-.table{
-	text-align: center;
-}
-.rank-head{
-    font-size: 28px;
-    color: #555;
-    line-height: 110px;
-    text-indent: 10px;
-    background-color: #f5f5f5;
-}
+
 </style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
-<div class="body-container" style="margin-top:100px;" id="node-rank">
+<div class="body-container content-body-container nodeRank-body-container" style="margin-top:100px;" id="node-rank">
 	<div class="rank-head">
 		排行 <span style="font-size:20px;color:#888;">各站点详细数据</span>
 		<span style="float:right;font-size:12px;position:relative;top:9px;">更新时间：{{updateTime}}</span>

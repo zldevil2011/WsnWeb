@@ -2,51 +2,10 @@
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>首页</title>
-<style type="text/css">
-	.body-container{
-		width: 80%;
-		margin: 0 auto;
-	}
-	.head-info{
-		background-color: #f5f5f5;
-	}
-	.device-status{
-		padding-left: 10px;
-	}
-	.device-status .device-head{
-		font-size: 24px;
-		color:black;
-	}
-	.device-status .device-info{
-		padding: 10px 0;
-		font-size: 16px;
-	}
-	.device-list{
-		padding: 20px 10px;
-	}
-	.device-list ul{
-		-webkit-margin-before: 0;
-		-webkit-padding-start: 0;
-	}
-	.device-list ul li{
-		list-style-type: none;
-		display: flex;
-		justify-content: space-between;
-		-webkit-margin-before:0;
-	}
-	.device-list ul li span.time{
-		flex: 2;
-	}
-	.device-list ul li span{
-		flex: 1;
-		text-align: center;
-		padding: 10px 0;
-	}
-</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
-<div class="body-container" style="margin-top:100px;">
+<div class="body-container content-body-container index-list-body-container" style="margin-top:100px;">
 	<div class="head-info" id="devices-info">
 		<div class="head-img">
 			<img src="/WsnWeb/img/background.png" width="100%" height="200">

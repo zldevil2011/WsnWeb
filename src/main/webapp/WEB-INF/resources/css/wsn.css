@@ -26,3 +26,7 @@ html, body{
 	position:relative;
 	margin-top: 70px;
 }
+.content-body-container{
+	width: 80%;
+	margin: 0 auto;
+}

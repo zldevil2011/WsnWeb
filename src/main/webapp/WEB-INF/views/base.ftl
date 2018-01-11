@@ -11,3 +11,4 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.bootcss.com/vue-resource/1.3.4/vue-resource.min.js"></script>
     <link rel="stylesheet" href="${utilHelper.getCssUrl('project')}"/>
+    <link rel="stylesheet" href="${utilHelper.getCssUrl('user')}"/>

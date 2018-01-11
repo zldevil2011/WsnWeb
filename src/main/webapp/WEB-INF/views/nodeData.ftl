@@ -2,80 +2,10 @@
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>节点数据</title>
-<style type="text/css">
-.body-container{
-	width: 80%;
-	margin: 0 auto;
-}
-.node-info{
-	background-color: #f5f5f5;
-}
-.node-info .node-name{
-    font-size: 28px;
-    color: #555;
-    line-height: 110px;
-    text-indent: 10px;
-}
-.p-list{
-	display: flex;
-	background-color:#ececec;
-}
-.p-list span{
-	flex:1;
-	text-align: center;
-	border-right: 1px solid #cecdcd;
-	height: 40px;
-	line-height: 40px;
-	border-bottom: #57b382 solid 4px;
-	cursor:pointer;
-}
-.p-list span:hover{
-	background-color: rgba(87, 179, 130, 0.3);
-}
-.p-list span.active{
-	background-color: #57b382;
-}
-.main-data{
-	height: 230px;
-	background-color: #ebeaf3;
-	display: flex;
-	padding: 28px 0;
-	box-sizing: border-box;
-}
-.main-data .item{
-	flex: 1;
-	height: 190px;
-}
-.main-data .data-circle{
-	text-align: center;
-}
-.main-data .data-circle .data{
-	width: 165px;
-	height: 165px;
-	border: 6px solid #66cb0180;
-	margin: 0 auto;
-	border-radius: 100px;
-	-webkit-border-radius: 100px;
-	-moz-border-radius: 100px;
-	-ms-border-radius: 100px;
-	-o-border-radius: 100px;
-	cursor: pointer;
-}
-.main-data .data-circle .data:hover{
-	border: 6px solid white;
-}
-
-.main-data .right-tip{
-	width: 250px;
-}
-.graph{
-	display: none;
-}
-</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
-<div class="body-container" style="margin-top:100px;">
+<div class="body-container content-body-container nodeData-body-container" style="margin-top:100px;">
 	<div class="node-info" id="node-data">
 		<div class="node-name">
 			{{node_info.nodeName}}<span style="font-size:20px;color:#888;">监测点详细数据</span><span style="font-size:12px;color:#888;margin-right: 26px;display: inline-block;cursor:pointer;" onclick="window.location.href='/WsnWeb/node_list/'">更多>></span>

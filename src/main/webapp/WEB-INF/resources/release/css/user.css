@@ -1,0 +1,76 @@
+.login-body {
+  background: url("/WsnWeb/img/mainBackground.png") no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+}
+.login-body .login-container {
+  min-width: 400px;
+  text-align: center;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  padding: 20px;
+}
+.login-body .input-group {
+  padding: 10px 5px;
+}
+.login-body .input-group label,
+.login-body .input-group input {
+  display: inline-block;
+  box-sizing: border-box;
+}
+.login-body .input-group label {
+  width: 30%;
+  text-align: center;
+}
+.login-body .input-group input {
+  width: 70%;
+}
+.login-body .zl-btn {
+  margin-top: 10px;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+}
+.register-body {
+  background: url("/WsnWeb/img/mainBackground.png") no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+}
+.register-body .register-container {
+  min-width: 400px;
+  text-align: center;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  padding: 20px;
+}
+.register-body .input-group {
+  padding: 10px 5px;
+}
+.register-body .input-group label,
+.register-body .input-group input {
+  display: inline-block;
+  box-sizing: border-box;
+}
+.register-body .input-group label {
+  width: 30%;
+  text-align: center;
+}
+.register-body .input-group input {
+  width: 70%;
+}
+.register-body .zl-btn {
+  margin-top: 10px;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+}

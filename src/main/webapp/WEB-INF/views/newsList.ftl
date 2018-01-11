@@ -1,58 +1,9 @@
 <#include "base.ftl"/>
 <title>新闻列表</title>
-<style type="text/css">
-.body-container{
-	width: 80%;
-	margin: 0 auto;
-}
-.right-news-list{
-	float:right;
-	width: 250px;
-}
-.right-news-list .right-head{
-	border-bottom: 1px solid gray;
-	font-size: 18px;
-    color: #888;
-}
-.right-news-list .news-list ul{
-	-webkit-padding-start:20px;
-}
-.right-news-list .news-list ul li{
-	list-style: unset;
-	margin-top: 10px;
-}
-.left-news-list{
-	margin-right: 260px;
-}
-.left-news-list .left-head{
-	border-bottom: 1px solid gray;
-	font-size: 18px;
-    color: #888;
-}
-.left-news-list .news-list .news{
-	height: 160px;
-	border-bottom: 1px dotted gray;
-	padding: 25px 10px;
-	box-sizing: border-box;
-	cursor:pointer;
-}
-.left-news-list .news-list .news:hover{
-	background-color:rgba(236, 236, 230, 0.2);
-}
-
-.left-news-list .news-list .news .right-news-info .news-title{
-	font-size: 16px;
-	padding: 5px 0;
-}
-.left-news-list .news-list .news .right-news-info .news-desc{
-	font-size: 12px;
-	padding: 10px 0;
-}
-</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
-<div class="body-container" id="news-list" style="margin-top: 100px;">
+<div class="body-container content-body-container newsList-body-container" id="news-list" style="margin-top: 100px;">
 	<div class="right-news-list">
 		<div class="right-head">热门新闻</div>
 		<div class="news-list">

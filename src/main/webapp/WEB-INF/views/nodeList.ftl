@@ -1,69 +1,9 @@
 <#include "base.ftl"/>
 <title>节点列表</title>
-<style type="text/css">
-.body-container{
-	width: 80%;
-	margin: 0 auto;
-}
-.city-head{
-	margin-top:100px;
-	height:50px;
-	line-height: 50px;
-	font-size:24px;
-	background-color: rgba(87, 179, 130, 0.2);
-	text-indent:10px;
-}
-.search-head{
-	height:42px;
-	line-height: 42px;
-	background-color: #efefef;
-}
-.search-head span{
-	display: inline-block;
-	width: 120px;
-	text-align: center;
-	cursor: pointer;
-}
-.search-head span.active{
-	background-color: #dfdfdf;
-}
-.left-head{
-	float: left;
-    display: inline;
-    display: inline;
-    width: 120px;
-    font-size: 24px;
-    margin-top: 8px;
-    color: #c8c8c8;
-    text-align:center;
-}
-.right-content{
-	float: left;
-    display: inline;
-    padding: 6px 0px 15px 0px;
-    margin-top: 10px;
-    margin-bottom: 0;
-}
-.right-content a{
-	padding: 4px 9px;
-    margin-top: 5px;
-    margin-right: 1px;
-    cursor:pointer;
-    text-decoration:none;
-}
-.list-data .item{
-	display: block;
-	margin-bottom:0;
-	overflow:hidden;
-}
-.list-data .item a:hover{
-	background-color:rgba(0,0,0,0.1);
-}
-</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
-<div class="body-container" id="node-list">
+<div class="body-container content-body-container nodeList-body-container" id="node-list">
 	<div class="city-head">
 		选择节点
 	</div>

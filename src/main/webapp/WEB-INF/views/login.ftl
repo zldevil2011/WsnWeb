@@ -1,46 +1,7 @@
 <#include "base.ftl"/>
 <title>个人用户登陆</title>
-<style type="text/css">
-	body{
-		background:url("/WsnWeb/img/mainBackground.png") no-repeat;
-		background-size: 100% 100%;
-		background-attachment: fixed;
-	}
-	.login-container{
-		min-width: 400px;
-		text-align: center;
-		margin: 0 auto;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		background: rgba(0,0,0,0.25);
-		border-radius: 5px;
-		padding: 20px;
-	}
-	.input-group{
-		padding: 10px 5px;
-	}
-	.input-group label, .input-group input{
-		display: inline-block;
-		box-sizing: border-box;
-	}
-	.input-group label{
-		width: 30%;
-		text-align: center;
-	}
-	.input-group input{
-		width: 70%;
-	}
-	.zl-btn{
-		margin-top: 10px;
-		outline:none;
-		border: 0;
-		cursor: pointer;
-	}
-</style>
 </head>
-<body>
+<body class="login-body">
 	<div class="login-container" id="formApp">
 		<form action="/" onsubmit="return false;">
 			<h3>个人用户登陆</h3>

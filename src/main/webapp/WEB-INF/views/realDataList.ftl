@@ -2,19 +2,10 @@
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>实时数据</title>
-<style type="text/css">
-	.body-container{
-		width: 80%;
-		margin: 0 auto;
-	}
-	.table tr{
-		text-align: center;
-	}
-</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
-<div class="body-container" style="margin-top:100px;">
+<div class="body-container content-body-container realDataList-body-container" style="margin-top:100px;">
 	<div class="real-data" id="real-data">
 		<div class="search-box">
 			<form class="form-inline">
