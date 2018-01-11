@@ -40,6 +40,15 @@ public class Node {
     @Column(name = "city")
     private String city;
 
+	@Column(name = "status")
+	private int status = 1; // 0代表在线，1代表离线
+
+	@Column(name = "lastDataTime")
+	private String lastDataTime;
+
+	@Column(name = "dataCount")
+	private int dataCount = 0;
+
 	public Long getId() {
 		return id;
 	}
@@ -119,6 +128,28 @@ public class Node {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
-	
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getLastDataTime() {
+		return lastDataTime;
+	}
+
+	public void setLastDataTime(String lastDataTime) {
+		this.lastDataTime = lastDataTime;
+	}
+
+	public int getDataCount() {
+		return dataCount;
+	}
+
+	public void setDataCount(int dataCount) {
+		this.dataCount = dataCount;
+	}
 }

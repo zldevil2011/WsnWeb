@@ -24,7 +24,11 @@
 					<span>名称</span><span class="time">安装日期</span><span>状态</span><span>最新数据日期</span><span>数据量</span>
 				</li>
 				<li v-for="node in nodeList">
-					<span>{{node.nodeName}}</span><span class="time">{{node.installTime}}</span><span>{{node.province}}</span><span>{{node.installTime}}</span><span>{{node.pm10}}</span>
+					<span>{{node.nodeName}}</span>
+					<span class="time">{{node.installTime}}</span>
+					<span>{{node.status == 0 ? '在线':'离线'}}</span>
+					<span>{{node.lastDataTime}}</span>
+					<span>{{node.dataCount}}</span>
 				</li>
 				<li>
 					<span style="text-align: right;padding-right: 20px;"><a href="/WsnWeb/node_list/"> 更多>></a></span>
@@ -47,10 +51,9 @@
 				{
                     nodeName:'齐山医药',
                     installTime:'2017-12-12 12:12:12',
-                    province: '正常',
-					pm25: '13',
-					pm10: '50',
-					so2: '--',
+                    status: '正常',
+                    lastDataTime: '13',
+					dataCount: '50'
 				}
 			]
         },
@@ -66,12 +69,27 @@
 		methods: {
 		    init:function(){
 		        // 异步获取设备列表数据
-                this.$http.get('/WsnWeb/api/index_node_rank').then(function(res){
+                this.$http.get('/WsnWeb/api/node_list').then(function(res){
                     console.log(res.data);
                     if(res.status != 200){
                         this.tip = true;
                     }else{
                         this.nodeList = res.data;
+                        var total = 0;
+                        var normal = 0;
+                        var trick = 0;
+                        total = this.nodeList.length;
+                        for(var i = 0; i < total; ++i){
+                            if(this.nodeList[i].status == 0){
+                                normal += 1;
+							}else{
+                                trick += 1;
+							}
+						}
+						this.data.normal = normal;
+						this.data.total = total;
+						this.data.trick = trick;
+						this.data.normalRate = normal/total;
                     }
                 }, function(err){
                     if(err.status != 200){

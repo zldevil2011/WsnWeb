@@ -60,6 +60,9 @@ public class Data {
     @Column(name = "aqi")
     private Double aqi;
 
+	@Column(name = "dataStatus")
+	private int dataStatus; // 0代表数据正常，1代表数据异常（缺失），2代表数据超标
+
 	public Long getId() {
 		return id;
 	}
@@ -179,6 +182,13 @@ public class Data {
 	public void setAqi(Double aqi) {
 		this.aqi = aqi;
 	}
-    
+
+	public int getDataStatus() {
+		return dataStatus;
+	}
+
+	public void setDataStatus(int dataStatust) {
+		this.dataStatus = dataStatus;
+	}
     
 }
