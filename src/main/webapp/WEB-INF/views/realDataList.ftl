@@ -39,10 +39,10 @@
 				</thead>
 				<tbody>
 				<tr v-for="(data,index) in nodeList">
-					<th scope="row">{{index}}</th>
+					<th scope="row">{{index+1}}</th>
 					<td>{{data.dataStatus == 0 ? '正常' : data.dataStatus == 1 ? '异常' : '超标'}}</td>
 					<td>{{data.nodeAddress}}</td>
-					<td>{{data.nodeName}}</td>
+					<td><a v-bind:href='"/WsnWeb/node_data/"+data.nodeId'>{{data.nodeName}}</a></td>
 					<td>{{data.updateTime}}</td>
 					<td>{{data.pm25}}</td>
 					<td>{{data.pm10}}</td>
@@ -60,17 +60,7 @@
     var readData = new Vue({
         el: "#real-data",
         data: {
-            nodeList: [{
-                dataStatus:'正常',
-				address:'安徽池州',
-				name:'岐山医药',
-				pm25:'13',
-				pm10:'103',
-				so2:'',
-				no2:'',
-				co:'',
-				o3:''
-			}]
+            nodeList: []
         },
         created: function () {
             this.init();

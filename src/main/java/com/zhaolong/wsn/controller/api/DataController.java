@@ -3,6 +3,8 @@ package com.zhaolong.wsn.controller.api;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
@@ -33,13 +35,14 @@ import com.zhaolong.wsn.service.DataService;
 import com.zhaolong.wsn.service.NodeService;
 
 import lombok.SneakyThrows;
+// NodeData从Data扩展而来，新增了关于AQI指数的解释信息，同时用来对数据进行统计（小时，日周月年）
 class NodeData extends Data{
 	public String nodeName;
 	public String nodeAddress;
 	public String level;
 	public String conclusion;
 	public String advice;
-	public String updateTime;
+	public String updateTime; // 数据平均之后的时间戳
 	public String getNodeName() {
 		return nodeName;
 	}
@@ -80,7 +83,14 @@ class NodeData extends Data{
 @Controller
 @RequestMapping(value = "/api/*") 
 public class DataController {
-	
+	/*
+		node_latest_data_list：获取所有设备的最新的一条数据
+		node_latest_data/{node_id}：获取某个节点的最新的一条数据
+		data_list/{node_id}"：获取某个节点的当日数据和最近一月的日平均数据
+		ranking_list：获取排名数据，针对所有的安装节点，按照今日，昨日，一周，一月分别计算当天，昨天，一周，一月的平均AQI指数并返回
+		data_save：生成测试数据
+		node_historical_data：获取某个节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
+	 */
 	@Autowired
 	private DataService dataService;
 	
@@ -89,13 +99,14 @@ public class DataController {
 
 	// 获取所有设备的最新的一条数据（有多少个设备就对应多少条数据）
 	@RequestMapping(value = "node_latest_data_list", method = RequestMethod.GET)
-	public @ResponseBody List<NodeData> nodeLatetDataList(HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody List<NodeData> nodeLatestDataList(HttpServletRequest request, HttpServletResponse response) {
 		List<Node> nodeList = nodeService.nodeList();
 		List<NodeData> nodeData = new ArrayList<NodeData>();
 		for(int i = 0; i < nodeList.size(); ++i){
 			Data data = dataService.latestData(nodeList.get(i).getId());
 			NodeData nData = new NodeData();
 			if(data != null){
+				nData.setNodeId(nodeList.get(i).getId());
 				nData.setNodeName(nodeList.get(i).getNodeName());
 				nData.setNodeAddress(nodeList.get(i).getProvince() + nodeList.get(i).getCity());
 				nData.setPm25((double)Math.round(data.getPm25()*100)/100);
@@ -131,7 +142,8 @@ public class DataController {
 		}
 		return nData;
 	}
-	// 获取每个节点的当日数据和最近一月的日平均数据
+
+	// 获取某个节点的当日数据和最近一月的日平均数据
 	@RequestMapping(value = "data_list/{node_id}", method = RequestMethod.GET)
 	public @ResponseBody List<ArrayList<Double>> dataList(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
 		String requestType = "day";
@@ -342,6 +354,7 @@ public class DataController {
 			return new ArrayList<ArrayList<Double>>();
 		}
 	}
+
 	// 获取排名数据，针对所有的安装节点，按照今日，昨日，一周，一月分别计算当天，昨天，一周，一月的平均AQI指数并返回
 	@RequestMapping(value = "ranking_list", method = RequestMethod.GET)
 	public @ResponseBody List<NodeRank> rankingList(HttpServletRequest request, HttpServletResponse response) {
@@ -580,30 +593,77 @@ public class DataController {
 	    }
 		return rankList;
 	}
+
+	// 获取某个节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
+	@RequestMapping(value = "node_historical_data/{node_id}", method = RequestMethod.POST)
+	public @ResponseBody List<NodeData> nodeHistoricalData(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
+		String requestType = "all";
+		List<NodeData> nodeDataList = new ArrayList<NodeData>();
+		// 对于需要获取的数据区间，先给一个默认值，即今天的日期
+		Date date = new Date();
+		java.sql.Date startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(startDay);
+		calendar.add(calendar.DATE, 1);
+		java.sql.Date endDay = new java.sql.Date(calendar.getTime().getTime());
+		try{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			requestType=request.getParameter("requestType");
+			String startTime=request.getParameter("startTime");
+			String endTime=request.getParameter("endTime");
+			System.out.println("startTime :" + startTime);
+			System.out.println("endTime :" + endTime);
+			startDay = (java.sql.Date) dateFormat.parse(startTime);
+			endDay = (java.sql.Date) dateFormat.parse(endTime);
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(requestType.equals("all")){
+			// 获取该节点的所有数据，将Data类型的数据拷贝到NodeData
+			List<Data> tmpList = dataService.dataList(node_id, startDay, endDay);
+			int dataLen = tmpList.size();
+			for(int i = 0; i < dataLen; ++i){
+				Data data = tmpList.get(i);
+				NodeData nodeData = (NodeData) data;
+				nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+				nodeDataList.add(nodeData);
+			}
+		}else if(requestType.equals("hour")){
+
+		}else if(requestType.equals("day")){
+
+		}else{
+			// 不合法参数
+		}
+		return nodeDataList;
+	}
+
 	@RequestMapping(value = "data_save", method = RequestMethod.GET)
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO Auto-generated method stub
 		System.out.println("data_save api");
-		for(int i = 1; i <= 30; ++i){
-			for(int j = 0; j < 24; ++j){
-				java.sql.Date dataDate = new java.sql.Date(118, 0, i); // year的值是用实际数字减去1900
-				Time dataTime = new Time(j, 0, 0);
-				System.out.println("data_save: "+dataDate + " " + dataTime);
-				Data d = new Data();
-				Random random=new Random();
-				d.setPm25(random.nextDouble() * 1000);
-				d.setPm10(random.nextDouble() * 1000);
-				d.setSo2(random.nextDouble() * 1000);
-				d.setNo2(random.nextDouble() * 1000);
-				d.setO3(random.nextDouble() * 1000);
-				d.setCo(random.nextDouble() * 1000);
-				d.setAqi(random.nextDouble() * 1000);
-				d.setDataDate(dataDate);
-				d.setDataTime(dataTime);
-				d.setNodeId((long) random.nextInt(20));
-				dataService.saveData(d);
+		for(long nodeId = 7; nodeId <= 13; ++nodeId) {
+			for (int i = 1; i <= 11; ++i) {
+				for (int j = 0; j < 24; ++j) {
+					java.sql.Date dataDate = new java.sql.Date(118, 0, i); // year的值是用实际数字减去1900
+					Time dataTime = new Time(j, 0, 0);
+					System.out.println("data_save: " + dataDate + " " + dataTime);
+					Data d = new Data();
+					Random random = new Random();
+					d.setPm25(random.nextDouble() * 1000);
+					d.setPm10(random.nextDouble() * 1000);
+					d.setSo2(random.nextDouble() * 1000);
+					d.setNo2(random.nextDouble() * 1000);
+					d.setO3(random.nextDouble() * 1000);
+					d.setCo(random.nextDouble() * 1000);
+					d.setAqi(random.nextDouble() * 1000);
+					d.setDataDate(dataDate);
+					d.setDataTime(dataTime);
+					d.setNodeId((long) nodeId);
+					dataService.saveData(d);
+				}
 			}
-		}		
+		}
 		response.setStatus(200);
 		PrintWriter pWriter = response.getWriter();
 		pWriter.println("success");

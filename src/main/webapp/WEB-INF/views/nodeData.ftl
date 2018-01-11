@@ -52,38 +52,90 @@
 		</div>
 	</div>
 	<div>
-	<div class="graph" id="pm25">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-	</div>
-	<div class="graph" id="pm10">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-	</div>
-	<div class="graph" id="so2">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-	</div>
-	<div class="graph" id="no2">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-	</div>
-	<div class="graph" id="o3">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-	</div>
-	<div class="graph" id="co">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
-	</div>
-	<div class="graph" id="aqi">
-		<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;">
-			<img alt="" src="/WsnWeb/img/loading.gif" style="position:relative;top:110px;left:50%;" v-show="loadingToday">
+		<div class="graph" id="pm25">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
 		</div>
-		<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;">
-			<img alt="" src="/WsnWeb/img/loading.gif" style="position:relative;top:120px;left:50%;" v-show="loadingMonth">
+		<div class="graph" id="pm10">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+		</div>
+		<div class="graph" id="so2">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+		</div>
+		<div class="graph" id="no2">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+		</div>
+		<div class="graph" id="o3">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+		</div>
+		<div class="graph" id="co">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;"></div>
+		</div>
+		<div class="graph" id="aqi">
+			<div class="today-data" id="today-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;">
+				<img alt="" src="/WsnWeb/img/loading.gif" style="position:relative;top:110px;left:50%;" v-show="loadingToday">
+			</div>
+			<div class="month-data" id="month-data" style="height:310px;background-color:#f7f7f7;border:1px solid e5e5e5;margin-top:40px;">
+				<img alt="" src="/WsnWeb/img/loading.gif" style="position:relative;top:120px;left:50%;" v-show="loadingMonth">
+			</div>
 		</div>
 	</div>
+	<div id="node-historical-data" class="node-historical-data">
+        <div class="search-box">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="province">时间</label>
+                    <input type="date" class="form-control" id="startTime">
+                    <input type="date" class="form-control" id="endTime">
+                </div>
+                <div class="form-group">
+                <select class="form-control select-100">
+                    <option>所有数据</option>
+                    <option>小时数据</option>
+                    <option>日均数据</option>
+                </select>
+				</div>
+                <button type="submit" class="btn btn-success btn-100" style="margin-left: 10px;padding: 5px 12px;">查找</button>
+            </form>
+        </div>
+        <div class="table-container">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>状态</th>
+                    <th>监测时间</th>
+                    <th>PM2.5(ug/m³)</th>
+                    <th>PM10(ug/m³)</th>
+                    <th>SO2(ug/m³)</th>
+                    <th>NO2(ug/m³)</th>
+                    <th>CO(ug/m³)</th>
+                    <th>O3(ug/m³)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(data,index) in nodeList">
+                    <th scope="row">{{index+1}}</th>
+                    <td>{{data.dataStatus == 0 ? '正常' : data.dataStatus == 1 ? '异常' : '超标'}}</td>
+                    <td>{{data.updateTime}}</td>
+                    <td>{{data.pm25}}</td>
+                    <td>{{data.pm10}}</td>
+                    <td>{{data.so2}}</td>
+                    <td>{{data.no2}}</td>
+                    <td>{{data.co}}</td>
+                    <td>{{data.o3}}</td>
+                </tr>
+                </tbody>
+            </table>
+			<div class="footer-info">
+
+			</div>
+        </div>
 	</div>
 </div>
 <script>

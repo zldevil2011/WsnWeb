@@ -328,3 +328,37 @@
 .nodeData-body-container .graph {
   display: none;
 }
+.nodeData-body-container .node-historical-data {
+  border: 1px solid #bce8f1;
+  min-height: 100px;
+  max-height: 600px;
+}
+.nodeData-body-container .node-historical-data .search-box {
+  background-color: #e2e2d5;
+  padding: 10px 10px 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.nodeData-body-container .node-historical-data .search-box .form-control {
+  background-color: rgba(255, 255, 255, 0.8);
+  margin: 0 5px;
+}
+.nodeData-body-container .node-historical-data .search-box .select-100 {
+  width: 100px;
+}
+.nodeData-body-container .node-historical-data .search-box label {
+  margin: 0 5px;
+}
+.nodeData-body-container .node-historical-data .search-box .btn-100 {
+  width: 100px;
+}
+.nodeData-body-container .node-historical-data .table-container {
+  overflow: scroll;
+}
+.nodeData-body-container .node-historical-data .table-container .table {
+  font-size: 12px;
+}
+.nodeData-body-container .node-historical-data .table-container .table tr td,
+.nodeData-body-container .node-historical-data .table-container .table tr th {
+  text-align: center;
+}

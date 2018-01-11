@@ -2,9 +2,6 @@
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>节点排名</title>
-<style type="text/css">
-
-</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>

@@ -73,7 +73,7 @@ public class MainController {
 	// 节点的排名数据
 	@RequestMapping(value = "node_rank", method = RequestMethod.GET)
 	public String nodeRank() {
-		return "nodeRank.less";
+		return "nodeRank";
 	}
 
 	// 新闻列表数据
