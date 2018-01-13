@@ -34,6 +34,7 @@ class NodeData extends Data{
 	public String nodeName;
 	public String nodeAddress;
 	public String level;
+	public String classification;
 	public String conclusion;
 	public String advice;
 	public String updateTime; // 数据平均之后的时间戳
@@ -48,6 +49,12 @@ class NodeData extends Data{
 	}
 	public void setNodeAddress(String nodeAddress) {
 		this.nodeAddress = nodeAddress;
+	}
+	public String getClassification() {
+		return classification;
+	}
+	public void setClassification(String classification) {
+		this.classification = classification;
 	}
 	public String getLevel() {
 		return level;
@@ -84,6 +91,7 @@ public class DataController {
 		ranking_list：获取排名数据，针对所有的安装节点，按照今日，昨日，一周，一月分别计算当天，昨天，一周，一月的平均AQI指数并返回
 		data_save：生成测试数据
 		node_historical_data：获取某个节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
+		node_list_aqi: 获取每个节点最新的一条数据计算该节点的污染指数的空气质量信息
 	 */
 	@Autowired
 	private DataService dataService;
@@ -111,7 +119,7 @@ public class DataController {
 				nData.setO3((double)Math.round(data.getO3()*100)/100);
 				nData.setAqi((double)Math.round(data.getAqi()*100)/100);
 				nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
-				nData.setLevel(getDesc(data.getAqi()));
+				nData.setClassification(getClassification(data.getAqi()));
 				nData.setConclusion(getConclusion(data.getAqi()));
 				nData.setAdvice(getAdvice(data.getAqi()));
 			}
@@ -130,7 +138,7 @@ public class DataController {
 			nData.setPm10((double)Math.round(data.getPm10()*100)/100);
 			nData.setAqi((double)Math.round(data.getAqi()*100)/100);
 			nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
-			nData.setLevel(getDesc(data.getAqi()));
+			nData.setClassification(getClassification(data.getAqi()));
 			nData.setConclusion(getConclusion(data.getAqi()));
 			nData.setAdvice(getAdvice(data.getAqi()));
 		}
@@ -404,7 +412,7 @@ public class DataController {
 //			int rankLen = rankList.size();
 //			for (int i = 0; i < rankLen; ++i) {
 //				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
 //		    }
 //			return rankList;
 		}else if(requestType.equals("yesterday")){
@@ -459,7 +467,7 @@ public class DataController {
 //			int rankLen = rankList.size();
 //			for (int i = 0; i < rankLen; ++i) {
 //				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
 //		    }
 //			return rankList;
 		}else if(requestType.equals("week")){
@@ -513,7 +521,7 @@ public class DataController {
 //			int rankLen = rankList.size();
 //			for (int i = 0; i < rankLen; ++i) {
 //				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
 //		    }
 //			return rankList;
 		}else if(requestType.equals("month")){
@@ -567,7 +575,7 @@ public class DataController {
 //			int rankLen = rankList.size();
 //			for (int i = 0; i < rankLen; ++i) {
 //				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
 //		    }
 //			return rankList;
 		}else{
@@ -583,7 +591,7 @@ public class DataController {
 		Collections.sort(rankList, new SortByAqi());
 		for (int i = 0; i < rankList.size(); ++i) {
 			rankList.get(i).setRank(i+1);
-			rankList.get(i).setDataDesc(getDesc(rankList.get(i).getAQI()));
+			rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
 	    }
 		return rankList;
 	}
@@ -825,6 +833,36 @@ public class DataController {
 		return nodeDataList;
 	}
 
+	// 获取每个节点最新的一条数据计算该节点的污染指数的空气质量信息
+	@RequestMapping(value = "node_list_aqi", method = RequestMethod.POST)
+	public @ResponseBody List<NodeData> nodeListAqi(HttpServletRequest request, HttpServletResponse response){
+		List<Node> nodeList = nodeService.nodeList();
+		List<NodeData> nodeData = new ArrayList<NodeData>();
+		for(int i = 0; i < nodeList.size(); ++i){
+			Data data = dataService.latestData(nodeList.get(i).getId());
+			NodeData nData = new NodeData();
+			if(data != null){
+				nData.setNodeId(nodeList.get(i).getId());
+				nData.setNodeName(nodeList.get(i).getNodeName());
+				nData.setNodeAddress(nodeList.get(i).getProvince() + nodeList.get(i).getCity());
+				nData.setPm25((double)Math.round(data.getPm25()*100)/100);
+				nData.setPm10((double)Math.round(data.getPm10()*100)/100);
+				nData.setSo2((double)Math.round(data.getSo2()*100)/100);
+				nData.setNo2((double)Math.round(data.getNo2()*100)/100);
+				nData.setCo((double)Math.round(data.getCo()*100)/100);
+				nData.setO3((double)Math.round(data.getO3()*100)/100);
+				nData.setAqi((double)Math.round(data.getAqi()*100)/100);
+				nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+				nData.setLevel(getLevel(data.getAqi()));
+				nData.setClassification(getClassification(data.getAqi()));
+				nData.setConclusion(getConclusion(data.getAqi()));
+				nData.setAdvice(getAdvice(data.getAqi()));
+			}
+			nodeData.add(nData);
+		}
+		return nodeData;
+	}
+
 	@RequestMapping(value = "data_save", method = RequestMethod.GET)
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO Auto-generated method stub
@@ -855,8 +893,27 @@ public class DataController {
 		PrintWriter pWriter = response.getWriter();
 		pWriter.println("success");
 	}
-	
-	public String getDesc(double aqi){
+
+	public String getLevel(double aqi){
+		if(aqi <= 0){
+			return "无数据";
+		}
+		if(aqi < 50){
+			return "一级";
+		}else if(aqi < 100){
+			return "二级";
+		}else if(aqi < 150){
+			return "三级";
+		}else if(aqi < 200){
+			return "四级";
+		}else if(aqi < 300){
+			return "五级";
+		}else if(aqi > 300){
+			return "六级";
+		}
+		return "无数据";
+	}
+	public String getClassification(double aqi){
 		if(aqi <= 0){
 			return "无数据";
 		}

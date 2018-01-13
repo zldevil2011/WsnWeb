@@ -42,6 +42,13 @@ public class MainController {
 		return "realDataList";
 	}
 
+	@RequestMapping(value = "aqiInfo", method = RequestMethod.GET)
+	public String aqiInfo() {
+		System.out.println("aqiInfo tempalte");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "aqiInfo";
+	}
+
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register() {
 		System.out.println("user register mapping!");

@@ -332,6 +332,7 @@
   border: 1px solid #bce8f1;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  margin-bottom: 50px;
 }
 .nodeData-body-container .node-historical-data .search-box {
   background-color: #e2e2d5;
@@ -363,4 +364,53 @@
 .nodeData-body-container .node-historical-data .table-container .table tr td,
 .nodeData-body-container .node-historical-data .table-container .table tr th {
   text-align: center;
+}
+.aqiInfo-body-container {
+  width: 80%;
+  margin: 0 auto;
+}
+.aqiInfo-body-container .aqiInfo-data {
+  border: 1px solid #bce8f1;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 50px;
+}
+.aqiInfo-body-container .aqiInfo-data .search-box {
+  background-color: #e2e2d5;
+  padding: 10px 10px 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.aqiInfo-body-container .aqiInfo-data .search-box .form-control {
+  background-color: rgba(255, 255, 255, 0.8);
+  margin: 0 5px;
+}
+.aqiInfo-body-container .aqiInfo-data .search-box .select-100 {
+  width: 100px;
+}
+.aqiInfo-body-container .aqiInfo-data .search-box label {
+  margin: 0 5px;
+}
+.aqiInfo-body-container .aqiInfo-data .search-box .btn-100 {
+  width: 100px;
+}
+.aqiInfo-body-container .aqiInfo-data .table-container {
+  min-height: 100px;
+  max-height: 600px;
+  overflow: scroll;
+}
+.aqiInfo-body-container .aqiInfo-data .table-container .table {
+  font-size: 12px;
+  width: 1200px;
+}
+.aqiInfo-body-container .aqiInfo-data .table-container .table tr td,
+.aqiInfo-body-container .aqiInfo-data .table-container .table tr th {
+  text-align: center;
+  vertical-align: middle;
+}
+.aqiInfo-body-container .aqiInfo-data .table-container .table tr td.item-center,
+.aqiInfo-body-container .aqiInfo-data .table-container .table tr th.item-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
