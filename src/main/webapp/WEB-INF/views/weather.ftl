@@ -19,7 +19,7 @@
                 <div class="weather-status">
                     <div class="today-temperature">{{ data.temperature }}℃</div>
                     <p class="today-detail">
-                        {{ data.weather }}&nbsp;&nbsp;|&nbsp;&nbsp;风向：{{ data.cloud_speed }}&nbsp;&nbsp;|&nbsp;&nbsp;风速：{{ data.cloud | keepTwoNum}}&nbsp;&nbsp;|&nbsp;&nbsp;湿度：{{ data.humidity }}%
+                        {{ data.weather }}&nbsp;&nbsp;|&nbsp;&nbsp;风向：{{ data.cloud_direction }}&nbsp;&nbsp;|&nbsp;&nbsp;风速：{{ data.cloud_speed | keepTwoNum}}&nbsp;&nbsp;|&nbsp;&nbsp;湿度：{{ data.humidity }}%
                     </p>
                 </div>
             </div>
@@ -45,14 +45,14 @@
                         <div>{{ fore.week }}</div>
                         <div>{{ fore.weather }}</div>
                         <div>{{ fore.high_temperature }}℃/{{ fore.low_temperature }}℃</div>
-                        <div>风速{{ fore.cloud }}</div>
-                        <div>风向{{ fore.cloud_speed }}</div>
+                        <div>风速:{{ fore.cloud }}</div>
+                        <div>{{ fore.cloud_speed }}</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="clearfix" style="background: rgba(228, 228, 219, 0.2);width: 80%; margin: 0 auto;margin-bottom: 20px;">
+    <div class="clearfix" style="background: rgba(228, 228, 219, 0.2);width: 80%; margin: 0 auto;margin-bottom: 100px;">
         <div class="clearfix">
             <div class="col-md-2 col-sm-12 horizontal-text-center" style="text-align: center;">
                 <h2 style="font-size: 18px;color: #000000;font-weight: bold;">一周气温趋势</h2>
@@ -171,7 +171,6 @@
             init:function(){
                 this.loadRealTime();
                 this.loadForecast();
-                this.paintLines();
             },
             loadRealTime:function () {
                 this.$http.jsonp('https://api.caiyunapp.com/v2/vgAv8bUfzXZMc=ZH/117.4914200000,30.6646900000/realtime.json'
@@ -182,8 +181,8 @@
                         date: new Date().MyTimeFormat("yyyy-MM-dd"),
                         temperature: result.temperature,
                         weather: dayMap[result.skycon],
-                        cloud:result.wind.speed,
-                        cloud_speed:result.wind.direction,
+                        cloud_direction:this.getDirection(result.wind.direction),
+                        cloud_speed:result.wind.speed,
                         humidity:result.humidity * 100,
                         pm25:result.pm25,
                         aqi:result.aqi
@@ -214,7 +213,7 @@
                                 high_temperature:result.temperature[i].max,
                                 low_temperature:result.temperature[i].min,
                                 cloud:result.wind[i].avg.speed,
-                                cloud_speed:result.wind[i].avg.direction
+                                cloud_speed:this.getDirection(result.wind[i].avg.direction)
                             };
                             var temDate = new Date(result.aqi[i].date);
                             var lowTmp = {};
@@ -298,6 +297,30 @@
                     }
                     chart.render();
                 }
+            },
+            getDirection:function(angle){
+                if(angle == 0){
+                    return "北风";
+                }
+                if(angle > 0 && angle < 90){
+                    return "东北风";
+                }
+                if(angle == 90){
+                    return "东风";
+                }
+                if(angle > 90 && angle < 180){
+                    return "东南风";
+                }
+                if(angle == 180){
+                    return "南风";
+                }
+                if(angle > 180 && angle < 270){
+                    return "西南风";
+                }
+                if(angle == 270){
+                    return "西风";
+                }
+                return "西北风";
             }
         }
     })
