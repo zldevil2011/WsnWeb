@@ -1,0 +1,59 @@
+#weather{
+}
+.weather-body-container {
+  .horizontal-center{
+    text-align: center;
+  }
+  .info-box{
+    overflow: hidden;
+    background: rgba(164, 140, 204, 0.2);
+    .flex-box{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+      flex-direction: column;
+      //padding-bottom: 10000px;
+      //margin-bottom: -10000px;
+      .city_name{
+        font-size: 28px;
+      }
+      .date-time-index{
+        font-size: 16px;
+      }
+      .weather-status{
+        .today-temperature{
+          font-size: 100px;
+        }
+      }
+      .warning-index, .warning-value, .horizontal-center{
+        font-size: 16px;
+      }
+    }
+  }
+  .week-forecast{
+    background: rgba(0,0,0,0.2);
+    padding: 20px 0;
+    .horizontal-text-center{
+      text-align: center;
+    }
+    .week-forecast-days{
+      display: flex;
+      justify-content: space-around;
+      .week-weather{
+        padding: 5px;
+        text-align: center;
+        >div{
+          background: rgba(255, 255, 255, 0.6);
+          padding: 5px;
+          border-radius: 5px;
+          width: 150px;
+          div{
+            padding: 5px;
+          }
+        }
+      }
+    }
+
+  }
+}

@@ -21,9 +21,10 @@
 		<div class="device-list">
 			<ul>
 				<li>
-					<span>名称</span><span class="time">安装日期</span><span>状态</span><span>最新数据日期</span><span>数据量</span>
+					<span>地址</span><span>名称</span><span class="time">安装日期</span><span>状态</span><span>最新数据日期</span><span>数据量</span>
 				</li>
 				<li v-for="node in nodeList">
+					<span>{{node.address}}</span>
 					<span>{{node.nodeName}}</span>
 					<span class="time">{{node.installTime}}</span>
 					<span>{{node.status == 0 ? '在线':'离线'}}</span>

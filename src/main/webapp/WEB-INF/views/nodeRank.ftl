@@ -19,38 +19,70 @@
 	<div class="rank-data" style="padding-top:30px;">
 		<table class="table"  v-show="parameter == 'today'">
 			<thead>
-				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
+				<tr><th>排名</th><th>质量</th><th>节点</th><th>AQI</th><th>PM2.5</th><th>PM10</th><th>SO2</th></tr>
 			</thead>
 			<tbody>
-				<tr v-for="node in todayNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
-				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingToday"></td></tr>
+				<tr v-for="node in todayNodes">
+					<td>{{node.rank}}</td>
+					<td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+					<td>{{node.nodeName}}</td>
+					<td>{{node.aqi}}</td>
+					<td>{{node.pm25}}</td>
+					<td>{{node.pm10}}</td>
+					<td>{{node.so2}}</td>
+				</tr>
+				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingToday"></td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'yesterday'">
 			<thead>
-				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
+            	<tr><th>排名</th><th>质量</th><th>节点</th><th>AQI</th><th>PM2.5</th><th>PM10</th><th>SO2</th></tr>
 			</thead>
 			<tbody>
-				<tr v-for="node in yesterdayNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
-				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingYesterday"></td></tr>
+				<tr v-for="node in yesterdayNodes">
+                    <td>{{node.rank}}</td>
+                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.nodeName}}</td>
+                    <td>{{node.aqi}}</td>
+                    <td>{{node.pm25}}</td>
+                    <td>{{node.pm10}}</td>
+                    <td>{{node.so2}}</td>
+				</tr>
+				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingYesterday"></td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'week'">
 			<thead>
-				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
+            	<tr><th>排名</th><th>质量</th><th>节点</th><th>AQI</th><th>PM2.5</th><th>PM10</th><th>SO2</th></tr>
 			</thead>
 			<tbody>
-				<tr v-for="node in weekNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
-				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingWeek"></td></tr>
+				<tr v-for="node in weekNodes">
+                    <td>{{node.rank}}</td>
+                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.nodeName}}</td>
+                    <td>{{node.aqi}}</td>
+                    <td>{{node.pm25}}</td>
+                    <td>{{node.pm10}}</td>
+                    <td>{{node.so2}}</td>
+				</tr>
+				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingWeek"></td></tr>
 			</tbody>
 		</table>
 		<table class="table"  v-show="parameter == 'month'">
 			<thead>
-				<tr><td>排名</td><td>质量</td><td>节点</td><td>AQI</td><td>PM2.5</td></tr>
+            	<tr><th>排名</th><th>质量</th><th>节点</th><th>AQI</th><th>PM2.5</th><th>PM10</th><th>SO2</th></tr>
 			</thead>
 			<tbody>
-				<tr v-for="node in monthNodes"><td>{{node.rank}}</td><td>{{node.dataDesc}}</td><td>{{node.nodeName}}</td><td>{{node.aqi}}</td><td>{{node.pm25}}</td></tr>
-				<tr><td colspan="5" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingMonth"></td></tr>
+				<tr v-for="node in monthNodes">
+                    <td>{{node.rank}}</td>
+                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.nodeName}}</td>
+                    <td>{{node.aqi}}</td>
+                    <td>{{node.pm25}}</td>
+                    <td>{{node.pm10}}</td>
+                    <td>{{node.so2}}</td>
+				</tr>
+				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingMonth"></td></tr>
 			</tbody>
 		</table>
 		
