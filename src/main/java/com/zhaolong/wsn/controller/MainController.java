@@ -56,6 +56,13 @@ public class MainController {
 		return "aqiInfo";
 	}
 
+	@RequestMapping(value = "dataWarning", method = RequestMethod.GET)
+	public String dataWarning() {
+		System.out.println("dataWarning tempalte");
+		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
+		return "dataWarning";
+	}
+
 	@RequestMapping(value = "weather", method = RequestMethod.GET)
 	public String weather() {
 		System.out.println("weather tempalte");

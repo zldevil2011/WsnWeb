@@ -6,6 +6,7 @@
 		<li onclick="window.location.href='/WsnWeb/realDataList/'">实时监测</li>
 		<li onclick="window.location.href='/WsnWeb/aqiInfo/'">AQI指数</li>
 		<li onclick="window.location.href='/WsnWeb/node_rank/'">排行榜</li>
+		<li onclick="window.location.href='/WsnWeb/dataWarning/'">空气报警</li>
 		<li onclick="window.location.href='/WsnWeb/news_list/'">最新新闻</li>
 		<li onclick="window.location.href='/WsnWeb/weather/'">天气情况</li>
 	</ul>

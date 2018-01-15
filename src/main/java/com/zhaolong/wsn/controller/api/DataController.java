@@ -81,6 +81,190 @@ class NodeData extends Data{
 		this.updateTime = updateTime;
 	}
 }
+class WarningData{
+	public String nodeName;
+	public String nodeAddress;
+	public String dataType;
+	public String parameter;
+	public String warningTime;
+	public String content;
+
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+
+	public String getNodeAddress() {
+		return nodeAddress;
+	}
+
+	public void setNodeAddress(String nodeAddress) {
+		this.nodeAddress = nodeAddress;
+	}
+
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
+	public String getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
+
+	public String getWarningTime() {
+		return warningTime;
+	}
+
+	public void setWarningTime(String warningTime) {
+		this.warningTime = warningTime;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public boolean getWarningData(Data data, String paramter, int dataType){
+		if(dataType == 1){
+			int cnt = 0;
+			// 检查是否是数据异常
+			if(paramter.equals("pm25")){
+				if(data.getPm25() == null){
+					this.setParameter("pm25");
+					this.setDataType("异常");
+					this.setContent("pm25传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("pm10")){
+				if(data.getPm10() == null){
+					this.setParameter("pm10");
+					this.setDataType("异常");
+					this.setContent("pm10传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("so2")){
+				if(data.getSo2() == null){
+					this.setParameter("so2");
+					this.setDataType("异常");
+					this.setContent("so2传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("no2")){
+				if(data.getNo2() == null){
+					this.setParameter("no2");
+					this.setDataType("异常");
+					this.setContent("no2传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("co")){
+				if(data.getCo() == null){
+					this.setParameter("co");
+					this.setDataType("异常");
+					this.setContent("co传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("o3")){
+				if(data.getO3() == null){
+					this.setParameter("o3");
+					this.setDataType("异常");
+					this.setContent("o3传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("speed")){
+				if(data.getSpeed() == null){
+					this.setParameter("speed");
+					this.setDataType("异常");
+					this.setContent("speed传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("direction")){
+				if(data.getDirection() == null){
+					this.setParameter("direction");
+					this.setDataType("异常");
+					this.setContent("direction传感器无数据");
+					cnt += 1;
+				}
+			}else if(paramter.equals("humidity")){
+				if(data.getHumidity() == null){
+					this.setParameter("humidity");
+					this.setDataType("异常");
+					this.setContent("humidity传感器无数据");
+					cnt += 1;
+				}
+			}
+			this.setWarningTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+			if(cnt > 0){
+				return true;
+			}
+			return false;
+		}else if(dataType == 2){
+			// 检查是否是数据超出阈值
+			int cnt = 0;
+			if(paramter.equals("pm25")){
+				if(data.getPm25() > 150){
+					this.setParameter("pm25");
+					this.setDataType("预警");
+					this.setContent("pm25数据超过150");
+					cnt += 1;
+				}
+			}else if(paramter.equals("pm10")){
+				if(data.getPm10()  > 150){
+					this.setParameter("pm10");
+					this.setDataType("预警");
+					this.setContent("pm10数据超过150");
+					cnt += 1;
+				}
+			}else if(paramter.equals("so2")){
+				if(data.getSo2() > 150){
+					this.setParameter("so2");
+					this.setDataType("预警");
+					this.setContent("so2数据超过150");
+					cnt += 1;
+				}
+			}else if(paramter.equals("no2")){
+				if(data.getNo2()  > 150l){
+					this.setParameter("no2");
+					this.setDataType("预警");
+					this.setContent("no2数据超过150");
+					cnt += 1;
+				}
+			}else if(paramter.equals("co")){
+				if(data.getCo()  > 150){
+					this.setParameter("co");
+					this.setDataType("预警");
+					this.setContent("co数据超过150");
+					cnt += 1;
+				}
+			}else if(paramter.equals("o3")){
+				if(data.getO3()  > 150){
+					this.setParameter("o3");
+					this.setDataType("预警");
+					this.setContent("o3数据超过150");
+					cnt += 1;
+				}
+			}
+			this.setWarningTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+			if(cnt > 0){
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+}
 @Controller
 @RequestMapping(value = "/api/*") 
 public class DataController {
@@ -92,6 +276,7 @@ public class DataController {
 		data_save：生成测试数据
 		node_historical_data：获取某个节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
 		node_list_aqi: 获取每个节点最新的一条数据计算该节点的污染指数的空气质量信息
+		node_warning_list: 获取某一个节点的在指定日期的预警和异常数据
 	 */
 	@Autowired
 	private DataService dataService;
@@ -861,6 +1046,70 @@ public class DataController {
 			nodeData.add(nData);
 		}
 		return nodeData;
+	}
+
+	// 获取某一个节点的在指定日期的预警和异常数据
+	@RequestMapping(value = "node_warning_list", method = RequestMethod.POST)
+	public @ResponseBody List<WarningData> nodeWarningList(HttpServletRequest request, HttpServletResponse response){
+		String nodeId = null;
+		List<WarningData> nodeWarningList = new ArrayList<WarningData>();
+		// 对于需要获取的数据区间，先给一个默认值，即今天的日期
+		Date date = new Date();
+		java.sql.Date startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(startDay);
+		calendar.add(calendar.DATE, 1);
+		java.sql.Date endDay = new java.sql.Date(calendar.getTime().getTime());
+		try{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			nodeId=request.getParameter("nodeId");
+			String startTime=request.getParameter("startTime");
+			String endTime=request.getParameter("endTime");
+			System.out.println("nodeId :" + nodeId);
+			System.out.println("startTime :" + startTime);
+			System.out.println("endTime :" + endTime);
+			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());;
+			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+		}catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+		}
+		// 对于需要获取的节点，先根据nodeId获取对应的的节点信息
+		if(nodeId == null){
+			return null;
+		}
+		Node node = nodeService.nodeInfo(Long.valueOf(nodeId));
+		List<Data> nodeDataList = dataService.dataList(Long.valueOf(nodeId), startDay, endDay);
+		int dataLen = nodeDataList.size();
+		ArrayList<String> parameterList = new ArrayList<String>();
+		parameterList.add("pm25");
+		parameterList.add("pm10");
+		parameterList.add("so2");
+		parameterList.add("no2");
+		parameterList.add("co");
+		parameterList.add("o3");
+		for(int i = 0; i < dataLen; ++i){
+			Data tData = nodeDataList.get(i);
+			for(int j = 0; j < 6; ++j){
+				String p = parameterList.get(j);
+				WarningData tmp = new WarningData();
+				tmp.setNodeName(node.getNodeName());
+				tmp.setNodeAddress(node.getAddress());
+				System.out.println("Check data: " + tData.getPm25() + ":" + p);
+				boolean res1 = tmp.getWarningData(tData, p, 1);
+				if(res1){
+					nodeWarningList.add(tmp);
+				}
+				WarningData tmp2 = new WarningData();
+				tmp2.setNodeName(node.getNodeName());
+				tmp2.setNodeAddress(node.getAddress());
+				boolean res2 = tmp2.getWarningData(tData, p, 2);
+				if(res2){
+					nodeWarningList.add(tmp2);
+				}
+			}
+		}
+		return nodeWarningList;
 	}
 
 	@RequestMapping(value = "data_save", method = RequestMethod.GET)
