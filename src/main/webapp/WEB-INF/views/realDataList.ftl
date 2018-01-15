@@ -51,6 +51,7 @@
 					<td>{{data.co}}</td>
 					<td>{{data.o3}}</td>
 				</tr>
+                <tr><td colspan="11" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingRealTimeData"></td></tr>
 				</tbody>
 			</table>
 		</div>
@@ -60,7 +61,8 @@
     var readData = new Vue({
         el: "#real-data",
         data: {
-            nodeList: []
+            nodeList: [],
+            loadingRealTimeData: true
         },
         created: function () {
             this.init();
@@ -73,6 +75,7 @@
                         this.tip = true;
                     }else{
                         this.nodeList = res.data;
+                        this.loadingRealTimeData = false;
                     }
                 }, function(err){
                     if(err.status != 200){

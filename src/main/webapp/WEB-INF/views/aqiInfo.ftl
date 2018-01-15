@@ -62,6 +62,7 @@
                     <td>{{data.level}}</td>
                     <td class="item-center">{{data.classification}}<span style="background-color:green; width: 20px; height: 12px; display: inline-block;margin-left: 10px;border-radius: 5px;"></span></td>
                 </tr>
+                <tr><td colspan="20" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAqiInfo"></td></tr>
                 </tbody>
             </table>
 			<div class="footer-info">
@@ -97,6 +98,7 @@
 		el:"#aqiInfo-data",
 		data:{
             aqiInfoDataList: '',
+            loadingAqiInfo: true,
             updateTime: new Date(),
 			search_info: {
                 requestType: 'all',
@@ -130,6 +132,7 @@
                     if(res.status != 200){
                         this.tip = true;
                     }else{
+                        this.loadingAqiInfo = false;
                         this.aqiInfoDataList = res.data;
                     }
                 }, function(err){

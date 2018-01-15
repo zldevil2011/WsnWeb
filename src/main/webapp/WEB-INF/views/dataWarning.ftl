@@ -46,6 +46,7 @@
                     <td>{{data.warningTime}}</td>
                     <td>{{data.content}}</td>
                 </tr>
+                <tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingDataWarning"></td></tr>
                 </tbody>
             </table>
 			<div class="footer-info">
@@ -80,6 +81,7 @@
 	var aqiInfoData = new Vue({
 		el:"#aqiInfo-data",
 		data:{
+            loadingDataWarning: true,
             warningList:[{
                 "nodeAddress": '安徽池州',
                 "nodeName": '站点一',
@@ -111,6 +113,7 @@
                 this.loadNodesList();
             },
             getInfoData: function(){
+                this.loadingDataWarning = true;
                 this.loadData();
 			},
             loadNodesList:function(){
@@ -147,6 +150,7 @@
                     }else{
                         console.log(res.data);
                         this.warningList = res.data;
+                        this.loadingDataWarning = false;
                     }
                 }, function(err){
                     if(err.status != 200){
