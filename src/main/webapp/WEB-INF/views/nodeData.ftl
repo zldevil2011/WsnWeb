@@ -120,7 +120,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="(data,index) in nodeDataList">
-                    <th scope="row">{{index+1}}</th>
+                    <td scope="row">{{index+1}}</td>
                     <td>{{data.dataStatus == 0 ? '正常' : data.dataStatus == 1 ? '异常' : '超标'}}</td>
                     <td>{{data.updateTime}}</td>
                     <td>{{data.pm25 | keepTwoNum}}</td>
@@ -130,7 +130,8 @@
                     <td>{{data.co | keepTwoNum}}</td>
                     <td>{{data.o3 | keepTwoNum}}</td>
                 </tr>
-                </tbody>
+                <tr><td colspan="9" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingNodeHistoricalData"></td></tr>
+				</tbody>
             </table>
 			<div class="footer-info">
 
@@ -402,6 +403,7 @@
 	var nodeHistoricalData = new Vue({
 		el:"#node-historical-data",
 		data:{
+            loadingNodeHistoricalData: true,
             nodeDataList: '',
 			search_info: {
                 requestType: 'all',
@@ -423,6 +425,7 @@
                 this.loadData();
             },
             getHistoricalData: function(){
+                this.loadingNodeHistoricalData = true;
                 this.loadData();
 			},
 			loadData: function(){
@@ -435,6 +438,7 @@
                         this.tip = true;
                     }else{
                         this.nodeDataList = res.data;
+                        this.loadingNodeHistoricalData = false;
                     }
                 }, function(err){
                     if(err.status != 200){

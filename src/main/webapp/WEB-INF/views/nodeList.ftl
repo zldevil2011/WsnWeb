@@ -25,7 +25,7 @@
 		<dl class="item" v-for="nodeList in charNodeList" v-show="!city">
 			<dt class="left-head">{{nodeList.tip}}</dt>
 			<dd class="right-content">
-				<a v-for="node in nodeList.node_list">{{node.nodeName}}</a>
+				<a v-for="node in nodeList.node_list" v-bind:href="'/WsnWeb/node_data/'+node.id">{{node.nodeName}}</a>
 			</dd>
 		</dl>
 	</div>

@@ -806,9 +806,9 @@ public class DataController {
 			requestType=request.getParameter("requestType");
 			String startTime=request.getParameter("startTime");
 			String endTime=request.getParameter("endTime");
-			System.out.println("requestType :" + requestType);
-			System.out.println("startTime :" + startTime);
-			System.out.println("endTime :" + endTime);
+//			System.out.println("requestType :" + requestType);
+//			System.out.println("startTime :" + startTime);
+//			System.out.println("endTime :" + endTime);
 			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());;
 			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
 
@@ -819,9 +819,9 @@ public class DataController {
 			System.out.println(e);
 			// TODO: handle exception
 		}
-		System.out.println("requestType :" + requestType.equals("all"));
+//		System.out.println("requestType :" + requestType.equals("all"));
 		if(requestType.equals("all")){
-			System.out.println("requestType is all :" + requestType.equals("all"));
+//			System.out.println("requestType is all :" + requestType.equals("all"));
 			// 获取该节点的所有数据，将Data类型的数据拷贝到NodeData
 			List<Data> tmpList = dataService.dataList(node_id, startDay, endDay);
 			int dataLen = tmpList.size();
@@ -1065,9 +1065,9 @@ public class DataController {
 			nodeId=request.getParameter("nodeId");
 			String startTime=request.getParameter("startTime");
 			String endTime=request.getParameter("endTime");
-			System.out.println("nodeId :" + nodeId);
-			System.out.println("startTime :" + startTime);
-			System.out.println("endTime :" + endTime);
+//			System.out.println("nodeId :" + nodeId);
+//			System.out.println("startTime :" + startTime);
+//			System.out.println("endTime :" + endTime);
 			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());;
 			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
 		}catch (Exception e) {
@@ -1095,7 +1095,6 @@ public class DataController {
 				WarningData tmp = new WarningData();
 				tmp.setNodeName(node.getNodeName());
 				tmp.setNodeAddress(node.getAddress());
-				System.out.println("Check data: " + tData.getPm25() + ":" + p);
 				boolean res1 = tmp.getWarningData(tData, p, 1);
 				if(res1){
 					nodeWarningList.add(tmp);
@@ -1109,6 +1108,7 @@ public class DataController {
 				}
 			}
 		}
+		Collections.reverse(nodeWarningList);
 		return nodeWarningList;
 	}
 
