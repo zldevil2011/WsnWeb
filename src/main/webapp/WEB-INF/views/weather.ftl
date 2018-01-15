@@ -63,13 +63,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="clearfix">
-                            <div v-for="city in locationList" class="horizontal-center col-md-2 img-rounded hander city-choice-item" v-on:click="changeLocation(city)">
+                            <div v-for="city in locationList" class="horizontal-center col-md-2 city-choice-item" v-on:click="changeLocation(city)" style="cursor:pointer;">
                                 {{ city.location }}
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
                 </div>
             </div>
@@ -117,6 +117,26 @@
         }
         return fmt;
     };
+    function Mul2(arg1,arg2){
+        var r1,r2, m, n,q;
+        if(parseInt(arg1) == arg1){
+            r1 = 0;
+        }else{
+            r1 = arg1.toString().split(".")[1].length;
+        }
+        if(parseInt(arg2) == arg2){
+            r2 = 0;
+        }else{
+            r2 = arg2.toString().split(".")[1].length;
+        }
+        m = Math.pow(10,r1);
+        n = Math.pow(10,r2);
+        q = m*n;
+        var sum = (((arg1*m) * (arg2*n))/q);
+        return sum;
+    }
+
+
     var weather = new Vue({
         el: "#weather",
         data:{
@@ -225,7 +245,7 @@
                         weather: dayMap[result.skycon],
                         cloud_direction:this.getDirection(result.wind.direction),
                         cloud_speed:result.wind.speed,
-                        humidity:result.humidity * 100,
+                        humidity:Mul2(result.humidity, 100),
                         pm25:result.pm25,
                         aqi:result.aqi
                     };

@@ -472,3 +472,11 @@
 .weather-body-container .week-forecast .week-forecast-days .week-weather > div div {
   padding: 5px;
 }
+.weather-body-container #place-choice .city-choice-item {
+  cursor: pointer;
+}
+.weather-body-container #place-choice .city-choice-item:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+}
