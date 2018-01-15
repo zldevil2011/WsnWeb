@@ -9,6 +9,7 @@
         <div class="clearfix info-box">
             <div class="flex-box col-md-3 horizontal-center">
                 <div class="city_name">
+                    <a id="" href="#place-choice" role="button" class="glyphicon glyphicon-edit hander" data-toggle="modal" style="font-size: 16px;color: #fff;text-decoration: none;"></a>
                     <span name="latest_location">{{data.location}}</span>&nbsp;
                 </div>
                 <p class="date-time-index">
@@ -51,6 +52,28 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="place-choice" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            请选择城市
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="clearfix">
+                            <div v-for="city in locationList" class="horizontal-center col-md-2 img-rounded hander city-choice-item" v-on:click="changeLocation(city)">
+                                {{ city.location }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="button" class="btn btn-primary">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="clearfix" style="background: rgba(228, 228, 219, 0.2);width: 80%; margin: 0 auto;margin-bottom: 100px;">
         <div class="clearfix">
@@ -63,8 +86,6 @@
             <div id="chartContainer" style="height: 200px; width: 100%;"></div>
         </div>
     </div>
-
-
 <script>
     var dayMap = {
         "CLEAR_DAY":"晴天",
@@ -99,6 +120,23 @@
     var weather = new Vue({
         el: "#weather",
         data:{
+            locationList: [{
+                location: '池州',
+                longitude: '117.49142',
+                latitude: '30.66469'
+            }, {
+                location: '合肥',
+                longitude: '117.17',
+                latitude: '31.52'
+            }, {
+                location: '北京',
+                longitude: '116.41667',
+                latitude: '39.91667'
+            }, {
+                location: '西安',
+                longitude: '108.95000',
+                latitude: '34.26667'
+            }],
             data:{
                 location: '池州',
                 date: '2018-01-15',
@@ -169,15 +207,19 @@
         },
         methods:{
             init:function(){
-                this.loadRealTime();
-                this.loadForecast();
+                this.loadRealTime(117.49142, 30.66469, '池州');
+                this.loadForecast(117.49142, 30.66469), '池州';
             },
-            loadRealTime:function () {
-                this.$http.jsonp('https://api.caiyunapp.com/v2/vgAv8bUfzXZMc=ZH/117.4914200000,30.6646900000/realtime.json'
+            changeLocation:function(data){
+                this.loadRealTime(data.longitude, data.latitude, data.location);
+                this.loadForecast(data.longitude, data.latitude, data.location);
+            },
+            loadRealTime:function (longitude, latitude, location) {
+                this.$http.jsonp('https://api.caiyunapp.com/v2/vgAv8bUfzXZMc=ZH/'+longitude+','+latitude+'/realtime.json'
                 ).then(function(res){
                     var result = res.data.result;
                     this.data = {
-                        location:'池州',
+                        location:location,
                         date: new Date().MyTimeFormat("yyyy-MM-dd"),
                         temperature: result.temperature,
                         weather: dayMap[result.skycon],
@@ -198,13 +240,15 @@
                     }
                 });
             },
-            loadForecast:function () {
-                this.$http.jsonp('https://api.caiyunapp.com/v2/vgAv8bUfzXZMc=ZH/117.4914200000,30.6646900000/forecast.json').then(function(res){
+            loadForecast:function (longitude, latitude, location) {
+                this.$http.jsonp('https://api.caiyunapp.com/v2/vgAv8bUfzXZMc=ZH/'+longitude+','+latitude+'/forecast.json').then(function(res){
                     if(res.status != 200){
                         this.tip = true;
                     }else{
                         var result = res.data.result.daily;
                         this.forecastList = [];
+                        this.lowTemList = [];
+                        this.highTemList = [];
                         for(var i = 0; i < 5; ++i){
                             var tmpObj = {
                                 date: result.aqi[i].date,
@@ -239,6 +283,7 @@
                 });
             },
             paintLines:function(){
+                $("#chartContainer").html('');
                 console.log("yes");
                 var chart = new CanvasJS.Chart("chartContainer", {
                     animationEnabled: true,
