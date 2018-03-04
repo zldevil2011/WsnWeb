@@ -109,17 +109,17 @@ public class ReceiveServer {
 			// TODO: handle exception
 		}
 	    try {
-	    	data.setSpeed(Double.parseDouble(speed));
+	    	data.setWindSpeed(Double.parseDouble(speed));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	    try {
-	    	data.setDirection(direction);
+	    	data.setWindyDirection(Double.parseDouble(direction));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	    try {
-	    	data.setHumidity(Double.parseDouble(humidity));
+	    	data.setAirHumidity(Double.parseDouble(humidity));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

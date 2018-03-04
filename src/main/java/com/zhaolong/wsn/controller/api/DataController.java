@@ -184,21 +184,21 @@ class WarningData{
 					cnt += 1;
 				}
 			}else if(parameter.equals("speed")){
-				if(data.getSpeed() == null){
+				if(data.getWindSpeed() == null){
 					this.setParameter("speed");
 					this.setDataType("异常");
 					this.setContent("speed传感器无数据");
 					cnt += 1;
 				}
 			}else if(parameter.equals("direction")){
-				if(data.getDirection() == null){
+				if(data.getWindyDirection() == null){
 					this.setParameter("direction");
 					this.setDataType("异常");
 					this.setContent("direction传感器无数据");
 					cnt += 1;
 				}
 			}else if(parameter.equals("humidity")){
-				if(data.getHumidity() == null){
+				if(data.getAirHumidity() == null){
 					this.setParameter("humidity");
 					this.setDataType("异常");
 					this.setContent("humidity传感器无数据");
@@ -905,13 +905,13 @@ public class DataController {
 							o3Cnt += 1;
 							o3Total += tData.getO3();
 						}
-						if(tData.getHumidity() != null){
+						if(tData.getAirHumidity() != null){
 							humidityCnt += 1;
-							humidityTotal += tData.getHumidity();
+							humidityTotal += tData.getAirHumidity();
 						}
-						if(tData.getSpeed() != null){
+						if(tData.getWindSpeed() != null){
 							speedCnt += 1;
-							speedTotal += tData.getSpeed();
+							speedTotal += tData.getWindSpeed();
 						}
 					}
 				}
@@ -922,8 +922,8 @@ public class DataController {
 					nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
 					nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
 					nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
-					nodeData.setHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
-					nodeData.setSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
+					nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
 					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
 					nodeDataList.add(nodeData);
 				}
@@ -988,13 +988,13 @@ public class DataController {
 							o3Cnt += 1;
 							o3Total += tData.getO3();
 						}
-						if(tData.getHumidity() != null){
+						if(tData.getAirHumidity() != null){
 							humidityCnt += 1;
-							humidityTotal += tData.getHumidity();
+							humidityTotal += tData.getAirHumidity();
 						}
-						if(tData.getSpeed() != null){
+						if(tData.getWindSpeed() != null){
 							speedCnt += 1;
-							speedTotal += tData.getSpeed();
+							speedTotal += tData.getWindSpeed();
 						}
 					}
 				}
@@ -1005,8 +1005,8 @@ public class DataController {
 					nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
 					nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
 					nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
-					nodeData.setHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
-					nodeData.setSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
+					nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
 					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
 					nodeDataList.add(nodeData);
 				}

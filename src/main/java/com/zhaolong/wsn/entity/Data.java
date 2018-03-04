@@ -20,6 +20,9 @@ public class Data {
     @Column(name = "created")
     private Long created = System.currentTimeMillis();
 
+    @Column(name = "dataCollectTime")
+	private String dataCollectTime;
+
     @Column(name = "dataDate", nullable=true)
     private Date dataDate;
     
@@ -28,7 +31,6 @@ public class Data {
     
     @Column(name = "nodeId", nullable=true)
     private Long nodeId;
-    
 
 	@Column(name = "pm25")
     private Double pm25;
@@ -48,15 +50,21 @@ public class Data {
     @Column(name = "co")
     private Double co;
     
-    @Column(name = "speed")
-    private Double speed;
+    @Column(name = "windySpeed")
+    private Double windSpeed;
     
-    @Column(name = "direction")
-    private String direction;
+    @Column(name = "windyDirection")
+    private Double windyDirection;
     
-    @Column(name = "humidity")
-    private Double humidity;
-    
+    @Column(name = "airHumidity")
+    private Double airHumidity;
+
+    @Column(name = "airTemperature")
+	private Double airTemperature;
+
+	@Column(name = "airPressure")
+	private Double airPressure;
+
     @Column(name = "aqi")
     private Double aqi;
 
@@ -77,6 +85,14 @@ public class Data {
 
 	public void setCreated(Long created) {
 		this.created = created;
+	}
+
+	public String getDataCollectTime() {
+		return dataCollectTime;
+	}
+
+	public void setDataCollectTime(String dataCollectTime) {
+		this.dataCollectTime = dataCollectTime;
 	}
 
 	public Date getDataDate() {
@@ -151,28 +167,44 @@ public class Data {
 		this.co = co;
 	}
 
-	public Double getSpeed() {
-		return speed;
+	public Double getWindSpeed() {
+		return windSpeed;
 	}
 
-	public void setSpeed(Double speed) {
-		this.speed = speed;
+	public void setWindSpeed(Double windSpeed) {
+		this.windSpeed = windSpeed;
 	}
 
-	public String getDirection() {
-		return direction;
+	public Double getWindyDirection() {
+		return windyDirection;
 	}
 
-	public void setDirection(String direction) {
-		this.direction = direction;
+	public void setWindyDirection(Double windyDirection) {
+		this.windyDirection = windyDirection;
 	}
 
-	public Double getHumidity() {
-		return humidity;
+	public Double getAirHumidity() {
+		return airHumidity;
 	}
 
-	public void setHumidity(Double humidity) {
-		this.humidity = humidity;
+	public void setAirHumidity(Double airHumidity) {
+		this.airHumidity = airHumidity;
+	}
+
+	public Double getAirTemperature() {
+		return airTemperature;
+	}
+
+	public void setAirTemperature(Double airTemperature) {
+		this.airTemperature = airTemperature;
+	}
+
+	public Double getAirPressure() {
+		return airPressure;
+	}
+
+	public void setAirPressure(Double airPressure) {
+		this.airPressure = airPressure;
 	}
 
 	public Double getAqi() {
@@ -187,8 +219,7 @@ public class Data {
 		return dataStatus;
 	}
 
-	public void setDataStatus(int dataStatust) {
+	public void setDataStatus(int dataStatus) {
 		this.dataStatus = dataStatus;
 	}
-    
 }
