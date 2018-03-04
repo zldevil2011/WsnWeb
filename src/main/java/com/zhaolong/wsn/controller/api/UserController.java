@@ -18,7 +18,10 @@ import com.zhaolong.wsn.service.PersonService;
 @Controller
 @RequestMapping(value = "/api/*") 
 public class UserController {
-	
+	/*
+	register：用户注册请求
+	login：用户登陆
+	 */
 	@Autowired
 	private PersonService personService;
 	

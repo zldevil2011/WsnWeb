@@ -9,7 +9,7 @@ import com.zhaolong.wsn.entity.Data;
 import com.zhaolong.wsn.repository.DataRepository;
 import com.zhaolong.wsn.service.DataService;
 
-public class DataServiceImpl implements DataService{
+public class 	DataServiceImpl implements DataService{
 	
 	@Autowired
     private DataRepository dataRepository;

@@ -137,67 +137,67 @@ class WarningData{
 		this.content = content;
 	}
 
-	public boolean getWarningData(Data data, String paramter, int dataType){
+	public boolean getWarningData(Data data, String parameter, int dataType){
 		if(dataType == 1){
 			int cnt = 0;
 			// 检查是否是数据异常
-			if(paramter.equals("pm25")){
+			if(parameter.equals("pm25")){
 				if(data.getPm25() == null){
 					this.setParameter("pm25");
 					this.setDataType("异常");
 					this.setContent("pm25传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("pm10")){
+			}else if(parameter.equals("pm10")){
 				if(data.getPm10() == null){
 					this.setParameter("pm10");
 					this.setDataType("异常");
 					this.setContent("pm10传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("so2")){
+			}else if(parameter.equals("so2")){
 				if(data.getSo2() == null){
 					this.setParameter("so2");
 					this.setDataType("异常");
 					this.setContent("so2传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("no2")){
+			}else if(parameter.equals("no2")){
 				if(data.getNo2() == null){
 					this.setParameter("no2");
 					this.setDataType("异常");
 					this.setContent("no2传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("co")){
+			}else if(parameter.equals("co")){
 				if(data.getCo() == null){
 					this.setParameter("co");
 					this.setDataType("异常");
 					this.setContent("co传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("o3")){
+			}else if(parameter.equals("o3")){
 				if(data.getO3() == null){
 					this.setParameter("o3");
 					this.setDataType("异常");
 					this.setContent("o3传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("speed")){
+			}else if(parameter.equals("speed")){
 				if(data.getSpeed() == null){
 					this.setParameter("speed");
 					this.setDataType("异常");
 					this.setContent("speed传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("direction")){
+			}else if(parameter.equals("direction")){
 				if(data.getDirection() == null){
 					this.setParameter("direction");
 					this.setDataType("异常");
 					this.setContent("direction传感器无数据");
 					cnt += 1;
 				}
-			}else if(paramter.equals("humidity")){
+			}else if(parameter.equals("humidity")){
 				if(data.getHumidity() == null){
 					this.setParameter("humidity");
 					this.setDataType("异常");
@@ -213,42 +213,42 @@ class WarningData{
 		}else if(dataType == 2){
 			// 检查是否是数据超出阈值
 			int cnt = 0;
-			if(paramter.equals("pm25")){
+			if(parameter.equals("pm25")){
 				if(data.getPm25() > 150){
 					this.setParameter("pm25");
 					this.setDataType("预警");
 					this.setContent("pm25数据超过150");
 					cnt += 1;
 				}
-			}else if(paramter.equals("pm10")){
+			}else if(parameter.equals("pm10")){
 				if(data.getPm10()  > 150){
 					this.setParameter("pm10");
 					this.setDataType("预警");
 					this.setContent("pm10数据超过150");
 					cnt += 1;
 				}
-			}else if(paramter.equals("so2")){
+			}else if(parameter.equals("so2")){
 				if(data.getSo2() > 150){
 					this.setParameter("so2");
 					this.setDataType("预警");
 					this.setContent("so2数据超过150");
 					cnt += 1;
 				}
-			}else if(paramter.equals("no2")){
+			}else if(parameter.equals("no2")){
 				if(data.getNo2()  > 150l){
 					this.setParameter("no2");
 					this.setDataType("预警");
 					this.setContent("no2数据超过150");
 					cnt += 1;
 				}
-			}else if(paramter.equals("co")){
+			}else if(parameter.equals("co")){
 				if(data.getCo()  > 150){
 					this.setParameter("co");
 					this.setDataType("预警");
 					this.setContent("co数据超过150");
 					cnt += 1;
 				}
-			}else if(paramter.equals("o3")){
+			}else if(parameter.equals("o3")){
 				if(data.getO3()  > 150){
 					this.setParameter("o3");
 					this.setDataType("预警");

@@ -6,7 +6,7 @@
 <!-- 
 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=2E92C953574c3fa5f86de9c14501c0ea"></script>
  -->
-<title>首页</title>
+<title>首页-欢迎你</title>
 <style type="text/css">
 	.body-container{
 		position:relative;

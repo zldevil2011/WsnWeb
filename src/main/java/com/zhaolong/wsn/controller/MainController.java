@@ -13,7 +13,7 @@ public class MainController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String StartPage() {
-		System.out.println("index tempalte");
+		System.out.println("index template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "index";
 	}
@@ -30,42 +30,42 @@ public class MainController {
 
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public String index() {
-		System.out.println("index tempalte");
+		System.out.println("index template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "index";
 	}
 
 	@RequestMapping(value = "indexList", method = RequestMethod.GET)
 	public String indexList() {
-		System.out.println("index tempalte");
+		System.out.println("index template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "indexList";
 	}
 
 	@RequestMapping(value = "realDataList", method = RequestMethod.GET)
 	public String realDataList() {
-		System.out.println("realDataList tempalte");
+		System.out.println("realDataList template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "realDataList";
 	}
 
 	@RequestMapping(value = "aqiInfo", method = RequestMethod.GET)
 	public String aqiInfo() {
-		System.out.println("aqiInfo tempalte");
+		System.out.println("aqiInfo template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "aqiInfo";
 	}
 
 	@RequestMapping(value = "dataWarning", method = RequestMethod.GET)
 	public String dataWarning() {
-		System.out.println("dataWarning tempalte");
+		System.out.println("dataWarning template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "dataWarning";
 	}
 
 	@RequestMapping(value = "weather", method = RequestMethod.GET)
 	public String weather() {
-		System.out.println("weather tempalte");
+		System.out.println("weather template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "weather";
 	}
@@ -86,7 +86,7 @@ public class MainController {
 
 	@RequestMapping(value = "node_list", method = RequestMethod.GET)
 	public String nodeList() {
-		System.out.println("node_list tempalte");
+		System.out.println("node_list template");
 		// 实际返回的是views/test.jsp ,spring-mvc.xml中配置过前后缀
 		return "nodeList";
 	}

@@ -90,6 +90,13 @@ class SortByAqi implements Comparator {
 @Controller
 @RequestMapping(value = "/api/*") 
 public class NodeController {
+	/*
+	nodeList: 获取所有的节点数据
+	index_node_rank： 返回所有采集站点的最新采集数据的质量排名
+	node_add： 通过请求API添加节点
+	node_location_list： 根据拼音首字母对安装的节点进行列表返回，返回26个列表
+	node_info/{node_id}： 获取某个节点的信息
+	*/
 	@Autowired
 	private NodeService nodeService;
 	

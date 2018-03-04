@@ -25,6 +25,9 @@ import com.zhaolong.wsn.service.InformationService;
 @RequestMapping(value = "/api/*") 
 public class InformationController {
 
+	/*
+	information_list： 获取新闻列表数据
+	 */
 	@Autowired
 	private InformationService informationService;
 	
