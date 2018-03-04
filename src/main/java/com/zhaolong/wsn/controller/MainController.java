@@ -109,4 +109,10 @@ public class MainController {
 	public String newsList() {
 		return "newsList";
 	}
+
+	// 新增节点页面
+	@RequestMapping(value = "node_add", method = RequestMethod.GET)
+	public String nodeAdd() {
+		return "nodeAdd";
+	}
 }

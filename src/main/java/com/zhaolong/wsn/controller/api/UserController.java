@@ -28,6 +28,7 @@ public class UserController {
 	@RequestMapping(value = "register", method = RequestMethod.POST)
     public void register(HttpServletRequest request, HttpServletResponse response) 
     		throws IOException{
+
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String telephone = request.getParameter("telephone");
@@ -39,6 +40,8 @@ public class UserController {
         person.setAddress(address);
         
         System.out.println("zhaolong_debug_000");
+        System.out.println(request.getHeader("Content-Type"));
+        System.out.println(request.getQueryString());
 		System.out.println(person.getUsername());
         personService.register(person);
         response.setStatus(200);

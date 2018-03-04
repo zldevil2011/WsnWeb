@@ -180,20 +180,31 @@ public class NodeController {
 		return rankList;
 	}
 	
-	@RequestMapping(value = "node_add", method = RequestMethod.GET)
+	@RequestMapping(value = "node_add", method = RequestMethod.POST)
 	public void dataSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
+		System.out.println(request.getParameterNames());
+		String address = request.getParameter("address");
+		String installTime = request.getParameter("installTime");
+		String latitude = request.getParameter("latitude");
+		String longitude = request.getParameter("longitude");
+		String nodeName = request.getParameter("nodeName");
+		String city = request.getParameter("city");
+		String province = request.getParameter("province");
+		System.out.println(city);
 		Node n = new Node();
-		n.setInstallTime("2017-11-20 12:00:00");
-		n.setOnline("0");
-		n.setAddress("安徽池州");
-		n.setNodeName("老干部局");
-		n.setLongitude("117.491446");
-		n.setLatitude("30.649073");
+		n.setAddress(address);
+		n.setInstallTime(installTime);
+		n.setLatitude(latitude);
+		n.setLongitude(longitude);
+		n.setNodeName(nodeName);
+		n.setCity(city);
+		n.setProvince(province);
 		nodeService.addNode(n);
 		response.setStatus(200);
 		PrintWriter pWriter = response.getWriter();
-		pWriter.println("success");
+		pWriter.println("success" + n);
 	}
 	
 	@RequestMapping(value = "node_location_list", method = RequestMethod.GET)

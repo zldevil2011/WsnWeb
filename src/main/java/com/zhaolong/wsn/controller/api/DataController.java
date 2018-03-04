@@ -296,17 +296,50 @@ public class DataController {
 				nData.setNodeId(nodeList.get(i).getId());
 				nData.setNodeName(nodeList.get(i).getNodeName());
 				nData.setNodeAddress(nodeList.get(i).getProvince() + nodeList.get(i).getCity());
-				nData.setPm25((double)Math.round(data.getPm25()*100)/100);
-				nData.setPm10((double)Math.round(data.getPm10()*100)/100);
-				nData.setSo2((double)Math.round(data.getSo2()*100)/100);
-				nData.setNo2((double)Math.round(data.getNo2()*100)/100);
-				nData.setCo((double)Math.round(data.getCo()*100)/100);
-				nData.setO3((double)Math.round(data.getO3()*100)/100);
-				nData.setAqi((double)Math.round(data.getAqi()*100)/100);
-				nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
-				nData.setClassification(getClassification(data.getAqi()));
-				nData.setConclusion(getConclusion(data.getAqi()));
-				nData.setAdvice(getAdvice(data.getAqi()));
+				try{
+					nData.setPm25((double)Math.round(data.getPm25()*100)/100);
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setPm10((double)Math.round(data.getPm10()*100)/100);
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setSo2((double)Math.round(data.getSo2()*100)/100);
+				}catch (Exception e){
+
+				}
+
+				try{
+					nData.setNo2((double)Math.round(data.getNo2()*100)/100);
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setCo((double)Math.round(data.getCo()*100)/100);
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setO3((double)Math.round(data.getO3()*100)/100);
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setAqi((double)Math.round(data.getAqi()*100)/100);
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+					nData.setClassification(getClassification(data.getAqi()));
+					nData.setConclusion(getConclusion(data.getAqi()));
+					nData.setAdvice(getAdvice(data.getAqi()));
+				}catch (Exception e){
+
+				}
 			}
 			nodeData.add(nData);
 		}

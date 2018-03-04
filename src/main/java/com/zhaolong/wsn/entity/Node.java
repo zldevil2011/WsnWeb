@@ -41,13 +41,19 @@ public class Node {
     private String city;
 
 	@Column(name = "status")
-	private int status = 1; // 0代表在线，1代表离线
+	private int status = 0; // 1代表在线，0代表离线
 
 	@Column(name = "lastDataTime")
 	private String lastDataTime;
 
 	@Column(name = "dataCount")
 	private int dataCount = 0;
+
+	@Column(name = "leaderName")
+	private String leaderName;
+
+	@Column(name = "leaderPhone")
+	private String leaderPhone;
 
 	public Long getId() {
 		return id;
