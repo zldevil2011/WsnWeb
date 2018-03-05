@@ -414,6 +414,11 @@
   text-align: center;
   vertical-align: middle;
 }
+.aqiInfo-body-container .aqiInfo-data .table-container .table tr td .no-data,
+.aqiInfo-body-container .aqiInfo-data .table-container .table tr th .no-data {
+  color: red;
+  font-size: 24px;
+}
 .aqiInfo-body-container .aqiInfo-data .table-container .table tr td.item-center,
 .aqiInfo-body-container .aqiInfo-data .table-container .table tr th.item-center {
   display: flex;
@@ -470,10 +475,12 @@
   width: 150px;
 }
 .weather-body-container .week-forecast .week-forecast-days .week-weather > div div {
-  padding: 5px;
+  111padding: 5px;
 }
 .weather-body-container #place-choice .city-choice-item {
   cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid #ffffff;
 }
 .weather-body-container #place-choice .city-choice-item:hover {
   background-color: rgba(0, 0, 0, 0.2);

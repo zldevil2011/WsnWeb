@@ -299,7 +299,6 @@ public class DataController {
 				try{
 					nData.setPm25((double)Math.round(data.getPm25()*100)/100);
 				}catch (Exception e){
-
 				}
 				try{
 					nData.setPm10((double)Math.round(data.getPm10()*100)/100);
@@ -608,7 +607,10 @@ public class DataController {
 						Data data = dataList.get(j);
 						NodeRank nodeRank = new NodeRank();
 						nodeRank.setAddress(node.getAddress());
-						nodeRank.setAQI((double)Math.round(data.getAqi()*100)/100);
+						try {
+                            nodeRank.setAQI((double) Math.round(data.getAqi() * 100) / 100);
+                        }catch (Exception e){
+                        }
 						nodeRank.setCity(node.getCity());
 						nodeRank.setCreated(node.getCreated());
 						nodeRank.setId(node.getId());
@@ -618,8 +620,10 @@ public class DataController {
 						nodeRank.setNodeName(node.getNodeName());
 						nodeRank.setOnline(node.getOnline());
 						nodeRank.setProvince(node.getProvince());
-						nodeRank.setSo2(data.getSo2());
-						nodeRank.setPm25((double)Math.round(data.getPm25()*100)/100);
+                        try {
+                            nodeRank.setPm25((double) Math.round(data.getPm25() * 100) / 100);
+                        }catch (Exception e){
+                        }
 						nodeRank.setPm10(data.getPm10());
 						rankList.add(nodeRank);
 						break;
@@ -656,9 +660,12 @@ public class DataController {
 				for(int j = 0; j < dataLen; ++j){
 					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
 						Data data = dataList.get(j);
-						aqiSum += data.getAqi();
-						pm25Sum += data.getPm25();
-						cnt += 1;
+						try{
+						    aqiSum += data.getAqi();
+						    pm25Sum += data.getPm25();
+						    cnt += 1;
+						}catch (Exception e){
+                        }
 					}
 				}
 				Node node = nodeList.get(i);
@@ -674,10 +681,14 @@ public class DataController {
 				nodeRank.setOnline(node.getOnline());
 				nodeRank.setProvince(node.getProvince());
 				if(cnt > 0){
-					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
-					nodeRank.setPm25((double)Math.round(pm25Sum/cnt*100)/100);
+				    try {
+                        nodeRank.setAQI((double) Math.round(aqiSum / cnt * 100) / 100);
+                        nodeRank.setPm25((double) Math.round(pm25Sum / cnt * 100) / 100);
+                    } catch (Exception e){
+                        nodeRank.setAQI(-1);
+                    }
 				}else{
-					nodeRank.setAQI(0);
+					nodeRank.setAQI(-1);
 				}
 				rankList.add(nodeRank);
 			}
@@ -710,9 +721,13 @@ public class DataController {
 				for(int j = 0; j < dataLen; ++j){
 					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
 						Data data = dataList.get(j);
-						aqiSum += data.getAqi();
-						pm25Sum += data.getPm25();
-						cnt += 1;
+						try{
+						    aqiSum += data.getAqi();
+                            pm25Sum += data.getPm25();
+                            cnt += 1;
+                        }catch (Exception e){
+                        }
+
 					}
 				}
 				Node node = nodeList.get(i);
@@ -728,10 +743,14 @@ public class DataController {
 				nodeRank.setOnline(node.getOnline());
 				nodeRank.setProvince(node.getProvince());
 				if(cnt > 0){
-					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
-					nodeRank.setPm25((double)Math.round(pm25Sum/cnt*100)/100);
+				    try {
+                        nodeRank.setAQI((double) Math.round(aqiSum / cnt * 100) / 100);
+                        nodeRank.setPm25((double) Math.round(pm25Sum / cnt * 100) / 100);
+                    }catch (Exception e){
+                        nodeRank.setAQI(-1);
+                    }
 				}else{
-					nodeRank.setAQI(0);
+					nodeRank.setAQI(-1);
 				}
 				rankList.add(nodeRank);
 			}
@@ -764,9 +783,12 @@ public class DataController {
 				for(int j = 0; j < dataLen; ++j){
 					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
 						Data data = dataList.get(j);
-						aqiSum += data.getAqi();
-						pm25Sum += data.getPm25();
-						cnt += 1;
+						try {
+                            aqiSum += data.getAqi();
+                            pm25Sum += data.getPm25();
+                            cnt += 1;
+                        }catch (Exception e){
+                        }
 					}
 				}
 				Node node = nodeList.get(i);
@@ -782,10 +804,14 @@ public class DataController {
 				nodeRank.setOnline(node.getOnline());
 				nodeRank.setProvince(node.getProvince());
 				if(cnt > 0){
-					nodeRank.setAQI((double)Math.round(aqiSum/cnt*100)/100);
-					nodeRank.setPm25((double)Math.round(pm25Sum/cnt*100)/100);
+				    try {
+                        nodeRank.setAQI((double) Math.round(aqiSum / cnt * 100) / 100);
+                        nodeRank.setPm25((double) Math.round(pm25Sum / cnt * 100) / 100);
+                    }catch (Exception e){
+                        nodeRank.setAQI(-1);
+                    }
 				}else{
-					nodeRank.setAQI(0);
+					nodeRank.setAQI(-1);
 				}
 				rankList.add(nodeRank);
 			}
@@ -1060,21 +1086,55 @@ public class DataController {
 			Data data = dataService.latestData(nodeList.get(i).getId());
 			NodeData nData = new NodeData();
 			if(data != null){
-				nData.setNodeId(nodeList.get(i).getId());
-				nData.setNodeName(nodeList.get(i).getNodeName());
-				nData.setNodeAddress(nodeList.get(i).getProvince() + nodeList.get(i).getCity());
-				nData.setPm25((double)Math.round(data.getPm25()*100)/100);
-				nData.setPm10((double)Math.round(data.getPm10()*100)/100);
-				nData.setSo2((double)Math.round(data.getSo2()*100)/100);
-				nData.setNo2((double)Math.round(data.getNo2()*100)/100);
-				nData.setCo((double)Math.round(data.getCo()*100)/100);
-				nData.setO3((double)Math.round(data.getO3()*100)/100);
-				nData.setAqi((double)Math.round(data.getAqi()*100)/100);
-				nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
-				nData.setLevel(getLevel(data.getAqi()));
-				nData.setClassification(getClassification(data.getAqi()));
-				nData.setConclusion(getConclusion(data.getAqi()));
-				nData.setAdvice(getAdvice(data.getAqi()));
+				try{
+					nData.setNodeId(nodeList.get(i).getId());
+				}catch (Exception e){
+
+				}
+				try{
+					nData.setNodeName(nodeList.get(i).getNodeName());
+				}catch (Exception e){
+				}
+				try{
+					nData.setNodeAddress(nodeList.get(i).getProvince() + nodeList.get(i).getCity());
+				}catch (Exception e){
+				}
+				try{
+					nData.setPm25((double)Math.round(data.getPm25()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setPm10((double)Math.round(data.getPm10()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setSo2((double)Math.round(data.getSo2()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setNo2((double)Math.round(data.getNo2()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setCo((double)Math.round(data.getCo()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setO3((double)Math.round(data.getO3()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setAqi((double)Math.round(data.getAqi()*100)/100);
+				}catch (Exception e){
+				}
+				try{
+					nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+					nData.setLevel(getLevel(data.getAqi()));
+					nData.setClassification(getClassification(data.getAqi()));
+					nData.setConclusion(getConclusion(data.getAqi()));
+					nData.setAdvice(getAdvice(data.getAqi()));
+				}catch (Exception e){
+				}
 			}
 			nodeData.add(nData);
 		}

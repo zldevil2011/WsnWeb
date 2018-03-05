@@ -51,15 +51,30 @@
                     <td>{{data.dataStatus == 0 ? '正常' : data.dataStatus == 1 ? '异常' : '超标'}}</td>
                     <td>{{data.nodeAddress}}</td>
                     <td>{{data.nodeName}}</td>
-                    <td>{{data.pm25 | keepTwoNum}}</td><td>{{data.aqi | keepTwoNum}}</td>
-                    <td>{{data.pm10 | keepTwoNum}}</td><td>{{data.aqi | keepTwoNum}}</td>
-                    <td>{{data.so2 | keepTwoNum}}</td><td>{{data.aqi | keepTwoNum}}</td>
-                    <td>{{data.no2 | keepTwoNum}}</td><td>{{data.aqi | keepTwoNum}}</td>
-                    <td>{{data.co | keepTwoNum}}</td><td>{{data.aqi | keepTwoNum}}</td>
-                    <td>{{data.o3 | keepTwoNum}}</td><td>{{data.aqi | keepTwoNum}}</td>
-                    <td>{{data.aqi | keepTwoNum}}</td>
+                    <td v-if="data.pm25">{{data.pm25 | keepTwoNum}}</td><td v-else class="no-data">---</td>
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
+                    <td v-if="data.pm25">{{data.pm10 | keepTwoNum}}</td><td v-else class="no-data">---</td>
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
+                    <td v-if="data.so2">{{data.so2 | keepTwoNum}}</td><td v-else class="no-data">---</td>
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
+                    <td v-if="data.no2">{{data.no2 | keepTwoNum}}</td><td v-else class="no-data">---</td>
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
+                    <td v-if="data.co">{{data.co | keepTwoNum}}</td><td v-else class="no-data">---</td>
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
+                    <td v-if="data.o3">{{data.o3 | keepTwoNum}}</td><td v-else class="no-data">---</td>
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
+                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
+
                     <td>PM2.5</td>
-                    <td>{{data.level}}</td>
+
+                    <td v-if="data.level">{{data.level}}</td><td v-else class="no-data">-</td>
+
                     <td class="item-center">{{data.classification}}<span style="background-color:green; width: 20px; height: 12px; display: inline-block;margin-left: 10px;border-radius: 5px;"></span></td>
                 </tr>
                 <tr><td colspan="20" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAqiInfo"></td></tr>
