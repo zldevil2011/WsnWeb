@@ -475,7 +475,7 @@
   width: 150px;
 }
 .weather-body-container .week-forecast .week-forecast-days .week-weather > div div {
-  111padding: 5px;
+  padding: 5px;
 }
 .weather-body-container #place-choice .city-choice-item {
   cursor: pointer;

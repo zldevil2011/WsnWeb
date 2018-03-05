@@ -115,4 +115,9 @@ public class MainController {
 	public String nodeAdd() {
 		return "nodeAdd";
 	}
+	// 数据渲染页面
+	@RequestMapping(value = "airQuality", method = RequestMethod.GET)
+	public String airQuality() {
+		return "airQuality";
+	}
 }
