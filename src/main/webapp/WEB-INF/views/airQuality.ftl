@@ -13,16 +13,22 @@
 </head>
 <body>
 	<#include "headerMenu.ftl"/>
-	<div id="airQuality" class="airQuality-body-container body-container">
-		<div class="left-map" id="map">
-			地图蓝
+	<div id="airQuality" class="airQuality-body-container body-container" style="margin-top: 0;">
+		<div class="left-map" id="map" style="display: flex;justify-content: center; align-items: center;">
+            <img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAirQualityData">
 		</div>
-        <div class="search-box" style="padding-bottom: 10px;text-align: center;position: absolute;top: 0;right: 0;">
-            <p>各观测站点数据（ 更新时间：{{ updateTime }} ）</p>
+        <div style="padding-bottom: 10px;text-align: center;position: absolute;top: 70px;right: 0;">
+            <div class="form-group">
+                <select class="form-control" v-model="search_info.parameter">
+                    <option v-for="parameter in parameter_list" v-bind:value='parameter.name'>{{parameter.name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="search-box" style="padding-bottom: 10px;text-align: center;position: absolute;bottom: 0;right: 0;">
+            <p style="font-size: 18px; color:red;">各观测站点数据（ 数据时间：{{ dataTime }} ）</p>
             <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
-                    <label for="dataTime">时间</label>
-                    <input type="date" class="form-control" id="startTime" v-model="search_info.startTime">
+                    <input type="date" class="form-control" id="startTime" v-model="search_info.startTime">至
                     <input type="date" class="form-control" id="endTime" v-model="search_info.endTime">
                 </div>
                 <div class="form-group">
@@ -31,22 +37,44 @@
                     </select>
                 </div>
                 <button type="submit" class="btn btn-success btn-100" style="margin-left: 10px;padding: 5px 12px;" @click="getInfoData">查找</button>
+                <button type="btn" class="btn btn-danger btn-100" style="margin-left: 10px;padding: 5px 12px;" @click="pause">{{ imgStatusText }}</button>
             </form>
         </div>
 	</div>
 	<script>
+        Date.prototype.MyTimeFormat = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "H+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        };
         Vue.http.options.emulateJSON = true;
         var t_id = 0;
         var interval_tag = 0;
         var airQuality = new Vue({
             el: "#airQuality",
             data: {
+                loadingAirQualityData: true,
+                imgStatus: 'pause',
+                imgStatusText: '暂停',
                 original_data: '',
                 nodeList: '',
                 search_info: {
                     startTime: '2018-03-03',
                     endTime: '2018-03-04',
-                    dataType: 'all',
+                    dataType: 'hour',
                     parameter: 'pm25'
                 },
                 parameter_list:[{
@@ -75,7 +103,8 @@
                     value: 'day',
                     name: '日平均'
                 }],
-                updateTime: '2018-03-03 12:00:00'
+                updateTime: '2018-03-03 12:00:00',
+                dataTime: new Date().MyTimeFormat("yyyy-MM-dd HH:mm:ss")
             },
             created:function(){
                 this.init();
@@ -98,7 +127,10 @@
                     });
                 },
                 getInfoData:function() {
+                    clearInterval(interval_tag);
+                    document.querySelector("#map").innerHTML = '<img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAirQualityData">';
                     var that = this;
+                    that.loadingAirQualityData = true;
                     var search_info = this.search_info;
                     var original_data = this.original_data;
                     var nodeList = this.nodeList;
@@ -111,15 +143,74 @@
                         if(res.status != 200){
 
                         }else{
-                            console.log(res.data);
+                            that.loadingAirQualityData = false;
                             that.original_data = res.data;
-                            loadAirQualityMap(that.original_data, search_info.parameter, nodeList);
+                            this.loadAirQualityMap(that.original_data, search_info.parameter, nodeList);
                         }
                     }, function(err){
                         if(err.status != 200){
                         }
                     });
 
+                },
+                pause:function(){
+                    var airQualityList = this.original_data;
+                    var parameter = this.search_info.parameter;
+                    var nodeList = this.nodeList;
+                    if(this.imgStatus === "pause"){
+                        clearInterval(interval_tag);
+                        this.imgStatus = "start";
+                        this.imgStatusText = "开始";
+                    }else{
+                        this.imgStatus = "pause";
+                        this.imgStatusText = "暂停";
+
+                        var that = this;
+                        interval_tag = setInterval(function(){
+                            if(airQualityList.length > 0){
+                                try{
+                                    that.dataTime = airQualityList[0][t_id]["updateTime"];
+                                }catch (e){
+
+                                }
+                            }
+                            loadMap(t_id, airQualityList, parameter, nodeList);
+                            t_id += 1;
+                            if(t_id >= timeCnt){
+                                t_id = 0;
+                            }
+                        }, 1000);
+                    }
+                },
+                loadAirQualityMap:function(airQualityList, parameter, nodeList){
+                    clearInterval(interval_tag);
+                    airQualityList = airQualityList || [];
+                    var nodeNum = airQualityList.length;
+                    var points = [];
+                    var maxResult = -1;
+                    console.log("NodeNum: " + nodeNum);
+                    if(nodeNum > 0){
+                        timeCnt = 0;
+                        if(airQualityList[0].length > 0){
+                            timeCnt = airQualityList[0].length;
+                        }
+                    }
+                    t_id = 0;
+                    var that = this;
+                    interval_tag = setInterval(function(){
+                        if(airQualityList.length > 0){
+                            try{
+                                that.dataTime = airQualityList[0][t_id]["updateTime"];
+                            }catch (e){
+
+                            }
+                        }
+                        loadMap(t_id, airQualityList, parameter, nodeList);
+                        t_id += 1;
+                        if(t_id >= timeCnt){
+                            t_id = 0;
+                        }
+                    }, 1000);
                 }
             }
         });

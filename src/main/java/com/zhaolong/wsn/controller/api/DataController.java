@@ -1080,51 +1080,55 @@ public class DataController {
     // 获取所有节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
     @RequestMapping(value = "all_nodes_historical_data", method = RequestMethod.POST)
     public @ResponseBody List<ArrayList<NodeData>> nodeHistoricalData(HttpServletRequest request, HttpServletResponse response) {
-        String requestType = "all";
         List<ArrayList<NodeData>> nodesDataList = new ArrayList<ArrayList<NodeData>>();
-        // 对于需要获取的数据区间，先给一个默认值，即今天的日期
-        Date date = new Date();
-        java.sql.Date startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(startDay);
-        calendar.add(calendar.DATE, 1);
-        java.sql.Date endDay = new java.sql.Date(calendar.getTime().getTime());
 
-        // 针对查询区间的小时和日平均数据提供java.Date类型的默认值
-        Date javaStartTime = new Date();
-        javaStartTime = new Date(javaStartTime.getYear(), javaStartTime.getMonth(), javaStartTime.getDate());
-        calendar.setTime(javaStartTime);
-        calendar.add(calendar.DATE, 1);
-        Date javaEndTime = new Date(calendar.getTime().getTime());
+        List<Node> nodeList = nodeService.nodeList();
+        for(int nI = 0; nI < nodeList.size(); ++nI){
 
-        try{
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String t1 = request.getParameter("dataType");
-            String t2 = request.getParameter("startTime");
-            String t3 = request.getParameter("endTime");
-            if(request.getParameter("dataType") != null){
-                requestType=request.getParameter("dataType");
-            }
-            if(request.getParameter("startTime") != null){
-                String startTime=request.getParameter("startTime");
-                startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());
-                javaStartTime = dateFormat.parse(startTime);
-            }
-            if(request.getParameter("endTime") != null){
-                String endTime=request.getParameter("endTime");
-                endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
-                javaEndTime = dateFormat.parse(endTime);
-            }
+            String requestType = "all";
+            // 对于需要获取的数据区间，先给一个默认值，即今天的日期
+            Date date = new Date();
+            java.sql.Date startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(startDay);
+            calendar.add(calendar.DATE, 1);
+            java.sql.Date endDay = new java.sql.Date(calendar.getTime().getTime());
+
+            // 针对查询区间的小时和日平均数据提供java.Date类型的默认值
+            Date javaStartTime = new Date();
+            javaStartTime = new Date(javaStartTime.getYear(), javaStartTime.getMonth(), javaStartTime.getDate());
+            calendar.setTime(javaStartTime);
+            calendar.add(calendar.DATE, 1);
+            Date javaEndTime = new Date(calendar.getTime().getTime());
+
+            try{
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String t1 = request.getParameter("dataType");
+                String t2 = request.getParameter("startTime");
+                String t3 = request.getParameter("endTime");
+                if(request.getParameter("dataType") != null){
+                    requestType=request.getParameter("dataType");
+                }
+                if(request.getParameter("startTime") != null){
+                    String startTime=request.getParameter("startTime");
+                    startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());
+                    javaStartTime = dateFormat.parse(startTime);
+                }
+                if(request.getParameter("endTime") != null){
+                    String endTime=request.getParameter("endTime");
+                    endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+                    javaEndTime = dateFormat.parse(endTime);
+                }
 //			System.out.println("requestType :" + requestType);
 //			System.out.println("startTime :" + startTime);
 //			System.out.println("endTime :" + endTime);
-            // 如果提供了查询的区间的起止日期，将改日期转换成前面声明的java.Date类型的数据
-        }catch (Exception e) {
-            System.out.println(e);
-            // TODO: handle exception
-        }
-        List<Node> nodeList = nodeService.nodeList();
-        for(int nI = 0; nI < nodeList.size(); ++nI){
+                // 如果提供了查询的区间的起止日期，将改日期转换成前面声明的java.Date类型的数据
+            }catch (Exception e) {
+                System.out.println(e);
+                // TODO: handle exception
+            }
+
+
             Long node_id = nodeList.get(nI).getId();
             ArrayList<NodeData> nodeDataList = new ArrayList<NodeData>();
             if(requestType.equals("all")){
@@ -1232,6 +1236,9 @@ public class DataController {
                         nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
                         nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
                         nodeDataList.add(nodeData);
+                    }else{
+                        nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
+                        nodeDataList.add(nodeData);
                     }
                 }
             }else if(requestType.equals("day")){
@@ -1246,7 +1253,6 @@ public class DataController {
                     Date pointEnd = new Date(tmpCalendar.getTime().getTime());
                     javaStartTime = pointEnd;
                     java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
-    //				System.out.println("sqlPointStartDate:" + sqlPointStartDate);
                     // 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
                     int dayDataCnt = 0;
                     NodeData nodeData = new NodeData();
@@ -1313,6 +1319,9 @@ public class DataController {
                         nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
                         nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
                         nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+                        nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
+                        nodeDataList.add(nodeData);
+                    }else{
                         nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
                         nodeDataList.add(nodeData);
                     }
