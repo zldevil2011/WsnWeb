@@ -42,6 +42,8 @@
         </div>
 	</div>
 	<script>
+        var map;
+
         Date.prototype.MyTimeFormat = function (fmt) { //author: meizz
             var o = {
                 "M+": this.getMonth() + 1, //月份
@@ -72,8 +74,8 @@
                 original_data: '',
                 nodeList: '',
                 search_info: {
-                    startTime: new Date(new Date()-24*60*60*1000).MyTimeFormat("yyyy-MM-dd"),
-                    endTime: new Date().MyTimeFormat("yyyy-MM-dd"),
+                    startTime: '2018-03-03', //new Date(new Date()-24*60*60*1000).MyTimeFormat("yyyy-MM-dd"),
+                    endTime: '2018-03-04', //new Date().MyTimeFormat("yyyy-MM-dd"),
                     dataType: 'hour',
                     parameter: 'pm25'
                 },
@@ -143,7 +145,9 @@
                         if(res.status != 200){
 
                         }else{
+                            alert("ok");
                             that.loadingAirQualityData = false;
+                            alert(that.loadingAirQualityData)
                             that.original_data = res.data;
                             this.loadAirQualityMap(that.original_data, search_info.parameter, nodeList);
                         }
@@ -183,12 +187,24 @@
                     }
                 },
                 loadAirQualityMap:function(airQualityList, parameter, nodeList){
+                    map = new BMap.Map("map");          // 创建地图实例
+                    var opts = {// 添加控制控件
+                        type : BMAP_NAVIGATION_CONTROL_SMALL,
+                        showZoomInfo : true
+                    };
+                    map.addControl(new BMap.NavigationControl(opts));
+                    map.enableScrollWheelZoom(); // 启动鼠标滚轮操作
+                    map.enableContinuousZoom(); // 开启连续缩放效果
+                    map.enableInertialDragging(); // 开启惯性拖拽效果
+
+                    var point = new BMap.Point(117.54728, 30.70481);
+                    map.centerAndZoom(point, 15);             // 初始化地图，设置中心点坐标和地图级别
+                    map.enableScrollWheelZoom(); // 允许滚轮缩放
+
+
                     clearInterval(interval_tag);
                     airQualityList = airQualityList || [];
                     var nodeNum = airQualityList.length;
-                    var points = [];
-                    var maxResult = -1;
-                    console.log("NodeNum: " + nodeNum);
                     if(nodeNum > 0){
                         timeCnt = 0;
                         if(airQualityList[0].length > 0){
@@ -256,19 +272,6 @@
                 }
             }
             console.log(points);
-            var map = new BMap.Map("map");          // 创建地图实例
-            var opts = {// 添加控制控件
-                type : BMAP_NAVIGATION_CONTROL_SMALL,
-                showZoomInfo : true
-            };
-            map.addControl(new BMap.NavigationControl(opts));
-            map.enableScrollWheelZoom(); // 启动鼠标滚轮操作
-            map.enableContinuousZoom(); // 开启连续缩放效果
-            map.enableInertialDragging(); // 开启惯性拖拽效果
-
-            var point = new BMap.Point(117.54728, 30.70481);
-            map.centerAndZoom(point, 15);             // 初始化地图，设置中心点坐标和地图级别
-            map.enableScrollWheelZoom(); // 允许滚轮缩放
 
             if (!isSupportCanvas()) {
                 alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
@@ -288,6 +291,7 @@
                     value 为颜色值.
              */
             heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 20});
+            map.clearOverlays();
             map.addOverlay(heatmapOverlay);
             heatmapOverlay.setDataSet({data: points, max: 100});
             heatmapOverlay.show();
