@@ -28,7 +28,7 @@
             <p style="font-size: 18px; color:red;">各观测站点数据（ 数据时间：{{ dataTime }} ）</p>
             <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
-                    <input type="date" class="form-control" id="startTime" v-model="search_info.startTime">至
+                    <input type="date" class="form-control" id="startTime" v-model="search_info.startTime">&nbsp;至
                     <input type="date" class="form-control" id="endTime" v-model="search_info.endTime">
                 </div>
                 <div class="form-group">
@@ -72,8 +72,8 @@
                 original_data: '',
                 nodeList: '',
                 search_info: {
-                    startTime: '2018-03-03',
-                    endTime: '2018-03-04',
+                    startTime: new Date(new Date()-24*60*60*1000).MyTimeFormat("yyyy-MM-dd"),
+                    endTime: new Date().MyTimeFormat("yyyy-MM-dd"),
                     dataType: 'hour',
                     parameter: 'pm25'
                 },
