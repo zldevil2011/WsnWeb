@@ -118,7 +118,7 @@
 		}
 	})
 	function loadMap(rankList){
-		rankList = rankList || [];	
+		rankList = rankList || [];
 		var nodeNum = rankList.length;
 		var point_list = [];
 		var maxResult = -1;

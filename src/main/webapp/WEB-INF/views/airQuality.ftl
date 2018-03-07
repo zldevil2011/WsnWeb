@@ -145,9 +145,9 @@
                         if(res.status != 200){
 
                         }else{
-                            alert("ok");
+//                            alert("ok");
                             that.loadingAirQualityData = false;
-                            alert(that.loadingAirQualityData)
+//                            alert(that.loadingAirQualityData)
                             that.original_data = res.data;
                             this.loadAirQualityMap(that.original_data, search_info.parameter, nodeList);
                         }
@@ -263,8 +263,8 @@
                     var node = {};
                     node["lng"] = nodeList[i].longitude;
                     node["lat"] = nodeList[i].latitude;
-                    console.log("NodeNum1: " + i + ":" + airQualityList[i][t_id]);
-                    console.log("NodeNum2: " + i + ":" + airQualityList[i][t_id][parameter]);
+//                    console.log("NodeNum1: " + i + ":" + airQualityList[i][t_id]);
+//                    console.log("NodeNum2: " + i + ":" + airQualityList[i][t_id][parameter]);
                     node["count"] = airQualityList[i][t_id][parameter];
                     points.push(node);
                 }catch (e){
