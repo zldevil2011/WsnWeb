@@ -40,11 +40,11 @@
         </div>
         <div id="dataRangeTip" style="position: absolute;left: 10px; bottom: 80px;">
             <span class="color-block color-0">0</span>
-            <span class="color-block color-2">20%</span>
-            <span class="color-block color-4">40%</span>
-            <span class="color-block color-6">60%</span>
-            <span class="color-block color-8">80%</span>
-            <span class="color-block color-10">10{{parameterMax}}%</span>
+            <span class="color-block color-2">&nbsp;</span>
+            <span class="color-block color-4">&nbsp;</span>
+            <span class="color-block color-6">&nbsp;</span>
+            <span class="color-block color-8">&nbsp;</span>
+            <span class="color-block color-10" id="maxValue">&nbsp;</span>
         </div>
         <div class="search-box" style="text-align: center;position: absolute;bottom: 70px;right: 0;background-color: rgba(0,0,0,0.1);border-radius: 10px;padding: 10px;">
             <p style="font-size: 18px; color:red;">各观测站点{{search_info.parameter}}数据（ 数据时间：{{ dataTime }} ）</p>
@@ -90,7 +90,6 @@
         var airQuality = new Vue({
             el: "#airQuality",
             data: {
-                parameterMax: 0,
                 loadingAirQualityData: true,
                 imgStatus: 'pause',
                 imgStatusText: '暂停',
@@ -165,6 +164,7 @@
             methods:{
                 init:function(){
                     var that = this;
+                    //获取站点列表
                     this.$http.get('/WsnWeb/api/node_list').then(function(res){
                         console.log(res.data);
                         if(res.status != 200){
@@ -180,12 +180,15 @@
                     });
                 },
                 getInfoData:function() {
+                    //加载新日期数据之前，清除原始的数据
                     clearInterval(interval_tag);
                     document.querySelector("#map").innerHTML = '<img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAirQualityData">';
-                    var that = this;
-                    that.loadingAirQualityData = true;
+                    this.loadingAirQualityData = true;
                     var search_info = this.search_info;
                     var nodeList = this.nodeList;
+
+                    var that = this;
+                    // 获取每个站点的历史数据
                     this.$http.post('/WsnWeb/api/all_nodes_historical_data/', search_info ,{
                         'headers': {
                             'Content-Type': 'application/x-www-form-urlencoded'
@@ -234,6 +237,7 @@
                     }
                 },
                 loadAirQualityMap:function(airQualityList, parameter, nodeList){
+                    // 生成地图并清除之前的数据，按照获取的数据的长度初始化开始进行渲染的时间序列
                     map = new BMap.Map("map");          // 创建地图实例
                     var opts = {// 添加控制控件
                         type : BMAP_NAVIGATION_CONTROL_SMALL,
@@ -258,6 +262,8 @@
                             timeCnt = airQualityList[0].length;
                         }
                     }
+                    // timeCnt代表了有多少张图
+                    // t_id代表当前执行的图的下标
                     t_id = 0;
                     var that = this;
                     interval_tag = setInterval(function(){
@@ -268,6 +274,7 @@
 
                             }
                         }
+                        // 根据参数加载地图
                         loadMap(t_id, airQualityList, parameter, nodeList);
                         t_id += 1;
                         if(t_id >= timeCnt){
@@ -301,24 +308,25 @@
             }
         });
         function loadMap(t_id, airQualityList, parameter, nodeList){
+            map.clearOverlays();
             var max = 0;
             airQualityList = airQualityList || [];
             var nodeNum = airQualityList.length;
             var points = [];
-            var maxResult = -1;
             for (var i = 0; i < nodeNum; ++i) {
                 try {
                     var node = {};
                     node["lng"] = nodeList[i].longitude;
                     node["lat"] = nodeList[i].latitude;
                     node["count"] = airQualityList[i][t_id][parameter];
-                    max = max > node["count"] ? max : node["count"];
+                    if(node["count"] != null){
+                        max = max > node["count"] ? max : node["count"];
+                    }
                     points.push(node);
                 }catch (e){
 
                 }
             }
-
             if (!isSupportCanvas()) {
                 alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
             }
@@ -364,7 +372,16 @@
 //                map.setViewport(pointArray);    //调整视野
 //            });
 
-
+            if(max > 100){
+                max = parseInt(max + 50);
+            }else if(max > 10){
+                max = parseInt(max + 10);
+            }else if(max > 0){
+                max = parseInt(max + 1);
+            }else{
+                max = 100;
+            }
+            document.querySelector("#maxValue").innerHTML = max;
             map.addOverlay(heatmapOverlay);
             heatmapOverlay.setDataSet({data: points, max: max,  min:0});
             heatmapOverlay.show();
