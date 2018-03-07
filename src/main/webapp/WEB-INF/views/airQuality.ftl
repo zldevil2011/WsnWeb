@@ -96,8 +96,8 @@
                 original_data: '',
                 nodeList: '',
                 search_info: {
-                    startTime: '2018-03-03', //new Date(new Date()-24*60*60*1000).MyTimeFormat("yyyy-MM-dd"),
-                    endTime: '2018-03-04', //new Date().MyTimeFormat("yyyy-MM-dd"),
+                    startTime: '2018-03-01', //new Date(new Date()-24*60*60*1000).MyTimeFormat("yyyy-MM-dd"),
+                    endTime: '2018-03-02', //new Date().MyTimeFormat("yyyy-MM-dd"),
                     dataType: 'hour',
                     parameter: 'pm25'
                 },

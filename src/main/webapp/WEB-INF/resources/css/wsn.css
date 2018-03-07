@@ -14,7 +14,7 @@ html, body{
 .header ul li{
 	display:inline-block;
 	line-height: 70px;
-	padding: 0 20px;
+	padding: 0 15px;
 	font-family: "Microsoft YaHei",Arial, Verdana, Helvetica, sans-serif;
    	color: white;
    	cursor: pointer;

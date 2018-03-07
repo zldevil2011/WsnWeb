@@ -274,7 +274,7 @@ public class DataController {
 		data_list/{node_id}"：获取某个节点的当日数据和最近一月的日平均数据
 		ranking_list：获取排名数据，针对所有的安装节点，按照今日，昨日，一周，一月分别计算当天，昨天，一周，一月的平均AQI指数并返回
 		data_save：生成测试数据
-		node_historical_data：获取某个节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
+		node_historical_data：获取某个节点的历史数据，根据后缀参数判断是获取全部数据(requestType=all)/小时数据(requestType=hour)/日平均数据(requestType=day)
 		node_list_aqi: 获取每个节点最新的一条数据计算该节点的污染指数的空气质量信息
 		node_warning_list: 获取某一个节点的在指定日期的预警和异常数据
 	 */
@@ -840,7 +840,7 @@ public class DataController {
 		return rankList;
 	}
 
-	// 获取某个节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
+	// 获取某个节点的历史数据，根据后缀参数判断是获取全部数据(requestType=all)/小时数据(requestType=hour)/日平均数据(requestType=day)
 	@RequestMapping(value = "node_historical_data/{node_id}", method = RequestMethod.POST)
 	public @ResponseBody List<NodeData> nodeHistoricalData(HttpServletRequest request, HttpServletResponse response, @PathVariable("node_id") Long node_id) {
 		String requestType = "all";
@@ -862,22 +862,32 @@ public class DataController {
 
 		try{
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			requestType=request.getParameter("requestType");
+			System.out.println("Test:--->" + request.getParameter("requestType"));
+			requestType=request.getParameter("requestType") == null ? requestType :request.getParameter("requestType");
 			String startTime=request.getParameter("startTime");
 			String endTime=request.getParameter("endTime");
 //			System.out.println("requestType :" + requestType);
 //			System.out.println("startTime :" + startTime);
 //			System.out.println("endTime :" + endTime);
-			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());;
-			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+			if(startTime != null){
+				startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());;
+				// 如果提供了查询的区间的起止日期，将改日期转换成前面声明的java.Date类型的数据
+				javaStartTime = dateFormat.parse(startTime);
+			}
+			if(endTime != null){
+				endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+				// 如果提供了查询的区间的起止日期，将改日期转换成前面声明的java.Date类型的数据
+				javaEndTime = dateFormat.parse(endTime);
+			}
 
-			// 如果提供了查询的区间的起止日期，将改日期转换成前面声明的java.Date类型的数据
-			javaStartTime = dateFormat.parse(startTime);
-			javaEndTime = dateFormat.parse(endTime);
 		}catch (Exception e) {
 			System.out.println(e);
 			// TODO: handle exception
 		}
+		System.out.println("requestType: " + requestType);
+		System.out.println("startDay: " + startDay);
+		System.out.println("endDay: " + endDay);
+		Node currentNde = nodeService.nodeInfo(node_id);
 //		System.out.println("requestType :" + requestType.equals("all"));
 		if(requestType.equals("all")){
 //			System.out.println("requestType is all :" + requestType.equals("all"));
@@ -887,6 +897,7 @@ public class DataController {
 			for(int i = 0; i < dataLen; ++i){
 				Data data = tmpList.get(i);
 				NodeData nodeData = new NodeData();
+				nodeData.setNodeName(currentNde.getNodeName());
 				nodeData.setDataStatus(data.getDataStatus());
 				nodeData.setPm25(data.getPm25());
 				nodeData.setPm10(data.getPm10());
@@ -975,6 +986,7 @@ public class DataController {
 					}
 				}
 				if(hourDataCnt > 0) {
+					nodeData.setNodeName(currentNde.getNodeName());
 					nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
 					nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
 					nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
@@ -983,6 +995,10 @@ public class DataController {
 					nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
 					nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
 					nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
+					nodeDataList.add(nodeData);
+				}else{
+					nodeData.setNodeName(currentNde.getNodeName());
 					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
 					nodeDataList.add(nodeData);
 				}
@@ -1068,6 +1084,10 @@ public class DataController {
 					nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
 					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
 					nodeDataList.add(nodeData);
+				}else{
+					nodeData.setNodeName(currentNde.getNodeName());
+					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
+					nodeDataList.add(nodeData);
 				}
 			}
 		}else{
@@ -1077,7 +1097,7 @@ public class DataController {
 		return nodeDataList;
 	}
 
-    // 获取所有节点的历史数据，根据后缀参数判断是获取全部数据(dataType=all)/小时数据(dataType=hour)/日平均数据(dataType=day)
+    // 获取所有节点的历史数据，根据后缀参数判断是获取全部数据(requestType=all)/小时数据(requestType=hour)/日平均数据(requestType=day)
     @RequestMapping(value = "all_nodes_historical_data", method = RequestMethod.POST)
     public @ResponseBody List<ArrayList<NodeData>> nodeHistoricalData(HttpServletRequest request, HttpServletResponse response) {
         List<ArrayList<NodeData>> nodesDataList = new ArrayList<ArrayList<NodeData>>();
@@ -1103,11 +1123,11 @@ public class DataController {
 
             try{
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String t1 = request.getParameter("dataType");
+                String t1 = request.getParameter("requestType");
                 String t2 = request.getParameter("startTime");
                 String t3 = request.getParameter("endTime");
-                if(request.getParameter("dataType") != null){
-                    requestType=request.getParameter("dataType");
+                if(request.getParameter("requestType") != null){
+                    requestType=request.getParameter("requestType");
                 }
                 if(request.getParameter("startTime") != null){
                     String startTime=request.getParameter("startTime");
@@ -1138,6 +1158,7 @@ public class DataController {
                 for(int i = 0; i < dataLen; ++i){
                     Data data = tmpList.get(i);
                     NodeData nodeData = new NodeData();
+                    nodeData.setNodeName(nodeList.get(nI).getNodeName());
                     nodeData.setDataStatus(data.getDataStatus());
                     nodeData.setPm25(data.getPm25());
                     nodeData.setPm10(data.getPm10());
@@ -1145,6 +1166,7 @@ public class DataController {
                     nodeData.setNo2(data.getSo2());
                     nodeData.setCo(data.getCo());
                     nodeData.setO3(data.getO3());
+                    nodeData.setAqi(data.getAqi());
                     nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
                     nodeDataList.add(nodeData);
                 }
@@ -1226,6 +1248,7 @@ public class DataController {
                         }
                     }
                     if(hourDataCnt > 0) {
+						nodeData.setNodeName(nodeList.get(nI).getNodeName());
                         nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
                         nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
                         nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
@@ -1237,6 +1260,7 @@ public class DataController {
                         nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
                         nodeDataList.add(nodeData);
                     }else{
+						nodeData.setNodeName(nodeList.get(nI).getNodeName());
                         nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
                         nodeDataList.add(nodeData);
                     }
@@ -1311,6 +1335,7 @@ public class DataController {
                         }
                     }
                     if(dayDataCnt > 0) {
+						nodeData.setNodeName(nodeList.get(nI).getNodeName());
                         nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
                         nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
                         nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
@@ -1322,6 +1347,7 @@ public class DataController {
                         nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
                         nodeDataList.add(nodeData);
                     }else{
+						nodeData.setNodeName(nodeList.get(nI).getNodeName());
                         nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
                         nodeDataList.add(nodeData);
                     }

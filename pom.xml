@@ -173,6 +173,18 @@
         <version>${lombokVersion}</version>
         <scope>provided</scope>
       </dependency>
+    <!-- Excel操作相关的包 -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>3.9</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>WsnWeb</finalName>

@@ -535,3 +535,56 @@
   justify-content: center;
   align-items: center;
 }
+.dataExport-body-container {
+  width: 80%;
+  margin: 0 auto;
+}
+.dataExport-body-container .dataExport {
+  border: 1px solid #bce8f1;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 50px;
+}
+.dataExport-body-container .dataExport .search-box {
+  background-color: #e2e2d5;
+  padding: 10px 10px 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.dataExport-body-container .dataExport .search-box .form-control {
+  background-color: rgba(255, 255, 255, 0.8);
+  margin: 0 5px;
+}
+.dataExport-body-container .dataExport .search-box .select-100 {
+  width: 100px;
+}
+.dataExport-body-container .dataExport .search-box label {
+  margin: 0 5px;
+}
+.dataExport-body-container .dataExport .search-box .btn-100 {
+  width: 100px;
+}
+.dataExport-body-container .dataExport .table-container {
+  min-height: 100px;
+  max-height: 600px;
+  overflow: scroll;
+}
+.dataExport-body-container .dataExport .table-container .table {
+  font-size: 12px;
+}
+.dataExport-body-container .dataExport .table-container .table tr td,
+.dataExport-body-container .dataExport .table-container .table tr th {
+  text-align: center;
+  vertical-align: middle;
+}
+.dataExport-body-container .dataExport .table-container .table tr td .no-data,
+.dataExport-body-container .dataExport .table-container .table tr th .no-data {
+  color: red;
+  font-size: 24px;
+}
+.dataExport-body-container .dataExport .table-container .table tr td.item-center,
+.dataExport-body-container .dataExport .table-container .table tr th.item-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
