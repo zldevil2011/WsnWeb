@@ -9,6 +9,20 @@
     html{height:100%}
     body{height:100%;margin:0px;padding:0px;font-family:"微软雅黑";}
     #map{height:100%;width:100%;}
+    .color-block{
+        width: 40px;
+        height: 18px;
+        font-size: 12px;
+        border-radius: 3px;
+        text-align: center;
+        display: inline-block;
+    }
+    .color-0{  background-color: rgb(0, 97, 0);  }
+    .color-2{  background-color: rgb(255, 102, 0);  }
+    .color-4{  background-color: rgb(255, 204, 0);  }
+    .color-6{  background-color: rgb(255, 255, 0);  }
+    .color-8{  background-color: rgb(122, 171, 0);  }
+    .color-10{  background-color: rgb(255, 34, 0);  }
 </style>
 </head>
 <body>
@@ -24,7 +38,15 @@
                 </select>
             </div>
         </div>
-        <div class="search-box" style="padding-bottom: 10px;text-align: center;position: absolute;bottom: 70px;right: 0;background-color: rgba(0,0,0,0.1);border-radius: 10px;padding: 10px;">
+        <div id="dataRangeTip" style="position: absolute;left: 10px; bottom: 80px;">
+            <span class="color-block color-0">0</span>
+            <span class="color-block color-2">20%</span>
+            <span class="color-block color-4">40%</span>
+            <span class="color-block color-6">60%</span>
+            <span class="color-block color-8">80%</span>
+            <span class="color-block color-10">10{{parameterMax}}%</span>
+        </div>
+        <div class="search-box" style="text-align: center;position: absolute;bottom: 70px;right: 0;background-color: rgba(0,0,0,0.1);border-radius: 10px;padding: 10px;">
             <p style="font-size: 18px; color:red;">各观测站点{{search_info.parameter}}数据（ 数据时间：{{ dataTime }} ）</p>
             <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
@@ -68,6 +90,7 @@
         var airQuality = new Vue({
             el: "#airQuality",
             data: {
+                parameterMax: 0,
                 loadingAirQualityData: true,
                 imgStatus: 'pause',
                 imgStatusText: '暂停',
@@ -278,6 +301,7 @@
             }
         });
         function loadMap(t_id, airQualityList, parameter, nodeList){
+            var max = 0;
             airQualityList = airQualityList || [];
             var nodeNum = airQualityList.length;
             var points = [];
@@ -288,6 +312,7 @@
                     node["lng"] = nodeList[i].longitude;
                     node["lat"] = nodeList[i].latitude;
                     node["count"] = airQualityList[i][t_id][parameter];
+                    max = max > node["count"] ? max : node["count"];
                     points.push(node);
                 }catch (e){
 
@@ -311,10 +336,37 @@
                 其中 key 表示插值的位置, 0~1.
                     value 为颜色值.
              */
-            heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 20});
+            heatmapOverlay = new BMapLib.HeatmapOverlay({"radius": 20}, {gradient:{
+                1:'rgb(255, 34, 0)',
+                0.8:'rgb(122, 171, 0)',
+                0.6:'rgb(255, 255, 0)',
+                0.4:'rgb(255, 204, 0)',
+                0.2:'rgb(255, 102, 0)',
+                0:'rgb(0, 97, 0)'
+            } });
             map.clearOverlays();
+
+//            var bdary = new BMap.Boundary();
+//            bdary.get("安徽省池州市贵池区", function(rs){       //获取行政区域
+//                map.clearOverlays();        //清除地图覆盖物
+//                var count = rs.boundaries.length; //行政区域的点有多少个
+//                console.log(rs.boundaries);
+//                if (count === 0) {
+//                    alert('未能获取当前输入行政区域');
+//                    return ;
+//                }
+//                var pointArray = [];
+//                for (var i = 0; i < count; i++) {
+//                    var ply = new BMap.Polygon(rs.boundaries[i], {strokeWeight: 2, strokeColor: "#ff0000"}); //建立多边形覆盖物
+//                    map.addOverlay(ply);  //添加覆盖物
+//                    pointArray = pointArray.concat(ply.getPath());
+//                }
+//                map.setViewport(pointArray);    //调整视野
+//            });
+
+
             map.addOverlay(heatmapOverlay);
-            heatmapOverlay.setDataSet({data: points, max: 100});
+            heatmapOverlay.setDataSet({data: points, max: max,  min:0});
             heatmapOverlay.show();
             function setGradient() {
                 /*格式如下所示:
