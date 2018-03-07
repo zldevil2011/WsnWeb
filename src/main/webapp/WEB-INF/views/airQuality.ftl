@@ -13,19 +13,19 @@
 </head>
 <body>
 	<#include "headerMenu.ftl"/>
-	<div id="airQuality" class="airQuality-body-container body-container" style="margin-top: 0;">
+	<div id="airQuality" class="airQuality-body-container body-container" style="margin-top: 70px;">
 		<div class="left-map" id="map" style="display: flex;justify-content: center; align-items: center;">
             <img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAirQualityData">
 		</div>
-        <div style="padding-bottom: 10px;text-align: center;position: absolute;top: 70px;right: 0;">
+        <div style="padding-bottom: 10px;text-align: center;position: absolute;top: 0;right: 0;" data-label="parameterList">
             <div class="form-group">
-                <select class="form-control" v-model="search_info.parameter">
-                    <option v-for="parameter in parameter_list" v-bind:value='parameter.name'>{{parameter.name}}</option>
+                <select class="form-control" v-model="search_info.parameter" @change="chooseParameter">
+                    <option v-for="parameter in parameter_list" v-bind:value='parameter.value'>{{parameter.name}}</option>
                 </select>
             </div>
         </div>
-        <div class="search-box" style="padding-bottom: 10px;text-align: center;position: absolute;bottom: 0;right: 0;">
-            <p style="font-size: 18px; color:red;">各观测站点数据（ 数据时间：{{ dataTime }} ）</p>
+        <div class="search-box" style="padding-bottom: 10px;text-align: center;position: absolute;bottom: 70px;right: 0;background-color: rgba(0,0,0,0.1);border-radius: 10px;padding: 10px;">
+            <p style="font-size: 18px; color:red;">各观测站点{{search_info.parameter}}数据（ 数据时间：{{ dataTime }} ）</p>
             <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
                     <input type="date" class="form-control" id="startTime" v-model="search_info.startTime">&nbsp;至
@@ -81,16 +81,44 @@
                 },
                 parameter_list:[{
                     id: 0,
-                    name: 'aqi'
+                    name: 'AQI',
+                    value: 'aqi'
                 },{
                     id: 1,
-                    name: 'pm25'
+                    name: 'Pm2.5',
+                    value: 'pm25'
                 },{
                     id: 2,
-                    name: 'pm10'
+                    name: 'Pm10',
+                    value: 'pm10'
                 },{
                     id: 3,
-                    name: 'so2'
+                    name: 'So2',
+                    value: 'so2'
+                },{
+                    id: 4,
+                    name: 'No2',
+                    value: 'no2'
+                },{
+                    id: 5,
+                    name: 'Co',
+                    value: 'Co'
+                },{
+                    id: 6,
+                    name: 'O3',
+                    value: 'o3'
+                },{
+                    id: 7,
+                    name: '湿度',
+                    value: 'airHumidity'
+                },{
+                    id: 8,
+                    name: '温度',
+                    value: 'airTemperature'
+                },{
+                    id: 9,
+                    name: '风速',
+                    value: 'windSpeed'
                 }],
                 dataType_list:[{
                     id: 0,
@@ -134,9 +162,7 @@
                     var that = this;
                     that.loadingAirQualityData = true;
                     var search_info = this.search_info;
-                    var original_data = this.original_data;
                     var nodeList = this.nodeList;
-                    console.log(search_info);
                     this.$http.post('/WsnWeb/api/all_nodes_historical_data/', search_info ,{
                         'headers': {
                             'Content-Type': 'application/x-www-form-urlencoded'
@@ -145,9 +171,7 @@
                         if(res.status != 200){
 
                         }else{
-//                            alert("ok");
                             that.loadingAirQualityData = false;
-//                            alert(that.loadingAirQualityData)
                             that.original_data = res.data;
                             this.loadAirQualityMap(that.original_data, search_info.parameter, nodeList);
                         }
@@ -227,51 +251,48 @@
                             t_id = 0;
                         }
                     }, 1000);
+                },
+                chooseParameter:function(ele){
+                    clearInterval(interval_tag);
+
+                    this.search_info.parameter = ele.target.value;
+                    var airQualityList = this.original_data;
+                    var parameter = this.search_info.parameter;
+                    var nodeList = this.nodeList;
+
+                    var that = this;
+                    t_id = 0;
+                    interval_tag = setInterval(function(){
+                        if(airQualityList.length > 0){
+                            try{
+                                that.dataTime = airQualityList[0][t_id]["updateTime"];
+                            }catch (e){}
+                        }
+                        loadMap(t_id, airQualityList, parameter, nodeList);
+                        t_id += 1;
+                        if(t_id >= timeCnt){
+                            t_id = 0;
+                        }
+                    }, 1000);
                 }
             }
         });
-        function loadAirQualityMap(airQualityList, parameter, nodeList) {
-            clearInterval(interval_tag);
-            airQualityList = airQualityList || [];
-            var nodeNum = airQualityList.length;
-            var points = [];
-            var maxResult = -1;
-            console.log("NodeNum: " + nodeNum);
-            if(nodeNum > 0){
-                timeCnt = 0;
-                if(airQualityList[0].length > 0){
-                    timeCnt = airQualityList[0].length;
-                }
-            }
-            t_id = 0;
-            interval_tag = setInterval(function(){
-                loadMap(t_id, airQualityList, parameter, nodeList);
-                t_id += 1;
-                if(t_id >= timeCnt){
-                    t_id = 0;
-                }
-            }, 1000);
-        }
         function loadMap(t_id, airQualityList, parameter, nodeList){
             airQualityList = airQualityList || [];
             var nodeNum = airQualityList.length;
             var points = [];
             var maxResult = -1;
-            console.log("NodeNum: " + nodeNum);
             for (var i = 0; i < nodeNum; ++i) {
                 try {
                     var node = {};
                     node["lng"] = nodeList[i].longitude;
                     node["lat"] = nodeList[i].latitude;
-//                    console.log("NodeNum1: " + i + ":" + airQualityList[i][t_id]);
-//                    console.log("NodeNum2: " + i + ":" + airQualityList[i][t_id][parameter]);
                     node["count"] = airQualityList[i][t_id][parameter];
                     points.push(node);
                 }catch (e){
 
                 }
             }
-            console.log(points);
 
             if (!isSupportCanvas()) {
                 alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
