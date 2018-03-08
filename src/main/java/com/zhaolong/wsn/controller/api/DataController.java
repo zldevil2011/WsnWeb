@@ -1716,24 +1716,116 @@ public class DataController {
 		}
 		// 此时nodesDataList存储的是节点的数据的列表的集合List<ArrayList<NodeData>>
 		// 如果是所有数据，则按照节点存储在不同的sheet里面； 如果是小时平均，则按照一个小时一个sheet；如果是日平均则一天一个sheet
-
-		String columnNames[]={"ID","项目名","销售人","负责人","所用技术","备注"};//列名
 		//生成一个Excel文件
 		// 创建excel工作簿
 		Workbook wb = new HSSFWorkbook();
+
+		String columnNames[]={"device", "dataTime", "pm2.5","pm10","so2","no2","co","o3","AirHumidity", "WindSpeed"};//列名
+
+		if(requestType.equals("all")){
+			int nodeLen = nodeList.size();
+			for(int nodeI = 0; nodeI < nodeLen; ++nodeI){
+				Sheet sheet = wb.createSheet(nodeList.get(nodeI).getNodeName());
+				Row rowHead = sheet.createRow((short) (0));
+				for(int ip = 0; ip < columnNames.length; ++ip){
+					Cell cName = rowHead.createCell(ip);
+					cName.setCellValue(columnNames[ip]);
+				}
+				int nodeDataLen = nodesDataList.get(nodeI).size();
+				for(int dataI = 0; dataI < nodeDataLen; ++dataI){
+					NodeData tData = nodesDataList.get(nodeI).get(dataI);
+					Row row = sheet.createRow((short) (dataI + 1));
+					Cell nodeName = row.createCell(0);nodeName.setCellValue(nodeList.get(nodeI).getNodeName());
+					Cell dataTime = row.createCell(1);try{ dataTime.setCellValue(tData.getUpdateTime()); } catch (Exception e){dataTime.setCellValue("");}
+					Cell pm25 = row.createCell(2);try{ pm25.setCellValue(tData.getPm25()); } catch (Exception e){pm25.setCellValue("");}
+					Cell pm10 = row.createCell(3);try{ pm10.setCellValue(tData.getPm10()); } catch (Exception e){pm10.setCellValue("");}
+					Cell so2 = row.createCell(4);try{ so2.setCellValue(tData.getSo2()); } catch (Exception e){so2.setCellValue("");}
+					Cell no2 = row.createCell(5);try{ no2.setCellValue(tData.getNo2()); } catch (Exception e){no2.setCellValue("");}
+					Cell co = row.createCell(6);try{ co.setCellValue(tData.getCo()); } catch (Exception e){co.setCellValue("");}
+					Cell o3 = row.createCell(7);try{ o3.setCellValue(tData.getO3()); } catch (Exception e){o3.setCellValue("");}
+					Cell AirHumidity = row.createCell(8);try{ AirHumidity.setCellValue(tData.getAirHumidity()); } catch (Exception e){AirHumidity.setCellValue("");}
+					Cell WindSpeed = row.createCell(9);try{ WindSpeed.setCellValue(tData.getWindSpeed()); } catch (Exception e){WindSpeed.setCellValue("");}
+				}
+			}
+		}else if(requestType.equals("hour")){
+			// 按照一个小时一个sheet则需要对应每一个站点的每一个时间点存储数据，则外层匹配为时间点，里层为节点
+			int nodeLen = nodeList.size();
+			if(nodesDataList.size() > 0){
+				int nodeDataLen = nodesDataList.get(0).size();
+				for(int dL = 0; dL < nodeDataLen; ++dL){
+					// 代表时间点循环
+					String tmp = nodesDataList.get(0).get(dL).getUpdateTime();
+					tmp = tmp.replaceAll(":", "-");
+					Sheet sheet = wb.createSheet(tmp);
+					Row rowHead = sheet.createRow((short) (0));
+					for(int ip = 0; ip < columnNames.length; ++ip){
+						Cell cName = rowHead.createCell(ip);
+						cName.setCellValue(columnNames[ip]);
+					}
+					for(int nL = 0; nL < nodeLen; ++nL){
+						// 代表每一个时间点每个节点的循环
+						NodeData tData = nodesDataList.get(nL).get(dL); // 获取某个站点在该时刻的数据
+						Row row = sheet.createRow((short) (nL + 1));
+						Cell nodeName = row.createCell(0);nodeName.setCellValue(nodeList.get(nL).getNodeName());
+						Cell dataTime = row.createCell(1);try{ dataTime.setCellValue(tData.getUpdateTime()); } catch (Exception e){dataTime.setCellValue("");}
+						Cell pm25 = row.createCell(2);try{ pm25.setCellValue(tData.getPm25()); } catch (Exception e){pm25.setCellValue("");}
+						Cell pm10 = row.createCell(3);try{ pm10.setCellValue(tData.getPm10()); } catch (Exception e){pm10.setCellValue("");}
+						Cell so2 = row.createCell(4);try{ so2.setCellValue(tData.getSo2()); } catch (Exception e){so2.setCellValue("");}
+						Cell no2 = row.createCell(5);try{ no2.setCellValue(tData.getNo2()); } catch (Exception e){no2.setCellValue("");}
+						Cell co = row.createCell(6);try{ co.setCellValue(tData.getCo()); } catch (Exception e){co.setCellValue("");}
+						Cell o3 = row.createCell(7);try{ o3.setCellValue(tData.getO3()); } catch (Exception e){o3.setCellValue("");}
+						Cell AirHumidity = row.createCell(8);try{ AirHumidity.setCellValue(tData.getAirHumidity()); } catch (Exception e){AirHumidity.setCellValue("");}
+						Cell WindSpeed = row.createCell(9);try{ WindSpeed.setCellValue(tData.getWindSpeed()); } catch (Exception e){WindSpeed.setCellValue("");}
+					}
+				}
+			}
+		}else if(requestType.equals("day")){
+			// 按照一天一个sheet则需要对应每一个站点的每一个时间点存储数据，则外层匹配为时间点，里层为节点
+			int nodeLen = nodeList.size();
+			if(nodesDataList.size() > 0){
+				int nodeDataLen = nodesDataList.get(0).size();
+				for(int dL = 0; dL < nodeDataLen; ++dL){
+					// 代表时间点循环
+					Sheet sheet = wb.createSheet(nodesDataList.get(0).get(dL).getUpdateTime());
+					Row rowHead = sheet.createRow((short) (0));
+					for(int ip = 0; ip < columnNames.length; ++ip){
+						Cell cName = rowHead.createCell(ip);
+						cName.setCellValue(columnNames[ip]);
+					}
+					for(int nL = 0; nL < nodeLen; ++nL){
+						// 代表每一个时间点每个节点的循环
+						NodeData tData = nodesDataList.get(nL).get(dL); // 获取某个站点在该时刻的数据
+						Row row = sheet.createRow((short) (nL + 1));
+						Cell nodeName = row.createCell(0);nodeName.setCellValue(nodeList.get(nL).getNodeName());
+						Cell dataTime = row.createCell(1);try{ dataTime.setCellValue(tData.getUpdateTime()); } catch (Exception e){dataTime.setCellValue("");}
+						Cell pm25 = row.createCell(2);try{ pm25.setCellValue(tData.getPm25()); } catch (Exception e){pm25.setCellValue("");}
+						Cell pm10 = row.createCell(3);try{ pm10.setCellValue(tData.getPm10()); } catch (Exception e){pm10.setCellValue("");}
+						Cell so2 = row.createCell(4);try{ so2.setCellValue(tData.getSo2()); } catch (Exception e){so2.setCellValue("");}
+						Cell no2 = row.createCell(5);try{ no2.setCellValue(tData.getNo2()); } catch (Exception e){no2.setCellValue("");}
+						Cell co = row.createCell(6);try{ co.setCellValue(tData.getCo()); } catch (Exception e){co.setCellValue("");}
+						Cell o3 = row.createCell(7);try{ o3.setCellValue(tData.getO3()); } catch (Exception e){o3.setCellValue("");}
+						Cell AirHumidity = row.createCell(8);try{ AirHumidity.setCellValue(tData.getAirHumidity()); } catch (Exception e){AirHumidity.setCellValue("");}
+						Cell WindSpeed = row.createCell(9);try{ WindSpeed.setCellValue(tData.getWindSpeed()); } catch (Exception e){WindSpeed.setCellValue("");}
+					}
+				}
+			}
+		}else{
+
+		}
+
 		// 创建第一个sheet（页），并命名
-		Sheet sheet = wb.createSheet("sheetName");
-		// 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
-		for(int i=0;i<columnNames.length;i++){
-			sheet.setColumnWidth((short) i, (short) (35.7 * 150));
-		}
+//		Sheet sheet = wb.createSheet("sheetName");
+//		// 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
+//		for(int i=0;i<columnNames.length;i++){
+//			sheet.setColumnWidth((short) i, (short) (35.7 * 150));
+//		}
 		// 创建第一行
-		Row row = sheet.createRow((short) 0);
+//		Row row = sheet.createRow((short) 0);
 		//设置列名
-		for(int i=0;i<columnNames.length;i++){
-			Cell cell = row.createCell(i);
-			cell.setCellValue(columnNames[i] + "天天");
-		}
+//		for(int i=0;i<columnNames.length;i++){
+//			Cell cell = row.createCell(i);
+//			cell.setCellValue(columnNames[i] + "天天");
+//		}
 
 
 
@@ -1749,7 +1841,14 @@ public class DataController {
 		// 设置response参数，可以打开下载页面
 		response.reset();
 		response.setContentType("application/vnd.ms-excel;charset=utf-8");
-		response.setHeader("Content-Disposition", "attachment;filename=test.xls");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		if(requestType == "all"){
+			response.setHeader("Content-Disposition", "attachment;filename=" + startTime + "-" + endTime + "DeviceData.xls");
+		}else if(requestType.equals("hour")){
+			response.setHeader("Content-Disposition", "attachment;filename=" + startTime + "-" + endTime + "HourAverage.xls");
+		}else{
+			response.setHeader("Content-Disposition", "attachment;filename=" + startTime + "-" + endTime + "DayAverage.xls");
+		}
 		ServletOutputStream out = response.getOutputStream();
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
