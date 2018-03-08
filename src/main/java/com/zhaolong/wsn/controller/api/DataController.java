@@ -584,6 +584,7 @@ public class DataController {
 	// 获取排名数据，针对所有的安装节点，按照今日，昨日，一周，一月分别计算当天，昨天，一周，一月的平均AQI指数并返回
 	@RequestMapping(value = "ranking_list", method = RequestMethod.GET)
 	public @ResponseBody List<NodeRank> rankingList(HttpServletRequest request, HttpServletResponse response) {
+		// 计算所有节点在不同时间段的数据排名情况，根据调用的参数选择不同的操作数据。优化：利用时间段筛选所有的节点的数据，然后按照数据节点进行匹配筛选，然后计算平均值，然后进行排名
 		String requestType = "day";
 		List<NodeRank> rankList = new ArrayList<NodeRank>();
 		try{
@@ -591,12 +592,13 @@ public class DataController {
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
+		List<Node> nodeList = nodeService.nodeList();
+		List<Data> dataList = new ArrayList<Data>();
+
 		if(requestType.equals("day")){
 			// 按照今日数据排序的时候，需要对每个节点获取今日的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
-			List<Node> nodeList = nodeService.nodeList();
 			// 然后获取今日的节点的数据
-			List<Data> dataList = new ArrayList<Data>();
 			Date date = new Date();
 			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
 			Calendar calendar = new GregorianCalendar();  
@@ -604,52 +606,10 @@ public class DataController {
 			calendar.add(calendar.DATE, 1);  
 			java.sql.Date tomorrow = new java.sql.Date(calendar.getTime().getTime());
 			dataList = dataService.dataList(today, tomorrow);
-			
-			int len = nodeList.size();
-			int dataLen = dataList.size();
-			for(int i = 0; i < len; ++i){
-				for(int j = 0; j < dataLen; ++j){
-					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
-						Node node = nodeList.get(i);
-						Data data = dataList.get(j);
-						NodeRank nodeRank = new NodeRank();
-						nodeRank.setAddress(node.getAddress());
-						try {
-                            nodeRank.setAQI((double) Math.round(data.getAqi() * 100) / 100);
-                        }catch (Exception e){
-                        }
-						nodeRank.setCity(node.getCity());
-						nodeRank.setCreated(node.getCreated());
-						nodeRank.setId(node.getId());
-						nodeRank.setInstallTime(node.getInstallTime());
-						nodeRank.setLatitude(node.getLatitude());
-						nodeRank.setLongitude(node.getLongitude());
-						nodeRank.setNodeName(node.getNodeName());
-						nodeRank.setOnline(node.getOnline());
-						nodeRank.setProvince(node.getProvince());
-                        try {
-                            nodeRank.setPm25((double) Math.round(data.getPm25() * 100) / 100);
-                        }catch (Exception e){
-                        }
-						nodeRank.setPm10(data.getPm10());
-						rankList.add(nodeRank);
-						break;
-					}
-				}
-			}
-//			Collections.sort(rankList, new SortByAqi());
-//			int rankLen = rankList.size();
-//			for (int i = 0; i < rankLen; ++i) {
-//				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
-//		    }
-//			return rankList;
 		}else if(requestType.equals("yesterday")){
 			// 按照昨日数据排序的时候，需要对每个节点获取昨日的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
-			List<Node> nodeList = nodeService.nodeList();
 			// 然后获取昨日的节点的数据
-			List<Data> dataList = new ArrayList<Data>();
 			Date date = new Date();
 			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
 			Calendar calendar = new GregorianCalendar();  
@@ -657,61 +617,10 @@ public class DataController {
 			calendar.add(calendar.DATE, -1);  
 			java.sql.Date yesterday = new java.sql.Date(calendar.getTime().getTime());
 			dataList = dataService.dataList(yesterday, today);
-			
-			int len = nodeList.size();
-			int dataLen = dataList.size();
-			for(int i = 0; i < len; ++i){
-				double aqiSum = 0;
-				double pm25Sum = 0;
-				int cnt = 0;
-				for(int j = 0; j < dataLen; ++j){
-					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
-						Data data = dataList.get(j);
-						try{
-						    aqiSum += data.getAqi();
-						    pm25Sum += data.getPm25();
-						    cnt += 1;
-						}catch (Exception e){
-                        }
-					}
-				}
-				Node node = nodeList.get(i);
-				NodeRank nodeRank = new NodeRank();
-				nodeRank.setAddress(node.getAddress());
-				nodeRank.setCity(node.getCity());
-				nodeRank.setCreated(node.getCreated());
-				nodeRank.setId(node.getId());
-				nodeRank.setInstallTime(node.getInstallTime());
-				nodeRank.setLatitude(node.getLatitude());
-				nodeRank.setLongitude(node.getLongitude());
-				nodeRank.setNodeName(node.getNodeName());
-				nodeRank.setOnline(node.getOnline());
-				nodeRank.setProvince(node.getProvince());
-				if(cnt > 0){
-				    try {
-                        nodeRank.setAQI((double) Math.round(aqiSum / cnt * 100) / 100);
-                        nodeRank.setPm25((double) Math.round(pm25Sum / cnt * 100) / 100);
-                    } catch (Exception e){
-                        nodeRank.setAQI(-1);
-                    }
-				}else{
-					nodeRank.setAQI(-1);
-				}
-				rankList.add(nodeRank);
-			}
-//			Collections.sort(rankList, new SortByAqi());
-//			int rankLen = rankList.size();
-//			for (int i = 0; i < rankLen; ++i) {
-//				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
-//		    }
-//			return rankList;
 		}else if(requestType.equals("week")){
 			// 按照一周数据排序的时候，需要对每个节点获取最近一周的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
-			List<Node> nodeList = nodeService.nodeList();
 			// 然后获取最近一周的节点的数据
-			List<Data> dataList = new ArrayList<Data>();
 			Date date = new Date();
 			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
 			Calendar calendar = new GregorianCalendar();  
@@ -719,61 +628,11 @@ public class DataController {
 			calendar.add(calendar.DATE, -7);  
 			java.sql.Date yesterday = new java.sql.Date(calendar.getTime().getTime());
 			dataList = dataService.dataList(yesterday, today);
-			int len = nodeList.size();
-			int dataLen = dataList.size();
-			for(int i = 0; i < len; ++i){
-				double aqiSum = 0;
-				double pm25Sum = 0;
-				int cnt = 0;
-				for(int j = 0; j < dataLen; ++j){
-					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
-						Data data = dataList.get(j);
-						try{
-						    aqiSum += data.getAqi();
-                            pm25Sum += data.getPm25();
-                            cnt += 1;
-                        }catch (Exception e){
-                        }
 
-					}
-				}
-				Node node = nodeList.get(i);
-				NodeRank nodeRank = new NodeRank();
-				nodeRank.setAddress(node.getAddress());
-				nodeRank.setCity(node.getCity());
-				nodeRank.setCreated(node.getCreated());
-				nodeRank.setId(node.getId());
-				nodeRank.setInstallTime(node.getInstallTime());
-				nodeRank.setLatitude(node.getLatitude());
-				nodeRank.setLongitude(node.getLongitude());
-				nodeRank.setNodeName(node.getNodeName());
-				nodeRank.setOnline(node.getOnline());
-				nodeRank.setProvince(node.getProvince());
-				if(cnt > 0){
-				    try {
-                        nodeRank.setAQI((double) Math.round(aqiSum / cnt * 100) / 100);
-                        nodeRank.setPm25((double) Math.round(pm25Sum / cnt * 100) / 100);
-                    }catch (Exception e){
-                        nodeRank.setAQI(-1);
-                    }
-				}else{
-					nodeRank.setAQI(-1);
-				}
-				rankList.add(nodeRank);
-			}
-//			Collections.sort(rankList, new SortByAqi());
-//			int rankLen = rankList.size();
-//			for (int i = 0; i < rankLen; ++i) {
-//				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
-//		    }
-//			return rankList;
 		}else if(requestType.equals("month")){
 			// 按照一月数据排序的时候，需要对每个节点获取最近一月的数据，然后计算平均值，按照平均值进行排序
 			// 首先获取所有的节点数据
-			List<Node> nodeList = nodeService.nodeList();
 			// 然后获取最近一月的节点的数据
-			List<Data> dataList = new ArrayList<Data>();
 			Date date = new Date();
 			java.sql.Date today = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
 			Calendar calendar = new GregorianCalendar();  
@@ -781,56 +640,78 @@ public class DataController {
 			calendar.add(calendar.DATE, -30);  
 			java.sql.Date yesterday = new java.sql.Date(calendar.getTime().getTime());
 			dataList = dataService.dataList(yesterday, today);
-			int len = nodeList.size();
-			int dataLen = dataList.size();
-			for(int i = 0; i < len; ++i){
-				double aqiSum = 0;
-				double pm25Sum = 0;
-				int cnt = 0;
-				for(int j = 0; j < dataLen; ++j){
-					if(dataList.get(j).getNodeId() == nodeList.get(i).getId()){
-						Data data = dataList.get(j);
-						try {
-                            aqiSum += data.getAqi();
-                            pm25Sum += data.getPm25();
-                            cnt += 1;
-                        }catch (Exception e){
-                        }
-					}
-				}
-				Node node = nodeList.get(i);
-				NodeRank nodeRank = new NodeRank();
-				nodeRank.setAddress(node.getAddress());
-				nodeRank.setCity(node.getCity());
-				nodeRank.setCreated(node.getCreated());
-				nodeRank.setId(node.getId());
-				nodeRank.setInstallTime(node.getInstallTime());
-				nodeRank.setLatitude(node.getLatitude());
-				nodeRank.setLongitude(node.getLongitude());
-				nodeRank.setNodeName(node.getNodeName());
-				nodeRank.setOnline(node.getOnline());
-				nodeRank.setProvince(node.getProvince());
-				if(cnt > 0){
-				    try {
-                        nodeRank.setAQI((double) Math.round(aqiSum / cnt * 100) / 100);
-                        nodeRank.setPm25((double) Math.round(pm25Sum / cnt * 100) / 100);
-                    }catch (Exception e){
-                        nodeRank.setAQI(-1);
-                    }
-				}else{
-					nodeRank.setAQI(-1);
-				}
-				rankList.add(nodeRank);
-			}
-//			Collections.sort(rankList, new SortByAqi());
-//			int rankLen = rankList.size();
-//			for (int i = 0; i < rankLen; ++i) {
-//				rankList.get(i).setRank(i+1);
-//				rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
-//		    }
-//			return rankList;
 		}else{
 			// 不合法参数
+		}
+		int len = nodeList.size();
+		int dataLen = dataList.size();
+		for(int i = 0; i < len; ++i){
+			double aqiSum = 0, pm25Sum = 0, pm10Sum = 0;
+			int pm25Cnt = 0, aqiCnt = 0, pm10Cnt = 0;
+			for(int j = 0; j < dataLen; ++j){
+				if(dataList.get(j).getNodeId().equals(nodeList.get(i).getId())){
+					Data data = dataList.get(j);
+					try{
+						aqiSum += data.getAqi();
+						aqiCnt += 1;
+					}catch (Exception e){}
+					try{
+						pm25Sum += data.getPm25();
+						pm25Cnt += 1;
+					}catch (Exception e){}
+					try{
+						pm10Sum += data.getPm10();
+						pm10Cnt += 1;
+					}catch (Exception e){}
+				}
+			}
+			Node node = nodeList.get(i);
+			NodeRank nodeRank = new NodeRank();
+			try {nodeRank.setAddress(node.getAddress());}catch (Exception e){}
+			try {nodeRank.setCity(node.getCity());}catch (Exception e){}
+			try {nodeRank.setCreated(node.getCreated());}catch (Exception e){}
+			try {nodeRank.setId(node.getId());}catch (Exception e){}
+			try {nodeRank.setInstallTime(node.getInstallTime());}catch (Exception e){}
+			try {nodeRank.setLatitude(node.getLatitude());}catch (Exception e){}
+			try {nodeRank.setLongitude(node.getLongitude());}catch (Exception e){}
+			try {nodeRank.setNodeName(node.getNodeName());}catch (Exception e){}
+			try {nodeRank.setOnline(node.getOnline());}catch (Exception e){}
+			try {nodeRank.setProvince(node.getProvince());}catch (Exception e){}
+			if(aqiCnt > 0){
+				try {
+					nodeRank.setAQI((double) Math.round(aqiSum / aqiCnt * 100) / 100);
+				} catch (Exception e){
+					nodeRank.setAQI(-1);
+				}
+			}else{
+				// 如果AQI参数不存在，则尝试尝试将pm25的值赋给aqi
+				if(pm25Cnt > 0){
+					try {
+						nodeRank.setAQI((double) Math.round(pm25Sum / pm25Cnt * 100) / 100);
+						nodeRank.setPm25((double) Math.round(pm25Sum / pm25Cnt * 100) / 100);
+					} catch (Exception e){
+						nodeRank.setPm25(-1);
+					}
+				}else{
+					// 如果PM25参数不存在，则尝试用pm10的值赋给aqi
+					if(pm10Cnt > 0){
+						try {
+							nodeRank.setAQI((double) Math.round(pm10Sum / pm10Cnt * 100) / 100);
+							nodeRank.setPm10((double) Math.round(pm10Sum / pm10Cnt * 100) / 100);
+						} catch (Exception e){
+							nodeRank.setPm10(-1);
+						}
+					}else{
+						// 都不存在
+						nodeRank.setPm10(-1);
+					}
+				}
+			}
+			if(aqiCnt <= 0 && pm25Cnt <= 0 && pm10Cnt <= 0) {
+				// 都不存在丢失这条数据
+			}else{
+			rankList.add(nodeRank);
+			}
 		}
 		int rankLen = rankList.size();
 		for (int i = 0; i < rankList.size(); ++i) {
@@ -1106,264 +987,191 @@ public class DataController {
 
     // 获取所有节点的历史数据，根据后缀参数判断是获取全部数据(requestType=all)/小时数据(requestType=hour)/日平均数据(requestType=day)
     @RequestMapping(value = "all_nodes_historical_data", method = RequestMethod.POST)
-    public @ResponseBody List<ArrayList<NodeData>> nodeHistoricalData(HttpServletRequest request, HttpServletResponse response) {
-        List<ArrayList<NodeData>> nodesDataList = new ArrayList<ArrayList<NodeData>>();
+    public @ResponseBody List<ArrayList<NodeData>> nodeHistoricalData(HttpServletRequest request, HttpServletResponse response)  throws IOException, ParseException {
+		String nodeId = request.getParameter("nodeId");
+		String requestType = request.getParameter("requestType");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
 
-        List<Node> nodeList = nodeService.nodeList();
-        for(int nI = 0; nI < nodeList.size(); ++nI){
+		// 首先对数据类型做判断，如果没有默认值，则默认全部数据
+		if(requestType == null){
+			requestType = "all";
+		}
+		// 然后针对选择的日期进行处理
+		java.sql.Date startDay = null;
+		java.sql.Date endDay = null;
+		Date javaStartTime = null;
+		Date javaEndTime = null;
+		if(startTime == null || endTime == null){
+			// 如果没有传递数据区间，则给一个默认值，即今天的日期
+			Date date = new Date();
+			startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(startDay);
+			calendar.add(calendar.DATE, 1);
+			endDay = new java.sql.Date(calendar.getTime().getTime());
+			// 针对查询区间的小时和日平均数据提供java.Date类型的默认值
+			javaStartTime = new Date();
+			javaStartTime = new Date(javaStartTime.getYear(), javaStartTime.getMonth(), javaStartTime.getDate());
+			calendar.setTime(javaStartTime);
+			calendar.add(calendar.DATE, 1);
+			javaEndTime = new Date(calendar.getTime().getTime());
+		}else{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());
+			javaStartTime = dateFormat.parse(startTime);
 
-            String requestType = "all";
-            // 对于需要获取的数据区间，先给一个默认值，即今天的日期
-            Date date = new Date();
-            java.sql.Date startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTime(startDay);
-            calendar.add(calendar.DATE, 1);
-            java.sql.Date endDay = new java.sql.Date(calendar.getTime().getTime());
+			endTime=request.getParameter("endTime");
+			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+			javaEndTime = dateFormat.parse(endTime);
+		}
 
-            // 针对查询区间的小时和日平均数据提供java.Date类型的默认值
-            Date javaStartTime = new Date();
-            javaStartTime = new Date(javaStartTime.getYear(), javaStartTime.getMonth(), javaStartTime.getDate());
-            calendar.setTime(javaStartTime);
-            calendar.add(calendar.DATE, 1);
-            Date javaEndTime = new Date(calendar.getTime().getTime());
+		List<Node> nodeList = new ArrayList<Node>();
+		List<Data> dataLists = new ArrayList<Data>();
+		if(nodeId == null){
+			return null;
+		}else if(Long.parseLong(nodeId) == 0){
+			// 导出全部节点的数据，导出全部数据，则先通过时间区间将对应的数据筛选出来，然后再在Java代码中做匹配，降低打开数据库操作的耗时
+			dataLists = dataService.dataList(startDay, endDay);
+			nodeList = nodeService.nodeList();
+		}else{
+			// 导出特定站点的数据
+			Long currentNodeId = Long.parseLong(nodeId);
+			dataLists = dataService.dataList(currentNodeId, startDay, endDay);
+			nodeList.add(nodeService.nodeInfo(currentNodeId));
+		}
+		// dataLists 代表所有节点在日期内的数据， nodeList 代表采集节点
+		// 在此做一个归一化处理，即将单站点的数据导出理解为导出所有站点，但所有站点也只有当前这个节点，进行合并处理
+		List<ArrayList<NodeData>> nodesDataList = new ArrayList<ArrayList<NodeData>>();
+		for(int nI = 0; nI < nodeList.size(); ++nI){
+			Date javaStartTimeTmp = javaStartTime;
+			Date javaEndTimeTmp = javaEndTime;
+			List<Data> nodeOriginalDataList = new ArrayList<Data>(); // 先从大数据数组中筛选出该节点的数据存储到该数组
+			nodeOriginalDataList.clear();
+			ArrayList<NodeData> nodeDataList = new ArrayList<NodeData>();
+			Node currentNode = nodeList.get(nI);
+			int datasLen = dataLists.size();
+			for(int di = 0; di < datasLen; ++di){
+				if(dataLists.get(di).getNodeId().equals(currentNode.getId())){
+					// 当前处理数据的设备ID和目标节点ID匹配，则是目节点标数据，加入到当前数组
+					nodeOriginalDataList.add(dataLists.get(di));
+				}
+			}
+			if(requestType.equals("all")) {
+				// 获取该节点的所有数据，将Data类型的数据拷贝到NodeData
+				for (Data data : nodeOriginalDataList) {
+					NodeData nodeData = new NodeData();
+					nodeData.setNodeName(currentNode.getNodeName());
+					nodeData.setDataStatus(data.getDataStatus());
+					nodeData.setPm25(data.getPm25());
+					nodeData.setPm10(data.getPm10());
+					nodeData.setSo2(data.getSo2());
+					nodeData.setNo2(data.getSo2());
+					nodeData.setCo(data.getCo());
+					nodeData.setO3(data.getO3());
+					nodeData.setAqi(data.getAqi());
+					nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+					nodeDataList.add(nodeData);
+				}
+			}else if(requestType.equals("hour")){
+				// 此时获取该节点的指定日期的的小时平均的数据
+				// 按照日期从选择的结束日期的前一天的23点开始倒计时计算获取对应的一小时之内的数据平均值
+				while(javaStartTimeTmp.before(javaEndTimeTmp)){
+					Calendar tmpCalendar = new GregorianCalendar();
+					tmpCalendar.setTime(javaStartTimeTmp);
+					tmpCalendar.add(tmpCalendar.HOUR, 1);
 
-            try{
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String t1 = request.getParameter("requestType");
-                String t2 = request.getParameter("startTime");
-                String t3 = request.getParameter("endTime");
-                if(request.getParameter("requestType") != null){
-                    requestType=request.getParameter("requestType");
-                }
-                if(request.getParameter("startTime") != null){
-                    String startTime=request.getParameter("startTime");
-                    startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());
-                    javaStartTime = dateFormat.parse(startTime);
-                }
-                if(request.getParameter("endTime") != null){
-                    String endTime=request.getParameter("endTime");
-                    endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
-                    javaEndTime = dateFormat.parse(endTime);
-                }
-//			System.out.println("requestType :" + requestType);
-//			System.out.println("startTime :" + startTime);
-//			System.out.println("endTime :" + endTime);
-                // 如果提供了查询的区间的起止日期，将改日期转换成前面声明的java.Date类型的数据
-            }catch (Exception e) {
-                System.out.println(e);
-                // TODO: handle exception
-            }
+					Date pointStart = javaStartTimeTmp;
+					Date pointEnd = new Date(tmpCalendar.getTime().getTime());
+					// pointStart是当前小时，pointEnd是当前小时的下一小时
+					javaStartTimeTmp = pointEnd;
 
+					java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
+					java.sql.Time sqlPointStartTime = new java.sql.Time(pointStart.getHours(), 0,0);
+					// 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
+					int hourDataCnt = 0;
+					NodeData nodeData = new NodeData();
+					nodeData.setNodeName(currentNode.getNodeName());
+					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
+					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0;
+					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0;
+					for (Data tData : nodeOriginalDataList) {
+						java.sql.Date dataDate = tData.getDataDate();
+						Time dataTime = tData.getDataTime();
+						if (dataDate.equals(sqlPointStartDate) && dataTime.getHours() == sqlPointStartTime.getHours()) {
+							hourDataCnt += 1;
+							if(tData.getPm25() != null){ pm25Cnt += 1; pm25Total += tData.getPm25(); }
+							if(tData.getPm10() != null){ pm10Cnt += 1; pm10Total += tData.getPm10(); }
+							if(tData.getSo2() != null){ so2Cnt += 1; so2Total += tData.getSo2(); }
+							if(tData.getNo2() != null){ no2Cnt += 1; no2Total += tData.getNo2(); }
+							if(tData.getCo() != null){ coCnt += 1; coTotal += tData.getCo(); }
+							if(tData.getO3() != null){ o3Cnt += 1; o3Total += tData.getO3(); }
+							if(tData.getAirHumidity() != null){ humidityCnt += 1; humidityTotal += tData.getAirHumidity(); }
+							if(tData.getWindSpeed() != null){ speedCnt += 1; speedTotal += tData.getWindSpeed(); }
+						}
+					}
+					if(hourDataCnt > 0) {
+						nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
+						nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
+						nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
+						nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
+						nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
+						nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
+						nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
+						nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					}
+					nodeDataList.add(nodeData);
 
-            Long node_id = nodeList.get(nI).getId();
-            ArrayList<NodeData> nodeDataList = new ArrayList<NodeData>();
-            if(requestType.equals("all")){
-                // 获取该节点的所有数据，将Data类型的数据拷贝到NodeData
-                List<Data> tmpList = dataService.dataList(node_id, startDay, endDay);
-                int dataLen = tmpList.size();
-                for(int i = 0; i < dataLen; ++i){
-                    Data data = tmpList.get(i);
-                    NodeData nodeData = new NodeData();
-                    nodeData.setNodeName(nodeList.get(nI).getNodeName());
-                    nodeData.setDataStatus(data.getDataStatus());
-                    nodeData.setPm25(data.getPm25());
-                    nodeData.setPm10(data.getPm10());
-                    nodeData.setSo2(data.getSo2());
-                    nodeData.setNo2(data.getSo2());
-                    nodeData.setCo(data.getCo());
-                    nodeData.setO3(data.getO3());
-                    nodeData.setAqi(data.getAqi());
-                    nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
-                    nodeDataList.add(nodeData);
-                }
-            }else if(requestType.equals("hour")){
-                List<Data> tmpList = dataService.dataList(node_id, startDay, endDay);
-                int dataLen = tmpList.size();
-                // 此时获取该节点的指定日期的的小时平均的数据
-                // 按照日期从选择的结束日期的前一天的23点开始倒计时计算获取对应的一小时之内的数据平均值
-                while(javaStartTime.before(javaEndTime)){
-                    Calendar tmpCalendar = new GregorianCalendar();
-                    tmpCalendar.setTime(javaStartTime);
-                    tmpCalendar.add(tmpCalendar.HOUR, 1);
+				}
+			}else if(requestType.equals("day")){
+				// 此时获取该节点的指定日期的的日平均的数据
+				while(javaStartTimeTmp.before(javaEndTimeTmp)){
+					Calendar tmpCalendar = new GregorianCalendar();
+					tmpCalendar.setTime(javaStartTimeTmp);
+					tmpCalendar.add(tmpCalendar.DATE, 1);
+					Date pointStart = javaStartTimeTmp;
+					Date pointEnd = new Date(tmpCalendar.getTime().getTime());
+					javaStartTimeTmp = pointEnd;
+					java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
+					// 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
+					int dayDataCnt = 0;
+					NodeData nodeData = new NodeData();
+					nodeData.setNodeName(currentNode.getNodeName());
+					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
+					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0;
+					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0;
+					for (Data tData : nodeOriginalDataList) {
+						java.sql.Date dataDate = tData.getDataDate();
+						if (dataDate.equals(sqlPointStartDate)) {
+							dayDataCnt += 1;
+							if(tData.getPm25() != null){ pm25Cnt += 1; pm25Total += tData.getPm25(); }
+							if(tData.getPm10() != null){ pm10Cnt += 1; pm10Total += tData.getPm10(); }
+							if(tData.getSo2() != null){ so2Cnt += 1; so2Total += tData.getSo2(); }
+							if(tData.getNo2() != null){ no2Cnt += 1; no2Total += tData.getNo2(); }
+							if(tData.getCo() != null){ coCnt += 1; coTotal += tData.getCo(); }
+							if(tData.getO3() != null){ o3Cnt += 1; o3Total += tData.getO3(); }
+							if(tData.getAirHumidity() != null){ humidityCnt += 1; humidityTotal += tData.getAirHumidity(); }
+							if(tData.getWindSpeed() != null){ speedCnt += 1; speedTotal += tData.getWindSpeed(); }
+						}
+					}
+					if(dayDataCnt > 0) {
+						nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
+						nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
+						nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
+						nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
+						nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
+						nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
+						nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
+						nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					}
+					nodeDataList.add(nodeData);
 
-                    Date pointStart = javaStartTime;
-                    Date pointEnd = new Date(tmpCalendar.getTime().getTime());
-                    // pointStart是当前小时，pointEnd是当前小时的下一小时
-                    javaStartTime = pointEnd;
-
-                    java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
-                    java.sql.Time sqlPointStartTime = new java.sql.Time(pointStart.getHours(), 0,0);
-    //				System.out.println("sqlPointStartDate:" + sqlPointStartDate);
-    //				System.out.println("sqlPointStartDate:" + sqlPointStartDate);
-                    // 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
-                    int hourDataCnt = 0;
-                    NodeData nodeData = new NodeData();
-                    double pm25Total = 0.0;
-                    int pm25Cnt = 0;
-                    double pm10Total = 0.0;
-                    int pm10Cnt = 0;
-                    double so2Total = 0.0;
-                    int so2Cnt = 0;
-                    double no2Total = 0.0;
-                    int no2Cnt = 0;
-                    double coTotal = 0.0;
-                    int coCnt = 0;
-                    double o3Total = 0.0;
-                    int o3Cnt = 0;
-                    double humidityTotal = 0.0;
-                    int humidityCnt = 0;
-                    double speedTotal = 0.0;
-                    int speedCnt = 0;
-                    for (Data tData : tmpList) {
-                        java.sql.Date dataDate = tData.getDataDate();
-                        Time dataTime = tData.getDataTime();
-                        if (dataDate.equals(sqlPointStartDate) && dataTime.getHours() == sqlPointStartTime.getHours()) {
-                            hourDataCnt += 1;
-                            if(tData.getPm25() != null){
-                                pm25Cnt += 1;
-                                pm25Total += tData.getPm25();
-                            }
-                            if(tData.getPm10() != null){
-                                pm10Cnt += 1;
-                                pm10Total += tData.getPm10();
-                            }
-                            if(tData.getSo2() != null){
-                                so2Cnt += 1;
-                                so2Total += tData.getSo2();
-                            }
-                            if(tData.getNo2() != null){
-                                no2Cnt += 1;
-                                no2Total += tData.getNo2();
-                            }
-                            if(tData.getCo() != null){
-                                coCnt += 1;
-                                coTotal += tData.getCo();
-                            }
-                            if(tData.getO3() != null){
-                                o3Cnt += 1;
-                                o3Total += tData.getO3();
-                            }
-                            if(tData.getAirHumidity() != null){
-                                humidityCnt += 1;
-                                humidityTotal += tData.getAirHumidity();
-                            }
-                            if(tData.getWindSpeed() != null){
-                                speedCnt += 1;
-                                speedTotal += tData.getWindSpeed();
-                            }
-                        }
-                    }
-                    if(hourDataCnt > 0) {
-						nodeData.setNodeName(nodeList.get(nI).getNodeName());
-                        nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
-                        nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
-                        nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
-                        nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
-                        nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
-                        nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
-                        nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
-                        nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
-                        nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
-                        nodeDataList.add(nodeData);
-                    }else{
-						nodeData.setNodeName(nodeList.get(nI).getNodeName());
-                        nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
-                        nodeDataList.add(nodeData);
-                    }
-                }
-            }else if(requestType.equals("day")){
-                List<Data> tmpList = dataService.dataList(node_id, startDay, endDay);
-                int dataLen = tmpList.size();
-                // 此时获取该节点的指定日期的的日平均的数据
-                while(javaStartTime.before(javaEndTime)){
-                    Calendar tmpCalendar = new GregorianCalendar();
-                    tmpCalendar.setTime(javaStartTime);
-                    tmpCalendar.add(tmpCalendar.DATE, 1);
-                    Date pointStart = javaStartTime;
-                    Date pointEnd = new Date(tmpCalendar.getTime().getTime());
-                    javaStartTime = pointEnd;
-                    java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
-                    // 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
-                    int dayDataCnt = 0;
-                    NodeData nodeData = new NodeData();
-                    double pm25Total = 0.0;
-                    int pm25Cnt = 0;
-                    double pm10Total = 0.0;
-                    int pm10Cnt = 0;
-                    double so2Total = 0.0;
-                    int so2Cnt = 0;
-                    double no2Total = 0.0;
-                    int no2Cnt = 0;
-                    double coTotal = 0.0;
-                    int coCnt = 0;
-                    double o3Total = 0.0;
-                    int o3Cnt = 0;
-                    double humidityTotal = 0.0;
-                    int humidityCnt = 0;
-                    double speedTotal = 0.0;
-                    int speedCnt = 0;
-                    for (Data tData : tmpList) {
-                        java.sql.Date dataDate = tData.getDataDate();
-                        if (dataDate.equals(sqlPointStartDate)) {
-                            dayDataCnt += 1;
-                            if(tData.getPm25() != null){
-                                pm25Cnt += 1;
-                                pm25Total += tData.getPm25();
-                            }
-                            if(tData.getPm10() != null){
-                                pm10Cnt += 1;
-                                pm10Total += tData.getPm10();
-                            }
-                            if(tData.getSo2() != null){
-                                so2Cnt += 1;
-                                so2Total += tData.getSo2();
-                            }
-                            if(tData.getNo2() != null){
-                                no2Cnt += 1;
-                                no2Total += tData.getNo2();
-                            }
-                            if(tData.getCo() != null){
-                                coCnt += 1;
-                                coTotal += tData.getCo();
-                            }
-                            if(tData.getO3() != null){
-                                o3Cnt += 1;
-                                o3Total += tData.getO3();
-                            }
-                            if(tData.getAirHumidity() != null){
-                                humidityCnt += 1;
-                                humidityTotal += tData.getAirHumidity();
-                            }
-                            if(tData.getWindSpeed() != null){
-                                speedCnt += 1;
-                                speedTotal += tData.getWindSpeed();
-                            }
-                        }
-                    }
-                    if(dayDataCnt > 0) {
-						nodeData.setNodeName(nodeList.get(nI).getNodeName());
-                        nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
-                        nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
-                        nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
-                        nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
-                        nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
-                        nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
-                        nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
-                        nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
-                        nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
-                        nodeDataList.add(nodeData);
-                    }else{
-						nodeData.setNodeName(nodeList.get(nI).getNodeName());
-                        nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
-                        nodeDataList.add(nodeData);
-                    }
-                }
-            }else{
-                // 不合法参数
-            }
-            nodesDataList.add(nodeDataList);
-        }
+				}
+			}else{
+				// 不合法参数
+			}
+			nodesDataList.add(nodeDataList);
+		}
         Collections.reverse(nodesDataList);
         return nodesDataList;
     }

@@ -23,13 +23,13 @@
 			</thead>
 			<tbody>
 				<tr v-for="node in todayNodes">
-					<td>{{node.rank}}</td>
-					<td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
-					<td>{{node.nodeName}}</td>
-					<td>{{node.aqi}}</td>
-					<td>{{node.pm25}}</td>
-					<td>{{node.pm10}}</td>
-					<td>{{node.so2}}</td>
+                    <td>{{node.rank}}</td>
+                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.nodeName}}</td>
+                    <td>{{node.aqi | keepTwoNum}}</td>
+                    <td>{{node.pm25 | keepTwoNum}}</td>
+                    <td>{{node.pm10 | keepTwoNum}}</td>
+                    <td>{{node.so2 | keepTwoNum}}</td>
 				</tr>
 				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingToday"></td></tr>
 			</tbody>
@@ -43,10 +43,10 @@
                     <td>{{node.rank}}</td>
                     <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
                     <td>{{node.nodeName}}</td>
-                    <td>{{node.aqi}}</td>
-                    <td>{{node.pm25}}</td>
-                    <td>{{node.pm10}}</td>
-                    <td>{{node.so2}}</td>
+                    <td>{{node.aqi | keepTwoNum}}</td>
+                    <td>{{node.pm25 | keepTwoNum}}</td>
+                    <td>{{node.pm10 | keepTwoNum}}</td>
+                    <td>{{node.so2 | keepTwoNum}}</td>
 				</tr>
 				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingYesterday"></td></tr>
 			</tbody>
@@ -60,10 +60,10 @@
                     <td>{{node.rank}}</td>
                     <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
                     <td>{{node.nodeName}}</td>
-                    <td>{{node.aqi}}</td>
-                    <td>{{node.pm25}}</td>
-                    <td>{{node.pm10}}</td>
-                    <td>{{node.so2}}</td>
+                    <td>{{node.aqi | keepTwoNum}}</td>
+                    <td>{{node.pm25 | keepTwoNum}}</td>
+                    <td>{{node.pm10 | keepTwoNum}}</td>
+                    <td>{{node.so2 | keepTwoNum}}</td>
 				</tr>
 				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingWeek"></td></tr>
 			</tbody>
@@ -77,10 +77,10 @@
                     <td>{{node.rank}}</td>
                     <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
                     <td>{{node.nodeName}}</td>
-                    <td>{{node.aqi}}</td>
-                    <td>{{node.pm25}}</td>
-                    <td>{{node.pm10}}</td>
-                    <td>{{node.so2}}</td>
+                    <td>{{node.aqi | keepTwoNum}}</td>
+                    <td>{{node.pm25 | keepTwoNum}}</td>
+                    <td>{{node.pm10 | keepTwoNum}}</td>
+                    <td>{{node.so2 | keepTwoNum}}</td>
 				</tr>
 				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingMonth"></td></tr>
 			</tbody>
@@ -121,6 +121,20 @@ var nodeRank = new Vue({
 	created:function(){
 		this.init();
 	},
+    filters: {
+        keepTwoNum: function(value){
+            if(value == null){
+                return  "--"
+            }else {
+                value = Number(value);
+                if(value <= 0){
+                    return  "--";
+				}else {
+                    return value.toFixed(2);
+                }
+            }
+        }
+    },
 	methods:{
 		changeParameter:function(pm){
 			this.parameter = pm;

@@ -165,47 +165,25 @@
             loadData: function(){
                 this.dataList = [];
                 this.loadingDataList = true;
-                if(this.search_info.nodeId === 0){
-                    // 代表需要获取所有站点在特定日期的对应数据
-                    // 获取每个站点的历史数据
-                    this.$http.post('/WsnWeb/api/all_nodes_historical_data/', this.search_info ,{
-                        'headers': {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        }
-                    }).then(function(res){
-                        if(res.status != 200){
+                this.$http.post('/WsnWeb/api/all_nodes_historical_data/', this.search_info ,{
+                    'headers': {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(res){
+                    if(res.status != 200){
 
-                        }else{
-                            this.loadingDataList = false;
-                            var tmpDataList = [];
-                            res.data.forEach(function(item){
-                                tmpDataList = tmpDataList.concat(item);
-                            });
-                            this.dataList = tmpDataList;
-                        }
-                    }, function(err){
-                        if(err.status != 200){
-                        }
-                    });
-                }else{
-                    //否则是获取特定站点在特定日期的对应数据
-                    this.$http.post('/WsnWeb/api/node_historical_data/' + this.search_info.nodeId, this.search_info ,{
-                        'headers': {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        }
-                    }).then(function(res){
-                        if(res.status != 200){
-                            this.tip = true;
-                        }else{
-                            this.dataList = res.data;
-                            this.loadingDataList = false;
-                        }
-                    }, function(err){
-                        if(err.status != 200){
-                            this.tip = true;
-                        }
-                    });
-                }
+                    }else{
+                        this.loadingDataList = false;
+                        var tmpDataList = [];
+                        res.data.forEach(function(item){
+                            tmpDataList = tmpDataList.concat(item);
+                        });
+                        this.dataList = tmpDataList;
+                    }
+                }, function(err){
+                    if(err.status != 200){
+                    }
+                });
             },
             dataExport:function(){
                 console.log(this.dataList);
