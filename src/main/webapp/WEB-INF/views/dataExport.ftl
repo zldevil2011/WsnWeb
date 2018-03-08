@@ -27,6 +27,7 @@
                     </select>
                 </div>
                 <button type="submit" class="btn btn-success btn-100" style="margin-left: 10px;padding: 5px 12px;" @click="loadData">查找</button>
+                <button type="submit" class="btn btn-warning btn-100" style="margin-left: 10px;padding: 5px 12px;" @click="dataExport">导出数据</button>
             </form>
         </div>
         <div class="table-container">
@@ -63,7 +64,6 @@
             </table>
         </div>
         <div class="footer-info" style="text-align: center;margin-bottom: 2px;margin-top: 10px;">
-            <button type="submit" class="btn btn-warning" style="margin-left: 10px;padding: 5px 12px;width: 200px;" @click="dataExport">导出数据</button>
         </div>
     </div>
 </div>
