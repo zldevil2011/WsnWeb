@@ -1,9 +1,9 @@
 package com.zhaolong.wsn.controller.api;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,9 +13,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -1518,6 +1525,252 @@ public class DataController {
 		response.setStatus(200);
 		PrintWriter pWriter = response.getWriter();
 		pWriter.println("success");
+	}
+
+	// 导出excel
+	@RequestMapping(value = "excelExport", method = RequestMethod.GET)
+	public String excelExport(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+		String nodeId = request.getParameter("nodeId");
+		String requestType = request.getParameter("requestType");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
+
+		// 首先对数据类型做判断，如果没有默认值，则默认全部数据
+		if(requestType == null){
+			requestType = "all";
+		}
+		// 然后针对选择的日期进行处理
+		java.sql.Date startDay = null;
+		java.sql.Date endDay = null;
+		Date javaStartTime = null;
+		Date javaEndTime = null;
+		if(startTime == null || endTime == null){
+			// 如果没有传递数据区间，则给一个默认值，即今天的日期
+			Date date = new Date();
+			startDay = new java.sql.Date(date.getYear(), date.getMonth(), date.getDate());
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTime(startDay);
+			calendar.add(calendar.DATE, 1);
+			endDay = new java.sql.Date(calendar.getTime().getTime());
+			// 针对查询区间的小时和日平均数据提供java.Date类型的默认值
+			javaStartTime = new Date();
+			javaStartTime = new Date(javaStartTime.getYear(), javaStartTime.getMonth(), javaStartTime.getDate());
+			calendar.setTime(javaStartTime);
+			calendar.add(calendar.DATE, 1);
+			javaEndTime = new Date(calendar.getTime().getTime());
+		}else{
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			startDay = new java.sql.Date(dateFormat.parse(startTime).getYear(), dateFormat.parse(startTime).getMonth(), dateFormat.parse(startTime).getDate());
+			javaStartTime = dateFormat.parse(startTime);
+
+			endTime=request.getParameter("endTime");
+			endDay = new java.sql.Date(dateFormat.parse(endTime).getYear(), dateFormat.parse(endTime).getMonth(), dateFormat.parse(endTime).getDate());
+			javaEndTime = dateFormat.parse(endTime);
+		}
+
+		List<Node> nodeList = new ArrayList<Node>();
+		List<Data> dataLists = new ArrayList<Data>();
+		if(nodeId == null){
+			return null;
+		}else if(Long.parseLong(nodeId) == 0){
+			// 导出全部节点的数据，导出全部数据，则先通过时间区间将对应的数据筛选出来，然后再在Java代码中做匹配，降低打开数据库操作的耗时
+			dataLists = dataService.dataList(startDay, endDay);
+			nodeList = nodeService.nodeList();
+		}else{
+			// 导出特定站点的数据
+			Long currentNodeId = Long.parseLong(nodeId);
+			dataLists = dataService.dataList(currentNodeId, startDay, endDay);
+			nodeList.add(nodeService.nodeInfo(currentNodeId));
+		}
+		// dataLists 代表所有节点在日期内的数据， nodeList 代表采集节点
+		// 在此做一个归一化处理，即将单站点的数据导出理解为导出所有站点，但所有站点也只有当前这个节点，进行合并处理
+		List<ArrayList<NodeData>> nodesDataList = new ArrayList<ArrayList<NodeData>>();
+		for(int nI = 0; nI < nodeList.size(); ++nI){
+			Date javaStartTimeTmp = javaStartTime;
+			Date javaEndTimeTmp = javaEndTime;
+			List<Data> nodeOriginalDataList = new ArrayList<Data>(); // 先从大数据数组中筛选出该节点的数据存储到该数组
+			nodeOriginalDataList.clear();
+			ArrayList<NodeData> nodeDataList = new ArrayList<NodeData>();
+			Node currentNode = nodeList.get(nI);
+			int datasLen = dataLists.size();
+			for(int di = 0; di < datasLen; ++di){
+				if(dataLists.get(di).getNodeId().equals(currentNode.getId())){
+					// 当前处理数据的设备ID和目标节点ID匹配，则是目节点标数据，加入到当前数组
+					nodeOriginalDataList.add(dataLists.get(di));
+				}
+			}
+			if(requestType.equals("all")) {
+				// 获取该节点的所有数据，将Data类型的数据拷贝到NodeData
+				for (Data data : nodeOriginalDataList) {
+					NodeData nodeData = new NodeData();
+					nodeData.setNodeName(currentNode.getNodeName());
+					nodeData.setDataStatus(data.getDataStatus());
+					nodeData.setPm25(data.getPm25());
+					nodeData.setPm10(data.getPm10());
+					nodeData.setSo2(data.getSo2());
+					nodeData.setNo2(data.getSo2());
+					nodeData.setCo(data.getCo());
+					nodeData.setO3(data.getO3());
+					nodeData.setAqi(data.getAqi());
+					nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
+					nodeDataList.add(nodeData);
+				}
+			}else if(requestType.equals("hour")){
+				// 此时获取该节点的指定日期的的小时平均的数据
+				// 按照日期从选择的结束日期的前一天的23点开始倒计时计算获取对应的一小时之内的数据平均值
+				while(javaStartTimeTmp.before(javaEndTimeTmp)){
+					Calendar tmpCalendar = new GregorianCalendar();
+					tmpCalendar.setTime(javaStartTimeTmp);
+					tmpCalendar.add(tmpCalendar.HOUR, 1);
+
+					Date pointStart = javaStartTimeTmp;
+					Date pointEnd = new Date(tmpCalendar.getTime().getTime());
+					// pointStart是当前小时，pointEnd是当前小时的下一小时
+					javaStartTimeTmp = pointEnd;
+
+					java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
+					java.sql.Time sqlPointStartTime = new java.sql.Time(pointStart.getHours(), 0,0);
+					// 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
+					int hourDataCnt = 0;
+					NodeData nodeData = new NodeData();
+					nodeData.setNodeName(currentNode.getNodeName());
+					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
+					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0;
+					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0;
+					for (Data tData : nodeOriginalDataList) {
+						java.sql.Date dataDate = tData.getDataDate();
+						Time dataTime = tData.getDataTime();
+						if (dataDate.equals(sqlPointStartDate) && dataTime.getHours() == sqlPointStartTime.getHours()) {
+							hourDataCnt += 1;
+							if(tData.getPm25() != null){ pm25Cnt += 1; pm25Total += tData.getPm25(); }
+							if(tData.getPm10() != null){ pm10Cnt += 1; pm10Total += tData.getPm10(); }
+							if(tData.getSo2() != null){ so2Cnt += 1; so2Total += tData.getSo2(); }
+							if(tData.getNo2() != null){ no2Cnt += 1; no2Total += tData.getNo2(); }
+							if(tData.getCo() != null){ coCnt += 1; coTotal += tData.getCo(); }
+							if(tData.getO3() != null){ o3Cnt += 1; o3Total += tData.getO3(); }
+							if(tData.getAirHumidity() != null){ humidityCnt += 1; humidityTotal += tData.getAirHumidity(); }
+							if(tData.getWindSpeed() != null){ speedCnt += 1; speedTotal += tData.getWindSpeed(); }
+						}
+					}
+					if(hourDataCnt > 0) {
+						nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
+						nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
+						nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
+						nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
+						nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
+						nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
+						nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
+						nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					}
+					nodeDataList.add(nodeData);
+
+				}
+			}else if(requestType.equals("day")){
+				// 此时获取该节点的指定日期的的日平均的数据
+				while(javaStartTimeTmp.before(javaEndTimeTmp)){
+					Calendar tmpCalendar = new GregorianCalendar();
+					tmpCalendar.setTime(javaStartTimeTmp);
+					tmpCalendar.add(tmpCalendar.DATE, 1);
+					Date pointStart = javaStartTimeTmp;
+					Date pointEnd = new Date(tmpCalendar.getTime().getTime());
+					javaStartTimeTmp = pointEnd;
+					java.sql.Date sqlPointStartDate = new java.sql.Date(pointStart.getYear(), pointStart.getMonth(), pointStart.getDate());
+					// 此时获得pointStart和pointEnd作为筛选条件筛选当前节点的在该时间段内的数据的平均值
+					int dayDataCnt = 0;
+					NodeData nodeData = new NodeData();
+					nodeData.setNodeName(currentNode.getNodeName());
+					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
+					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0;
+					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0;
+					for (Data tData : nodeOriginalDataList) {
+						java.sql.Date dataDate = tData.getDataDate();
+						if (dataDate.equals(sqlPointStartDate)) {
+							dayDataCnt += 1;
+							if(tData.getPm25() != null){ pm25Cnt += 1; pm25Total += tData.getPm25(); }
+							if(tData.getPm10() != null){ pm10Cnt += 1; pm10Total += tData.getPm10(); }
+							if(tData.getSo2() != null){ so2Cnt += 1; so2Total += tData.getSo2(); }
+							if(tData.getNo2() != null){ no2Cnt += 1; no2Total += tData.getNo2(); }
+							if(tData.getCo() != null){ coCnt += 1; coTotal += tData.getCo(); }
+							if(tData.getO3() != null){ o3Cnt += 1; o3Total += tData.getO3(); }
+							if(tData.getAirHumidity() != null){ humidityCnt += 1; humidityTotal += tData.getAirHumidity(); }
+							if(tData.getWindSpeed() != null){ speedCnt += 1; speedTotal += tData.getWindSpeed(); }
+						}
+					}
+					if(dayDataCnt > 0) {
+						nodeData.setPm25(pm25Cnt > 0 ? pm25Total / pm25Cnt : null);
+						nodeData.setPm10(pm10Cnt > 0 ? pm10Total / pm10Cnt : null);
+						nodeData.setSo2(so2Cnt > 0 ? so2Total / so2Cnt : null);
+						nodeData.setNo2(no2Cnt > 0 ? no2Total / no2Cnt : null);
+						nodeData.setCo(coCnt > 0 ? coTotal / coCnt : null);
+						nodeData.setO3(o3Cnt > 0 ? o3Total / o3Cnt : null);
+						nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
+						nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
+					}
+					nodeDataList.add(nodeData);
+
+				}
+			}else{
+				// 不合法参数
+			}
+			nodesDataList.add(nodeDataList);
+		}
+		// 此时nodesDataList存储的是节点的数据的列表的集合List<ArrayList<NodeData>>
+		// 如果是所有数据，则按照节点存储在不同的sheet里面； 如果是小时平均，则按照一个小时一个sheet；如果是日平均则一天一个sheet
+
+		String columnNames[]={"ID","项目名","销售人","负责人","所用技术","备注"};//列名
+		//生成一个Excel文件
+		// 创建excel工作簿
+		Workbook wb = new HSSFWorkbook();
+		// 创建第一个sheet（页），并命名
+		Sheet sheet = wb.createSheet("sheetName");
+		// 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。
+		for(int i=0;i<columnNames.length;i++){
+			sheet.setColumnWidth((short) i, (short) (35.7 * 150));
+		}
+		// 创建第一行
+		Row row = sheet.createRow((short) 0);
+		//设置列名
+		for(int i=0;i<columnNames.length;i++){
+			Cell cell = row.createCell(i);
+			cell.setCellValue(columnNames[i] + "天天");
+		}
+
+
+
+		//同理可以设置数据行
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			wb.write(os);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byte[] content = os.toByteArray();
+		InputStream is = new ByteArrayInputStream(content);
+		// 设置response参数，可以打开下载页面
+		response.reset();
+		response.setContentType("application/vnd.ms-excel;charset=utf-8");
+		response.setHeader("Content-Disposition", "attachment;filename=test.xls");
+		ServletOutputStream out = response.getOutputStream();
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+		try {
+			bis = new BufferedInputStream(is);
+			bos = new BufferedOutputStream(out);
+			byte[] buff = new byte[2048];
+			int bytesRead;
+			// Simple read/write loop.
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+		} catch (final IOException e) {
+			throw e;
+		} finally {
+			if (bis != null)
+				bis.close();
+			if (bos != null)
+				bos.close();
+		}
+		return null;
 	}
 
 	public String getLevel(double aqi){

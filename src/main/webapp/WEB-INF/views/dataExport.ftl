@@ -209,6 +209,7 @@
             },
             dataExport:function(){
                 console.log(this.dataList);
+                window.location.href= "/WsnWeb/api/excelExport/startTime=" + this.search_info.startTime + "&endTime=" + this.search_info.endTime + "&nodeId=" + this.search_info.nodeId + "&requestType=" + this.search_info.requestType;
             }
         }
     })
