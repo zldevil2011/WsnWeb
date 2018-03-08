@@ -2,6 +2,17 @@
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>节点排名</title>
+<style>
+	.level-label{
+        height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;
+	}
+	.level1_color{ background: #67cb01;  }
+	.level2_color{ background: #f6e202;  }
+	.level3_color{ background: #fb890f;  }
+	.level4_color{ background: #e02d00;  }
+	.level5_color{ background: #b414bb;  }
+	.level6_color{ background: #6f0473;  }
+</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
@@ -24,7 +35,9 @@
 			<tbody>
 				<tr v-for="node in todayNodes">
                     <td>{{node.rank}}</td>
-                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.dataDesc}}
+                        <span v-bind:class="'level-label level'+node.pollutionLevelNumber+'_color'"></span>
+                    </td>
                     <td>{{node.nodeName}}</td>
                     <td>{{node.aqi | keepTwoNum}}</td>
                     <td>{{node.pm25 | keepTwoNum}}</td>
@@ -34,14 +47,16 @@
 				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingToday"></td></tr>
 			</tbody>
 		</table>
-		<table class="table"  v-show="parameter == 'yesterday'">
+		<table class="table" v-show="parameter == 'yesterday'">
 			<thead>
             	<tr><th>排名</th><th>质量</th><th>节点</th><th>AQI</th><th>PM2.5</th><th>PM10</th><th>SO2</th></tr>
 			</thead>
 			<tbody>
 				<tr v-for="node in yesterdayNodes">
                     <td>{{node.rank}}</td>
-                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.dataDesc}}
+                        <span v-bind:class="'level-label level'+node.pollutionLevelNumber+'_color'"></span>
+                    </td>
                     <td>{{node.nodeName}}</td>
                     <td>{{node.aqi | keepTwoNum}}</td>
                     <td>{{node.pm25 | keepTwoNum}}</td>
@@ -51,14 +66,16 @@
 				<tr><td colspan="7" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingYesterday"></td></tr>
 			</tbody>
 		</table>
-		<table class="table"  v-show="parameter == 'week'">
+		<table class="table" v-show="parameter == 'week'">
 			<thead>
             	<tr><th>排名</th><th>质量</th><th>节点</th><th>AQI</th><th>PM2.5</th><th>PM10</th><th>SO2</th></tr>
 			</thead>
 			<tbody>
 				<tr v-for="node in weekNodes">
                     <td>{{node.rank}}</td>
-                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.dataDesc}}
+                        <span v-bind:class="'level-label level'+node.pollutionLevelNumber+'_color'"></span>
+                    </td>
                     <td>{{node.nodeName}}</td>
                     <td>{{node.aqi | keepTwoNum}}</td>
                     <td>{{node.pm25 | keepTwoNum}}</td>
@@ -75,7 +92,9 @@
 			<tbody>
 				<tr v-for="node in monthNodes">
                     <td>{{node.rank}}</td>
-                    <td>{{node.dataDesc}}<span style="background: green; height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;"></span></td>
+                    <td>{{node.dataDesc}}
+                        <span v-bind:class="'level-label level'+node.pollutionLevelNumber+'_color'"></span>
+                    </td>
                     <td>{{node.nodeName}}</td>
                     <td>{{node.aqi | keepTwoNum}}</td>
                     <td>{{node.pm25 | keepTwoNum}}</td>

@@ -178,7 +178,7 @@
                         res.data.forEach(function(item){
                             tmpDataList = tmpDataList.concat(item);
                         });
-                        this.dataList = tmpDataList;
+                        this.dataList = tmpDataList.slice(0, 500);
                     }
                 }, function(err){
                     if(err.status != 200){

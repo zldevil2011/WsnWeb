@@ -35,6 +35,7 @@ class NodeRank extends Node{
 	public double Pm25;
 	public double Pm10;
 	public String DataDesc;
+	public int pollutionLevelNumber;
 	public int getRank() {
 		return rank;
 	}
@@ -71,7 +72,8 @@ class NodeRank extends Node{
 	public void setDataDesc(String dataDesc) {
 		DataDesc = dataDesc;
 	}
-	
+	public int getPollutionLevelNumber() { return pollutionLevelNumber; }
+	public void setPollutionLevelNumber(int pollutionLevelNumber) { this.pollutionLevelNumber = pollutionLevelNumber;}
 }
 class SortByAqi implements Comparator {
     public int compare(Object o1, Object o2) {

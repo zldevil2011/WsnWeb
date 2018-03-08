@@ -724,6 +724,7 @@ public class DataController {
 		for (int i = 0; i < rankList.size(); ++i) {
 			rankList.get(i).setRank(i+1);
 			rankList.get(i).setDataDesc(getClassification(rankList.get(i).getAQI()));
+			rankList.get(i).setPollutionLevelNumber(getPollutionLevelNumber(rankList.get(i).getAQI()));
 	    }
 		return rankList;
 	}
@@ -1755,5 +1756,24 @@ public class DataController {
 			return "儿童，老年人和病人应当留在室内，避免体力消耗，一般人群应避免户外运动";
 		}
 		return "无数据";
+	}
+	public int getPollutionLevelNumber(double aqi){
+		if(aqi <= 0){
+			return 0;
+		}
+		if(aqi < 50){
+			return 1;
+		}else if(aqi < 100){
+			return 2;
+		}else if(aqi < 150){
+			return 3;
+		}else if(aqi < 200){
+			return 4;
+		}else if(aqi < 300){
+			return 5;
+		}else if(aqi > 300){
+			return 6;
+		}
+		return 0;
 	}
 }
