@@ -139,16 +139,16 @@
 		</div>
 	</div>
 	<script>
-	var map = new BMap.Map("map", {
-        maxZoom : 19,
-        minZoom:1,
-        mapType : BMAP_NORMAL_MAP
-    });// 默认卫星地图BMAP_SATELLITE_MAP
-    map.setMapStyle({style:'midnight'});
-	var point = new BMap.Point(117.541916, 30.703908);// 地图的中心点
-	map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-	map.centerAndZoom(point, 13);
-	var rightData = new Vue({
+        var map = new BMap.Map("map", {
+            maxZoom : 19,
+            minZoom:1,
+            mapType : BMAP_NORMAL_MAP
+        });// 默认卫星地图BMAP_SATELLITE_MAP
+        map.setMapStyle({style:'midnight'});
+        var point = new BMap.Point(117.540733, 30.714130);// 地图的中心点
+        map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+        map.centerAndZoom(point, 14);
+		var rightData = new Vue({
 		el: "#right-data",
 		data: {
 			nodeList: '',

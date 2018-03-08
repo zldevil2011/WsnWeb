@@ -41,6 +41,7 @@ class NodeData extends Data{
 	public String nodeName;
 	public String nodeAddress;
 	public String level;
+	public int pollutionLevelNumber;
 	public String classification;
 	public String conclusion;
 	public String advice;
@@ -87,6 +88,8 @@ class NodeData extends Data{
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
+	public int getPollutionLevelNumber() { return pollutionLevelNumber; }
+	public void setPollutionLevelNumber(int pollutionLevelNumber) { this.pollutionLevelNumber = pollutionLevelNumber;}
 }
 class WarningData{
 	public String nodeName;
@@ -358,13 +361,20 @@ public class DataController {
 		Data data = dataService.latestData(node_id);
 		NodeData nData = new NodeData();
 		if(data != null){
-			nData.setPm25((double)Math.round(data.getPm25()*100)/100);
-			nData.setPm10((double)Math.round(data.getPm10()*100)/100);
-			nData.setAqi((double)Math.round(data.getAqi()*100)/100);
+			try {
+				nData.setPm25((double) Math.round(data.getPm25() * 100) / 100);
+			}catch (Exception e) {}
+			try{ nData.setPm10((double)Math.round(data.getPm10()*100)/100); } catch (Exception e){}
+			try{ nData.setAqi((double)Math.round(data.getAqi()*100)/100); } catch (Exception e){}
 			nData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
-			nData.setClassification(getClassification(data.getAqi()));
-			nData.setConclusion(getConclusion(data.getAqi()));
-			nData.setAdvice(getAdvice(data.getAqi()));
+
+			try {
+				nData.setClassification(getClassification(data.getAqi()));
+				nData.setConclusion(getConclusion(data.getAqi()));
+				nData.setAdvice(getAdvice(data.getAqi()));
+			}catch (Exception e){
+
+			}
 		}
 		return nData;
 	}
@@ -1186,6 +1196,7 @@ public class DataController {
 			Data data = dataService.latestData(nodeList.get(i).getId());
 			NodeData nData = new NodeData();
 			if(data != null){
+				data.setAqi(data.getPm25());
 				try{
 					nData.setNodeId(nodeList.get(i).getId());
 				}catch (Exception e){
@@ -1233,6 +1244,7 @@ public class DataController {
 					nData.setClassification(getClassification(data.getAqi()));
 					nData.setConclusion(getConclusion(data.getAqi()));
 					nData.setAdvice(getAdvice(data.getAqi()));
+					nData.setPollutionLevelNumber(getPollutionLevelNumber(data.getAqi()));
 				}catch (Exception e){
 				}
 			}

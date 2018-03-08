@@ -2,6 +2,17 @@
 <link href="https://cdn.bootcss.com/highcharts/6.0.3/css/highcharts.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/highcharts/6.0.3/highcharts.js"></script>
 <title>AQI数据</title>
+<style>
+    .level-label{
+        height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;
+    }
+    .level1_color{ background: #67cb01;  }
+    .level2_color{ background: #f6e202;  }
+    .level3_color{ background: #fb890f;  }
+    .level4_color{ background: #e02d00;  }
+    .level5_color{ background: #b414bb;  }
+    .level6_color{ background: #6f0473;  }
+</style>
 </head>
 <body>
 <#include "headerMenu.ftl"/>
@@ -33,12 +44,12 @@
                     <th>状态</th>
                     <th>地址</th>
                     <th>站点</th>
-                    <th>PM2.5</th><th>指数</th>
-                    <th>PM10</th><th>指数</th>
-                    <th>SO2</th><th>指数</th>
-                    <th>NO2</th><th>指数</th>
-                    <th>CO</th><th>指数</th>
-                    <th>O3</th><th>指数</th>
+                    <th>PM2.5</th>
+                    <th>PM10</th>
+                    <th>SO2</th>
+                    <th>NO2</th>
+                    <th>CO</th>
+                    <th>O3</th>
                     <th>AQI指数</th>
                     <th>首要污染物</th>
                     <th>空气等级</th>
@@ -52,32 +63,19 @@
                     <td>{{data.nodeAddress}}</td>
                     <td>{{data.nodeName}}</td>
                     <td v-if="data.pm25">{{data.pm25 | keepTwoNum}}</td><td v-else class="no-data">---</td>
-                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
                     <td v-if="data.pm25">{{data.pm10 | keepTwoNum}}</td><td v-else class="no-data">---</td>
-                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
                     <td v-if="data.so2">{{data.so2 | keepTwoNum}}</td><td v-else class="no-data">---</td>
-                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
                     <td v-if="data.no2">{{data.no2 | keepTwoNum}}</td><td v-else class="no-data">---</td>
-                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
                     <td v-if="data.co">{{data.co | keepTwoNum}}</td><td v-else class="no-data">---</td>
-                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
                     <td v-if="data.o3">{{data.o3 | keepTwoNum}}</td><td v-else class="no-data">---</td>
                     <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
-                    <td v-if="data.aqi">{{data.aqi | keepTwoNum}}</td><td v-else class="no-data">---</td>
-
                     <td>PM2.5</td>
-
                     <td v-if="data.level">{{data.level}}</td><td v-else class="no-data">-</td>
-
-                    <td class="item-center">{{data.classification}}<span style="background-color:green; width: 20px; height: 12px; display: inline-block;margin-left: 10px;border-radius: 5px;"></span></td>
+                    <td class="item-center">{{data.classification}}
+                        <span v-bind:class="'level-label level'+data.pollutionLevelNumber+'_color'"></span>
+                    </td>
                 </tr>
-                <tr><td colspan="20" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAqiInfo"></td></tr>
+                <tr><td colspan="14" align="center;"><img alt="" src="/WsnWeb/img/loading.gif" v-show="loadingAqiInfo"></td></tr>
                 </tbody>
             </table>
 			<div class="footer-info">
