@@ -1196,7 +1196,8 @@ public class DataController {
 			Data data = dataService.latestData(nodeList.get(i).getId());
 			NodeData nData = new NodeData();
 			if(data != null){
-				data.setAqi(data.getPm25());
+				//#############################################################################################################################
+//				data.setAqi(data.getPm25());
 				try{
 					nData.setNodeId(nodeList.get(i).getId());
 				}catch (Exception e){
