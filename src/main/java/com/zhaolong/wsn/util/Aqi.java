@@ -1,13 +1,17 @@
 package com.zhaolong.wsn.util;
 
+import com.zhaolong.wsn.entity.Data;
+import com.zhaolong.wsn.service.DataService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Aqi {
 	private String[] pList = {"so2", "no2", "pm10", "co", "o3", "pm25"};
 	private double[] transform_factor = {2949.276785714286, 2054.017857142857, 1, 1.2504464285714287, 2142.7767857142856, 1};
-	private double AQI_24 = 0;
-	private double AQI_1 = 0;
+	public double AQI_24 = 0;
+	public double AQI_1 = 0;
 	private double[][][] fix_value_24 = {
 			{{0.0,1.0},{50,1.0/2},{150,2.0/13},{475,2.0/13},{800,1.0/8},{1600,1.0/5},{2100, 5.0/26}},
 			{{0.0,5.0/4},{40,5.0/4},{80,1.0/2},{180,1.0/2},{280,10.0/57},{565,20.0/37},{750, 10.0/19}},
@@ -30,21 +34,33 @@ public class Aqi {
 		// data示例：[30,10,112,4,12,50] 分别代表该数据记录的"so2", "no2", "pm10", "co", "o3", "pm25"
 		int dLen = data.length;
 		for(int i = 0; i < dLen; ++i){
-			data[i] = data[i] / this.transform_factor[i];
+			if(data[i] <= 0){
+				data[i] = 0;
+			}else {
+				try {
+					data[i] = data[i] / this.transform_factor[i];
+				} catch (Exception e) {
+					data[i] = 0;
+				}
+			}
 		}
 		List<Double> HourItemAqiList = new ArrayList<Double>();
 		for(int i = 0; i < dLen; ++i){
 			double val = data[i];
-			double[][] tmpData = this.fix_value_1[i];
-			int len = tmpData.length;
-			int cnt = -1;
-			for(int j = len - 1; j >= 0; --j){
-				cnt += 1;
-				if(val >= tmpData[j][0]){
-					double tmp = (val - tmpData[j][0]) * tmpData[j][1] + this.startPoint[cnt];
-					HourItemAqiList.add(tmp);
-					break;
+			if(val > 0) {
+				double[][] tmpData = this.fix_value_1[i];
+				int len = tmpData.length;
+				int cnt = -1;
+				for (int j = len - 1; j >= 0; --j) {
+					cnt += 1;
+					if (val >= tmpData[j][0]) {
+						double tmp = (val - tmpData[j][0]) * tmpData[j][1] + this.startPoint[cnt];
+						HourItemAqiList.add(tmp);
+						break;
+					}
 				}
+			}else{
+				HourItemAqiList.add(-1.0);
 			}
 		}
 		double HourAqi = -1;
@@ -60,7 +76,15 @@ public class Aqi {
 		// data示例：[30,10,112,4,12,50] 分别代表该数据记录的"so2", "no2", "pm10", "co", "o3", "pm25"
 		int dLen = data.length;
 		for(int i = 0; i < dLen; ++i){
-			data[i] = data[i] / this.transform_factor[i];
+			if(data[i] <= 0){
+				data[i] = 0;
+			}else {
+				try {
+					data[i] = data[i] / this.transform_factor[i];
+				} catch (Exception e) {
+					data[i] = 0;
+				}
+			}
 		}
 		List<Double> DayItemAqiList = new ArrayList<Double>();
 		for(int i = 0; i < dLen; ++i){
@@ -84,6 +108,13 @@ public class Aqi {
 			}
 		}
 		this.AQI_24 = Aqi;
+	}
+	public void output(List<Double> tData){
+		int dLen = tData.size();
+		for(int i = 0; i < dLen; ++i){
+			System.out.print(tData.get(i) + " ");
+		}
+		System.out.println("\n");
 	}
 	public static void main(String[] args) {
 		Aqi aqi = new Aqi();

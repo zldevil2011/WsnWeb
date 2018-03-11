@@ -7,6 +7,7 @@ import com.zhaolong.wsn.entity.Data;
 
 public interface DataService {
 	Long saveData(Data data);
+	void updateAqi(Long id, Data data);
 	Data latestData(Long nodeId);
 	List<Data> dataList();
 	List<Data> dataList(Date startDay, Date enDay);

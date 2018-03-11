@@ -3,6 +3,7 @@ package com.zhaolong.wsn.repository.impl;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,14 @@ public class DataRepositoryImpl implements DataRepository{
 		currentSession.close();
 		return res;
 	}
+
+	public void updateAqi(Long id, Data tData) {
+		Session currentSession = getCurrentSession();
+		Query query=currentSession.createQuery("update Data set aqi = " + tData.getAqi() + " where id = " + tData.getId());
+		query.executeUpdate();
+		currentSession.close();
+	}
+
 	public void persist(Data entity) {
 		// TODO Auto-generated method stub
 		Session currentSession = getCurrentSession();

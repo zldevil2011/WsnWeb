@@ -11,4 +11,5 @@ public interface DataRepository extends DomainRepository<Data,Long>{
 	List<Data> findAllByIdTime(Long nodeId, Date today);
 	List<Data> findAllByIdTimeRange(Long nodeId, Date startDay, Date endDay);
 	List<Data> findAllByTimeRange(Date startDay, Date endDay);
+	void updateAqi(Long id, Data tData);
 }

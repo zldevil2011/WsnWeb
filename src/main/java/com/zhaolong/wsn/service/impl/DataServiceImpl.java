@@ -19,6 +19,10 @@ public class 	DataServiceImpl implements DataService{
 		return dataRepository.save(data);
 	}
 
+	public void updateAqi(Long id, Data data) {
+		dataRepository.updateAqi(id, data);
+	}
+
 	public List<Data> dataList() {
 		// TODO Auto-generated method stub
 		return dataRepository.findAll();
