@@ -1471,6 +1471,8 @@ public class DataController {
 					nodeData.setCo(data.getCo());
 					nodeData.setO3(data.getO3());
 					nodeData.setAqi(data.getAqi());
+					nodeData.setAirTemperature(data.getAirTemperature());
+					nodeData.setAirPressure(data.getAirPressure());
 					nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
 					nodeDataList.add(nodeData);
 				}
@@ -1494,8 +1496,8 @@ public class DataController {
 					NodeData nodeData = new NodeData();
 					nodeData.setNodeName(currentNode.getNodeName());
 					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate) + " " + sqlPointStartTime);
-					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0, aqiTotal = 0.0;
-					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0, aqiCnt = 0;
+					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0, aqiTotal = 0.0, temperatureTotal = 0.0, pressureTotal = 0.0;
+					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0, aqiCnt = 0, temperatureCnt = 0, pressureCnt = 0;
 					for (Data tData : nodeOriginalDataList) {
 						java.sql.Date dataDate = tData.getDataDate();
 						Time dataTime = tData.getDataTime();
@@ -1510,6 +1512,8 @@ public class DataController {
 							if(tData.getAirHumidity() != null){ humidityCnt += 1; humidityTotal += tData.getAirHumidity(); }
 							if(tData.getWindSpeed() != null){ speedCnt += 1; speedTotal += tData.getWindSpeed(); }
 							if(tData.getAqi() != null){ aqiCnt += 1; aqiTotal += tData.getAqi(); }
+							if(tData.getAirTemperature() != null){ temperatureCnt += 1; temperatureTotal += tData.getAirTemperature(); }
+							if(tData.getAirPressure() != null){ pressureCnt += 1; pressureTotal += tData.getAirPressure(); }
 						}
 					}
 					if(hourDataCnt > 0) {
@@ -1522,6 +1526,8 @@ public class DataController {
 						nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
 						nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
 						nodeData.setAqi(aqiCnt > 0 ? aqiTotal / aqiCnt : null);
+						nodeData.setAirTemperature(temperatureCnt > 0 ? temperatureTotal / temperatureCnt : null);
+						nodeData.setAirPressure(pressureCnt > 0 ? pressureTotal / pressureCnt : null);
 					}
 					nodeDataList.add(nodeData);
 
@@ -1541,8 +1547,8 @@ public class DataController {
 					NodeData nodeData = new NodeData();
 					nodeData.setNodeName(currentNode.getNodeName());
 					nodeData.setUpdateTime(String.valueOf(sqlPointStartDate));
-					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0, aqiTotal = 0.0;
-					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0, aqiCnt = 0;
+					double pm25Total = 0.0, pm10Total = 0.0, so2Total = 0.0, no2Total = 0.0, coTotal = 0.0, o3Total = 0.0, humidityTotal = 0.0, speedTotal = 0.0, aqiTotal = 0.0, temperatureTotal = 0.0, pressureTotal = 0.0;
+					int pm25Cnt = 0,  pm10Cnt = 0, so2Cnt = 0, no2Cnt = 0, coCnt = 0, o3Cnt = 0, humidityCnt = 0, speedCnt = 0, aqiCnt = 0, temperatureCnt = 0, pressureCnt = 0;
 					for (Data tData : nodeOriginalDataList) {
 						java.sql.Date dataDate = tData.getDataDate();
 						if (dataDate.equals(sqlPointStartDate)) {
@@ -1556,6 +1562,8 @@ public class DataController {
 							if(tData.getAirHumidity() != null){ humidityCnt += 1; humidityTotal += tData.getAirHumidity(); }
 							if(tData.getWindSpeed() != null){ speedCnt += 1; speedTotal += tData.getWindSpeed(); }
 							if(tData.getAqi() != null){ aqiCnt += 1; aqiTotal += tData.getAqi(); }
+							if(tData.getAirTemperature() != null){ temperatureCnt += 1; temperatureTotal += tData.getAirTemperature(); }
+							if(tData.getAirPressure() != null){ pressureCnt += 1; pressureTotal += tData.getAirPressure(); }
 						}
 					}
 					if(dayDataCnt > 0) {
@@ -1568,6 +1576,8 @@ public class DataController {
 						nodeData.setAirHumidity(humidityCnt > 0 ? humidityTotal / humidityCnt : null);
 						nodeData.setWindSpeed(speedCnt > 0 ? speedTotal / speedCnt : null);
 						nodeData.setAqi(aqiCnt > 0 ? aqiTotal / aqiCnt : null);
+						nodeData.setAirTemperature(temperatureCnt > 0 ? temperatureTotal / temperatureCnt : null);
+						nodeData.setAirPressure(pressureCnt > 0 ? pressureTotal / pressureCnt : null);
 					}
 					nodeDataList.add(nodeData);
 
@@ -1583,7 +1593,7 @@ public class DataController {
 		// 创建excel工作簿
 		Workbook wb = new HSSFWorkbook();
 
-		String columnNames[]={"device", "dataTime", "pm2.5","pm10","so2","no2","co","o3","AirHumidity", "WindSpeed", "Aqi"};//列名
+		String columnNames[]={"device", "dataTime", "pm2.5","pm10","so2","no2","co","o3","AirHumidity", "WindSpeed", "AirTemperature", "AirPressure", "Aqi"};//列名
 
 		if(requestType.equals("all")){
 			int nodeLen = nodeList.size();
@@ -1608,7 +1618,9 @@ public class DataController {
 					Cell o3 = row.createCell(7);try{ o3.setCellValue(tData.getO3()); } catch (Exception e){o3.setCellValue("");}
 					Cell AirHumidity = row.createCell(8);try{ AirHumidity.setCellValue(tData.getAirHumidity()); } catch (Exception e){AirHumidity.setCellValue("");}
 					Cell WindSpeed = row.createCell(9);try{ WindSpeed.setCellValue(tData.getWindSpeed()); } catch (Exception e){WindSpeed.setCellValue("");}
-					Cell aqi = row.createCell(10);try{ aqi.setCellValue(tData.getAqi()); } catch (Exception e){aqi.setCellValue("");}
+					Cell AirTemperature = row.createCell(10);try{ AirTemperature.setCellValue(tData.getAirTemperature()); } catch (Exception e){AirTemperature.setCellValue("");}
+					Cell AirPressure = row.createCell(11);try{ AirPressure.setCellValue(tData.getAirPressure()); } catch (Exception e){AirPressure.setCellValue("");}
+					Cell aqi = row.createCell(12);try{ aqi.setCellValue(tData.getAqi()); } catch (Exception e){aqi.setCellValue("");}
 				}
 			}
 		}else if(requestType.equals("hour")){
@@ -1640,7 +1652,9 @@ public class DataController {
 						Cell o3 = row.createCell(7);try{ o3.setCellValue(tData.getO3()); } catch (Exception e){o3.setCellValue("");}
 						Cell AirHumidity = row.createCell(8);try{ AirHumidity.setCellValue(tData.getAirHumidity()); } catch (Exception e){AirHumidity.setCellValue("");}
 						Cell WindSpeed = row.createCell(9);try{ WindSpeed.setCellValue(tData.getWindSpeed()); } catch (Exception e){WindSpeed.setCellValue("");}
-						Cell aqi = row.createCell(10);try{ aqi.setCellValue(tData.getAqi()); } catch (Exception e){aqi.setCellValue("");}
+						Cell AirTemperature = row.createCell(10);try{ AirTemperature.setCellValue(tData.getAirTemperature()); } catch (Exception e){AirTemperature.setCellValue("");}
+						Cell AirPressure = row.createCell(11);try{ AirPressure.setCellValue(tData.getAirPressure()); } catch (Exception e){AirPressure.setCellValue("");}
+						Cell aqi = row.createCell(12);try{ aqi.setCellValue(tData.getAqi()); } catch (Exception e){aqi.setCellValue("");}
 					}
 				}
 			}
@@ -1671,7 +1685,9 @@ public class DataController {
 						Cell o3 = row.createCell(7);try{ o3.setCellValue(tData.getO3()); } catch (Exception e){o3.setCellValue("");}
 						Cell AirHumidity = row.createCell(8);try{ AirHumidity.setCellValue(tData.getAirHumidity()); } catch (Exception e){AirHumidity.setCellValue("");}
 						Cell WindSpeed = row.createCell(9);try{ WindSpeed.setCellValue(tData.getWindSpeed()); } catch (Exception e){WindSpeed.setCellValue("");}
-						Cell aqi = row.createCell(10);try{ aqi.setCellValue(tData.getAqi()); } catch (Exception e){aqi.setCellValue("");}
+						Cell AirTemperature = row.createCell(10);try{ AirTemperature.setCellValue(tData.getAirTemperature()); } catch (Exception e){AirTemperature.setCellValue("");}
+						Cell AirPressure = row.createCell(11);try{ AirPressure.setCellValue(tData.getAirPressure()); } catch (Exception e){AirPressure.setCellValue("");}
+						Cell aqi = row.createCell(12);try{ aqi.setCellValue(tData.getAqi()); } catch (Exception e){aqi.setCellValue("");}
 					}
 				}
 			}
@@ -1708,7 +1724,7 @@ public class DataController {
 		response.reset();
 		response.setContentType("application/vnd.ms-excel;charset=utf-8");
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		if(requestType == "all"){
+		if(requestType.equals("all")){
 			response.setHeader("Content-Disposition", "attachment;filename=" + startTime + "-" + endTime + "DeviceData.xls");
 		}else if(requestType.equals("hour")){
 			response.setHeader("Content-Disposition", "attachment;filename=" + startTime + "-" + endTime + "HourAverage.xls");
