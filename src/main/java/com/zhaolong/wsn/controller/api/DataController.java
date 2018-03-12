@@ -1471,6 +1471,8 @@ public class DataController {
 					nodeData.setCo(data.getCo());
 					nodeData.setO3(data.getO3());
 					nodeData.setAqi(data.getAqi());
+					nodeData.setAirHumidity(data.getAirHumidity());
+					nodeData.setWindSpeed(data.getWindSpeed());
 					nodeData.setAirTemperature(data.getAirTemperature());
 					nodeData.setAirPressure(data.getAirPressure());
 					nodeData.setUpdateTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
