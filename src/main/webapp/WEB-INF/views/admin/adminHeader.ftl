@@ -13,7 +13,7 @@
                         <a href="deviceList">设备</a>
                     </li>
                     <li :class="{active: warningActive}">
-                        <a href="#">预警</a>
+                        <a href="warningEventList">预警</a>
                     </li>
                     <li class="dropdown" :class="{active: dataActive}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据<strong class="caret"></strong></a>
@@ -22,7 +22,7 @@
                                 <a href="#">数据下载</a>
                             </li>
                             <li>
-                                <a href="#">数据查看</a>
+                                <a href="deviceDataList">数据查看</a>
                             </li>
                         </ul>
                     </li>

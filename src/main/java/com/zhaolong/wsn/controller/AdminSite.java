@@ -20,4 +20,14 @@ public class AdminSite {
         System.out.println("admin deviceList template");
         return "admin/deviceList";
     }
+    @RequestMapping(value = "/warningEventList", method = RequestMethod.GET)
+    public String WarningEventList() {
+        System.out.println("admin warningEventList template");
+        return "admin/warningEventList";
+    }
+    @RequestMapping(value = "/deviceDataList", method = RequestMethod.GET)
+    public String DeviceDataList() {
+        System.out.println("admin deviceDataList template");
+        return "admin/deviceDataList";
+    }
 }
