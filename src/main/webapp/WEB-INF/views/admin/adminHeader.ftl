@@ -4,18 +4,18 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">管理</a>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="collapse navbar-collapse" id="admin-navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active">
+                    <li :class="{active: indexActive}">
                         <a href="index">首页</a>
                     </li>
-                    <li>
+                    <li :class="{active: deviceActive}">
                         <a href="deviceList">设备</a>
                     </li>
-                    <li>
+                    <li :class="{active: warningActive}">
                         <a href="#">预警</a>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" :class="{active: dataActive}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据<strong class="caret"></strong></a>
                         <ul class="dropdown-menu">
                             <li>
@@ -26,7 +26,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" :class="{active: documentActive}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">文档信息<strong class="caret"></strong></a>
                         <ul class="dropdown-menu">
                             <li>

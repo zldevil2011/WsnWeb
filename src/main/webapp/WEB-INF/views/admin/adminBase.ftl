@@ -11,6 +11,10 @@
     <script src="/WsnWeb/js/canvasjs.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.bootcss.com/vue-resource/1.3.4/vue-resource.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <link rel="stylesheet" href="${utilHelper.getCssUrl('project')}"/>
     <link rel="stylesheet" href="${utilHelper.getCssUrl('user')}"/>
     <link rel="stylesheet" href="${utilHelper.getCssUrl('admin')}"/>

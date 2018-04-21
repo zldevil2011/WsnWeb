@@ -3,7 +3,7 @@
 <style></style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="adminIndex">
     <#include "adminHeader.ftl"/>
     <div class="row clearfix">
         <div class="col-md-12">
@@ -63,4 +63,12 @@
         </div>
     </div>
 </div>
+<script>
+    var adminIndex = new Vue({
+        el: "#adminIndex",
+        data:{
+            indexActive: true,
+        }
+    })
+</script>
 <#include "adminFooter.ftl"/>
