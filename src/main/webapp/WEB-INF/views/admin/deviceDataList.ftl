@@ -22,6 +22,7 @@
         <div class="col-md-12 column">
             <el-table
                     :data="tableData5"
+                    v-loading.body="loading"
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
@@ -49,15 +50,15 @@
                 </el-table-column>
                 <el-table-column
                         label="ID"
-                        prop="id">
+                        prop="nodeId">
                 </el-table-column>
                 <el-table-column
                         label="设备"
-                        prop="name">
+                        prop="nodeName">
                 </el-table-column>
                 <el-table-column
                         label="时间"
-                        prop="date">
+                        prop="updateTime">
                 </el-table-column>
             </el-table>
         </div>
@@ -67,10 +68,11 @@
     var deviceList = new Vue({
         el: "#warningEventList",
         data: {
+            loading: true,
             tableData5: [{
-                id: '1',
-                name: '赛维机械',
-                date: '2018-03-03 12:12:12',
+                nodeId: '1',
+                nodeName: '赛维机械',
+                updateTime: '2018-03-03 12:12:12',
                 pm25: 22,
                 pm10: 56.7,
                 so2: 0.1,
@@ -78,9 +80,9 @@
                 co: 3.4,
                 o3: 5.5
             }, {
-                id: '2',
-                name: '赛维机械',
-                date: '2018-03-03 22:10:12',
+                nodeId: '2',
+                nodeName: '赛维机械',
+                updateTime: '2018-03-03 22:10:12',
                 pm25: 22,
                 pm10: 56.7,
                 so2: 0.1,
@@ -88,9 +90,9 @@
                 co: 3.4,
                 o3: 5.5
             }, {
-                id: '3',
-                name: '赛维机械',
-                date: '2018-03-04 10:12:12',
+                nodeId: '3',
+                nodeName: '赛维机械',
+                updateTime: '2018-03-04 10:12:12',
                 pm25: 22,
                 pm10: 56.7,
                 so2: 0.1,
@@ -98,9 +100,9 @@
                 co: 3.4,
                 o3: 5.5
             }, {
-                id: '4',
-                name: '赛维机械',
-                date: '2018-03-03 12:44:13',
+                nodeId: '4',
+                nodeName: '赛维机械',
+                updateTime: '2018-03-03 12:44:13',
                 pm25: 22,
                 pm10: 56.7,
                 so2: 0.1,
@@ -115,7 +117,26 @@
         },
         methods:{
             init:function(){
-
+                this.$http.post('/WsnWeb/api/node_list_aqi/', this.search_info ,{
+                    'headers': {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(res){
+                    if(res.status != 200){
+                        this.$message.error('拉取数据失败！');
+                    }else{
+                        this.$message({
+                            message: '数据已刷新',
+                            type: 'success'
+                        });
+                        this.tableData5 = res.data;
+                    }
+                    this.loading = false;
+                }, function(err){
+                    if(err.status != 200){
+                        this.$message.error('拉取数据失败！');
+                    }
+                });
             }
         }
     })

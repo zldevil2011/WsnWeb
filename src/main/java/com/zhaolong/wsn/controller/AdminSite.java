@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping(value = "/adminWsn/*")
 public class AdminSite {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String AdminIndex() {
+        System.out.println("admin index template");
+        return "admin/adminIndex";
+    }
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String StartPage() {
         System.out.println("admin index template");
