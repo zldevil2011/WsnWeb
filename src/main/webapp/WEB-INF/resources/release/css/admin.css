@@ -1,0 +1,4 @@
+.device-list table tr td,
+.device-list table tr th {
+  text-align: center;
+}

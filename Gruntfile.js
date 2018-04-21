@@ -53,8 +53,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     "<%= path.dest %>/css/project.css": "<%= path.src %>/css/project.less",
-                    "<%= path.dest %>/css/user.css": "<%= path.src %>/css/user.less"
-
+                    "<%= path.dest %>/css/user.css": "<%= path.src %>/css/user.less",
+                    "<%= path.dest %>/css/admin.css": "<%= path.src %>/css/admin.less"
                 }
             }
         },
@@ -299,7 +299,7 @@ module.exports = function(grunt) {
         {
             css:
                 {
-                    files: ['src/main/webapp/WEB-INF/resources/css/device/*.less','src/main/webapp/WEB-INF/resources/css/user/*.less'],
+                    files: ['src/main/webapp/WEB-INF/resources/css/device/*.less','src/main/webapp/WEB-INF/resources/css/user/*.less','src/main/webapp/WEN-INF/resources/css/*.less'],
                     tasks: ['less'],
                     options: {livereload:false}
                 }
