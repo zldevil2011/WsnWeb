@@ -12,8 +12,16 @@
                     <li :class="{active: deviceActive}">
                         <a href="deviceList">设备</a>
                     </li>
-                    <li :class="{active: warningActive}">
-                        <a href="warningEventList">预警</a>
+                    <li class="dropdown" :class="{active: warningActive}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">预警<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="warningEventList">预警列表</a>
+                            </li>
+                            <li>
+                                <a href="warningRule">预警规则</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="dropdown" :class="{active: dataActive}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据<strong class="caret"></strong></a>

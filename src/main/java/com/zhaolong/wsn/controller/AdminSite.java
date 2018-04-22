@@ -40,4 +40,9 @@ public class AdminSite {
         System.out.println("admin deviceDataExport template");
         return "admin/deviceDataExport";
     }
+    @RequestMapping(value = "/warningRule", method = RequestMethod.GET)
+    public String WarningRule() {
+        System.out.println("admin warningRule template");
+        return "admin/warningRule";
+    }
 }
