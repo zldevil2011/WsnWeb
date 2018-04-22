@@ -12,7 +12,7 @@ import java.sql.Time;
 nodeId 设备ID
 nodeName 设备名称
 parameter 规则参数
-ruleType 报警类型（采集异常、超过阈值、增长过快）
+ruleType 报警类型（采集异常0、超过阈值1、增长过快2）
 ruleValue 报警值（None、阈值、增长率）
  */
 @Entity
@@ -35,7 +35,7 @@ public class WarningRule {
     private String parameter;
 
     @Column(name = "ruleType")
-    private String ruleType;
+    private int ruleType;
 
     @Column(name = "ruleValue")
     private Double ruleValue;
@@ -80,11 +80,11 @@ public class WarningRule {
         this.parameter = parameter;
     }
 
-    public String getRuleType() {
+    public int getRuleType() {
         return ruleType;
     }
 
-    public void setRuleType(String ruleType) {
+    public void setRuleType(int ruleType) {
         this.ruleType = ruleType;
     }
 

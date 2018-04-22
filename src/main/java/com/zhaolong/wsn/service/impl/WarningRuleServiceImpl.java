@@ -5,6 +5,8 @@ import com.zhaolong.wsn.repository.WarningRuleRepository;
 import com.zhaolong.wsn.service.WarningRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * Created by zhaolong on 2018/4/22.
  */
@@ -14,5 +16,9 @@ public class WarningRuleServiceImpl implements WarningRuleService {
 
     public Long addWarningRule(WarningRule warningRule) {
         return warningRuleRepository.save(warningRule);
+    }
+
+    public List<WarningRule> warningRuleList() {
+        return warningRuleRepository.findAll();
     }
 }

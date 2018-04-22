@@ -28,7 +28,10 @@ public class WarningRuleRepositoryImpl implements WarningRuleRepository {
     }
 
     public List<WarningRule> findAll() {
-        return null;
+        Session currentSession = getCurrentSession();
+        List<WarningRule> res = (List<WarningRule>) currentSession.createQuery("from WarningRule").list();
+        currentSession.close();
+        return res;
     }
 
     public void persist(WarningRule entity) {

@@ -41,13 +41,13 @@
             <el-col :span="6" v-for="(rule,index) in ruleList" key={{index}}>
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
-                        <span>规则1</span>
+                        <span>规则{{index+1}}</span>
                         <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
                     </div>
                     <div>
-                        <p>站点:<span>{{ rule.station }}</span></p>
+                        <p>站点:<span>{{ rule.nodeName }}</span></p>
                         <p>参数:<span>{{ rule.parameter }}</span></p>
-                        <p>类型:<span>{{ rule.ruleType }}</span></p>
+                        <p>类型:<span>{{ rule.ruleType | filterRuleType}}</span></p>
                         <p>阈值:<span>{{ rule.ruleValue }}</span></p>
                     </div>
                 </el-card>
@@ -112,22 +112,28 @@
     </div>
     <el-dialog title="新建规则" :visible.sync="dialogVisible">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="站点" prop="device">
-                <el-select v-model="ruleForm.device" placeholder="请选择站点">
-                    <el-option label="站点一" value="1"></el-option>
-                    <el-option label="站点二" value="2"></el-option>
+            <el-form-item label="站点" prop="nodeId">
+                <el-select v-model="ruleForm.nodeId" placeholder="请选择站点">
+                    <el-option label="所有站点" value="0" selected>所有站点</el-option>
+                    <el-option v-for="(node,index) in nodeList" v-bind:value='node.id' :label="node.nodeName">{{node.nodeName}}</el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="参数" prop="parameter">
                 <el-select v-model="ruleForm.parameter" placeholder="请选择参数">
-                    <el-option label="参数一" value="1"></el-option>
-                    <el-option label="参数二" value="2"></el-option>
+                    <el-option label="PM2.5" value="pm25"></el-option>
+                    <el-option label="PM10" value="pm10"></el-option>
+                    <el-option label="SO2" value="so2"></el-option>
+                    <el-option label="NO2" value="no2"></el-option>
+                    <el-option label="CO" value="co"></el-option>
+                    <el-option label="O3" value="o3"></el-option>
+                    <el-option label="采集" value="collect"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="类型" prop="ruleType">
                 <el-select v-model="ruleForm.ruleType" placeholder="请选择类型">
-                    <el-option label="类型一" value="1"></el-option>
-                    <el-option label="类型二" value="2"></el-option>
+                    <el-option label="阈值" value="1"></el-option>
+                    <el-option label="增长率" value="2"></el-option>
+                    <el-option label="采集异常" value="0"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="阈值" prop="ruleValue">
@@ -173,7 +179,7 @@
             },
             dialogVisible: false, // 弹窗是否隐藏
             ruleForm: {
-                device: '',
+                nodeId: '',
                 parameter: '',
                 ruleType: '',
                 ruleValue: ''
@@ -203,6 +209,17 @@
                 }else {
                     value = Number(value);
                     return value.toFixed(2);
+                }
+            },
+            filterRuleType: function(value){
+                if(value == 0){
+                    return  "采集异常";
+                }else if(value == 1){
+                    return  "超过阈值";
+                }else if(value == 2){
+                    return  "增长过快"
+                }else{
+                    return  "未知类型"
                 }
             }
         },
@@ -234,30 +251,45 @@
                 });
             },
             loadData: function(){
-                this.$http.post('/WsnWeb/api/node_warning_list/', this.search_info ,{
-                    'headers': {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }).then(function(res){
+                this.$http.get('/WsnWeb/api/warningRule/warningRuleList/').then(function(res){
+                    console.log(res.data);
                     if(res.status != 200){
-                        this.tip = true;
+                        this.$message.error('拉取数据失败');
                     }else{
+                        this.$message({
+                            message: '更新数据成功',
+                            type: 'success'
+                        });
                         this.ruleList = res.data;
-                        this.loadingDataList = false;
                     }
                 }, function(err){
-                    if(err.status != 200){
-                        this.tip = true;
-                    }
+                    this.$message.error('拉取数据失败' + err);
                 });
             },
             submitForm(formName) {
-                console.log(this.$refs);
-                console.log(this.$refs[formName]);
-
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        console.log(this.$refs[formName].model);
+
+                        this.$http.post('/WsnWeb/api/warningRule/warningRuleAdd/', this.$refs[formName].model ,{
+                            'headers': {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }).then(function(res){
+                            if(res.status != 200){
+                                this.$message.error('错了哦，这是一条错误消息' + err);
+                                console.log(err);
+                            }else{
+                                this.$message({
+                                    message: '恭喜成功',
+                                    type: 'success'
+                                });
+                                window.location.reload();
+                            }
+                        }, function(err){
+                            this.$message.error('错了哦，这是一条错误消息' + err);
+                            console.log(err);
+                        });
                     } else {
                         console.log('error submit!!');
                         return false;
