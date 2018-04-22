@@ -25,6 +25,12 @@
 		
 		<bean id="NodeServiceImpl" class="com.zhaolong.wsn.service.impl.NodeServiceImpl"></bean>
 		<bean id="NodeRepositoryImpl" class="com.zhaolong.wsn.repository.impl.NodeRepositoryImpl"></bean>
+
+		<bean id="EventServiceImpl" class="com.zhaolong.wsn.service.impl.EventServiceImpl"></bean>
+		<bean id="EventRepositoryImpl" class="com.zhaolong.wsn.repository.impl.EventRepositoryImpl"></bean>
+
+		<bean id="WarningRuleServiceImpl" class="com.zhaolong.wsn.service.impl.WarningRuleServiceImpl"></bean>
+		<bean id="WarningRuleRepositoryImpl" class="com.zhaolong.wsn.repository.impl.WarningRuleRepositoryImpl"></bean>
 		
 		<!-- <bean id="InformationServiceImpl" class="com.zhaolong.wsn.service.impl.InformationServiceImpl"></bean>
 		<bean id="InformationRepositoryImpl" class="com.zhaolong.wsn.repository.impl.InformationRepositoryImpl"></bean>
