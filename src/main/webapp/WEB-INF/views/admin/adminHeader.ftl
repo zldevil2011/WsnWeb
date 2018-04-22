@@ -22,7 +22,7 @@
                                 <a href="deviceDataExport">数据下载</a>
                             </li>
                             <li>
-                                <a href="deviceDataList">数据查看</a>
+                                <a href="deviceDataList">站点最新</a>
                             </li>
                         </ul>
                     </li>

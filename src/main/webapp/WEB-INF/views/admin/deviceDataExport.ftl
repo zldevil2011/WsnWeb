@@ -9,10 +9,10 @@
 </style>
 </head>
 <body>
-<div class="container device-list" id="warningEventList">
+<div class="container device-list" id="deviceDataExport">
 <#include "adminHeader.ftl"/>
     <div class="row clearfix">
-        <div id="deviceDataExport">
+        <div>
             <div class="search-box" style="padding-bottom: 10px;text-align: center;">
                 <p>观测站点数据下载（ 更新时间：{{ updateTime }} ）</p>
                 <el-form :inline="true" :model="search_info" class="demo-form-inline">
@@ -29,12 +29,12 @@
                     <el-form-item label="站点">
                         <el-select placeholder="目标站点" v-model="search_info.nodeId">
                             <el-option label="所有站点" value="0" selected>所有站点</el-option>
-                            <el-option v-for="node in nodeList" v-bind:value='node.id'>{{node.nodeName}}</el-option>
+                            <el-option v-for="node in nodeList" v-bind:value='node.id' :label="node.nodeName">{{node.nodeName}}</el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="时间尺度">
                         <el-select placeholder="选择时间尺度" v-model="search_info.requestType">
-                            <el-option v-for="data in dataTypeList" v-bind:value='data.value'>{{data.name}}</el-option>
+                            <el-option v-for="data in dataTypeList" v-bind:value='data.value' :label="data.lable">{{data.lable}}</el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -141,16 +141,17 @@
     var deviceDataExport = new Vue({
         el:"#deviceDataExport",
         data:{
+            dataActive: true,
             loadingDataList: true,
             dataTypeList:[{
                 value: 'all',
-                name: '所有数据'
+                lable: '所有数据'
             },{
                 value: 'hour',
-                name: '小时平均'
+                lable: '小时平均'
             },{
                 value: 'day',
-                name: '日平均'
+                lable: '日平均'
             }],
             dataList:[{
                 "nodeName": '站点一',
@@ -216,7 +217,6 @@
                     this.search_info.startTime = this.search_info.timeRange[0];
                     this.search_info.endTime = this.search_info.timeRange[1];
                 }
-                console.log(this.search_info);
                 this.dataList = [];
                 this.loadingDataList = true;
                 this.$http.post('/WsnWeb/api/all_nodes_historical_data/', this.search_info ,{
@@ -240,7 +240,10 @@
                 });
             },
             dataExport:function(){
-                console.log(this.dataList);
+                if(this.search_info.timeRange){
+                    this.search_info.startTime = this.search_info.timeRange[0];
+                    this.search_info.endTime = this.search_info.timeRange[1];
+                }
                 window.location.href= "/WsnWeb/api/excelExport?startTime=" + this.search_info.startTime + "&endTime=" + this.search_info.endTime + "&nodeId=" + this.search_info.nodeId + "&requestType=" + this.search_info.requestType;
             }
         }
