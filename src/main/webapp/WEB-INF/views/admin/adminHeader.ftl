@@ -19,7 +19,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">数据<strong class="caret"></strong></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#">数据下载</a>
+                                <a href="deviceDataExport">数据下载</a>
                             </li>
                             <li>
                                 <a href="deviceDataList">数据查看</a>

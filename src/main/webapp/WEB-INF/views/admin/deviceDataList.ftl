@@ -13,6 +13,15 @@
         margin-bottom: 0;
         width: 50%;
     }
+    .level-label{
+        height: 12px; width: 30px;display: inline-block;border-radius: 2px;margin-left: 5px;
+    }
+    .level1_color{ background: #67cb01;  }
+    .level2_color{ background: #f6e202;  }
+    .level3_color{ background: #fb890f;  }
+    .level4_color{ background: #e02d00;  }
+    .level5_color{ background: #b414bb;  }
+    .level6_color{ background: #6f0473;  }
 </style>
 </head>
 <body>
@@ -21,29 +30,29 @@
     <div class="row clearfix">
         <div class="col-md-12 column">
             <el-table
-                    :data="tableData5"
+                    :data="deviceDataList"
                     v-loading.body="loading"
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
                             <el-form-item label="PM2.5">
-                                <span>{{ props.row.pm25 }}</span>
+                                <span>{{ props.row.pm25 ? props.row.pm25 + 'ug/m3' : '无数据' }}</span>
                             </el-form-item>
                             <el-form-item label="PM10">
-                                <span>{{ props.row.pm10 }}</span>
+                                <span>{{ props.row.pm10 ? props.row.pm10 + 'ug/m3' : '无数据'  }}</span>
                             </el-form-item>
                             <el-form-item label="SO2">
-                                <span>{{ props.row.so2 }}</span>
+                                <span>{{ props.row.so2 ? props.row.so2 + 'ug/m3' : '无数据'  }}</span>
                             </el-form-item>
                             <el-form-item label="NO2">
-                                <span>{{ props.row.no2 }}</span>
+                                <span>{{ props.row.no2 ? props.row.no2 + 'ug/m3' : '无数据'  }}</span>
                             </el-form-item>
                             <el-form-item label="CO">
-                                <span>{{ props.row.co }}</span>
+                                <span>{{ props.row.co ? props.row.co + 'mg/m3' : '无数据'  }}</span>
                             </el-form-item>
                             <el-form-item label="O3">
-                                <span>{{ props.row.o3 }}</span>
+                                <span>{{ props.row.o3 ? props.row.o3 + 'ug/m3' : '无数据'  }}</span>
                             </el-form-item>
                         </el-form>
                     </template>
@@ -60,6 +69,12 @@
                         label="时间"
                         prop="updateTime">
                 </el-table-column>
+                <el-table-column
+                        label="环境质量">
+                    <template slot-scope="scope">
+                        <span v-bind:class="'level-label level'+scope.row.pollutionLevelNumber+'_color'"></span>{{scope.row.classification}}
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
     </div>
@@ -69,47 +84,7 @@
         el: "#warningEventList",
         data: {
             loading: true,
-            tableData5: [{
-                nodeId: '1',
-                nodeName: '赛维机械',
-                updateTime: '2018-03-03 12:12:12',
-                pm25: 22,
-                pm10: 56.7,
-                so2: 0.1,
-                no2: 1.3,
-                co: 3.4,
-                o3: 5.5
-            }, {
-                nodeId: '2',
-                nodeName: '赛维机械',
-                updateTime: '2018-03-03 22:10:12',
-                pm25: 22,
-                pm10: 56.7,
-                so2: 0.1,
-                no2: 1.3,
-                co: 3.4,
-                o3: 5.5
-            }, {
-                nodeId: '3',
-                nodeName: '赛维机械',
-                updateTime: '2018-03-04 10:12:12',
-                pm25: 22,
-                pm10: 56.7,
-                so2: 0.1,
-                no2: 1.3,
-                co: 3.4,
-                o3: 5.5
-            }, {
-                nodeId: '4',
-                nodeName: '赛维机械',
-                updateTime: '2018-03-03 12:44:13',
-                pm25: 22,
-                pm10: 56.7,
-                so2: 0.1,
-                no2: 1.3,
-                co: 3.4,
-                o3: 5.5
-            }],
+            deviceDataList: [],
             dataActive: true,
         },
         created:function(){
@@ -129,7 +104,7 @@
                             message: '数据已刷新',
                             type: 'success'
                         });
-                        this.tableData5 = res.data;
+                        this.deviceDataList = res.data;
                     }
                     this.loading = false;
                 }, function(err){

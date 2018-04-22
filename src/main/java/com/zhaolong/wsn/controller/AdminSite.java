@@ -35,4 +35,9 @@ public class AdminSite {
         System.out.println("admin deviceDataList template");
         return "admin/deviceDataList";
     }
+    @RequestMapping(value = "/deviceDataExport", method = RequestMethod.GET)
+    public String DeviceDataExport() {
+        System.out.println("admin deviceDataExport template");
+        return "admin/deviceDataExport";
+    }
 }
