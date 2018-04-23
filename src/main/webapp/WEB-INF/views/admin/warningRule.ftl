@@ -52,62 +52,6 @@
                     </div>
                 </el-card>
             </el-col>
-            <el-col :span="6">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>规则1</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
-                    </div>
-                    <div>
-                        <p>站点:<span>测试站点</span></p>
-                        <p>参数:<span>PM2.5</span></p>
-                        <p>类型:<span>阈值</span></p>
-                        <p>阈值:<span>50</span></p>
-                    </div>
-                </el-card>
-            </el-col>
-            <el-col :span="6">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>规则1</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
-                    </div>
-                    <div>
-                        <p>站点:<span>测试站点</span></p>
-                        <p>参数:<span>PM2.5</span></p>
-                        <p>类型:<span>阈值</span></p>
-                        <p>阈值:<span>50</span></p>
-                    </div>
-                </el-card>
-            </el-col>
-            <el-col :span="6">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>规则1</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
-                    </div>
-                    <div>
-                        <p>站点:<span>测试站点</span></p>
-                        <p>参数:<span>PM2.5</span></p>
-                        <p>类型:<span>阈值</span></p>
-                        <p>阈值:<span>50</span></p>
-                    </div>
-                </el-card>
-            </el-col>
-            <el-col :span="6">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span>规则1</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
-                    </div>
-                    <div>
-                        <p>站点:<span>测试站点</span></p>
-                        <p>参数:<span>PM2.5</span></p>
-                        <p>类型:<span>阈值</span></p>
-                        <p>阈值:<span>50</span></p>
-                    </div>
-                </el-card>
-            </el-col>
         </el-row>
     </div>
     <el-dialog title="新建规则" :visible.sync="dialogVisible">
@@ -136,7 +80,7 @@
                     <el-option label="采集异常" value="0"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="阈值" prop="ruleValue">
+            <el-form-item label="阈值" prop="ruleValue" v-if="ruleForm.ruleType > 0">
                 <el-input v-model="ruleForm.ruleValue"></el-input>
             </el-form-item>
         </el-form>

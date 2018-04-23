@@ -23,7 +23,8 @@ import java.util.List;
 @RequestMapping(value = "/api/warningRule/*")
 public class WarningRuleController {
     /*
-        WarningRuleAdd: 新建预警规则
+        warningRuleList: 获取现有的预警规则的列表
+        warningRuleAdd: 新建预警规则
      */
     @Autowired
     private WarningRuleService warningRuleService;
@@ -51,16 +52,22 @@ public class WarningRuleController {
             Long nodeId = Long.valueOf(request.getParameter("nodeId"));
             String parameter = request.getParameter("parameter");
             int ruleType = Integer.parseInt(request.getParameter("ruleType"));
-            Double ruleValue = Double.valueOf(request.getParameter("ruleValue"));
 
-            Node node = nodeService.nodeInfo(nodeId);
-            String nodeName = node.getNodeName();
             WarningRule w = new WarningRule();
+            String nodeName = "";
+            if(nodeId == 0){
+                // 针对所有站点的设置
+                nodeName = "所有站点";
+            }else{
+                Node node = nodeService.nodeInfo(nodeId);
+                nodeName = node.getNodeName();
+                Double ruleValue = Double.valueOf(request.getParameter("ruleValue"));
+                w.setRuleValue(ruleValue);
+            }
             w.setNodeId(nodeId);
             w.setNodeName(nodeName);
             w.setParameter(parameter);
             w.setRuleType(ruleType);
-            w.setRuleValue(ruleValue);
             warningRuleService.addWarningRule(w);
             response.setStatus(200);
         }catch (Exception e){
