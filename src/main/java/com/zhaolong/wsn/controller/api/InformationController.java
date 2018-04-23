@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,6 +38,15 @@ public class InformationController {
 		List<Information> data = new ArrayList<Information>();
 		data = informationService.informationList();
 		System.out.println(data.size());
+		return data;
+	}
+
+	@RequestMapping(value = "newsDetails/{news_id}", method = RequestMethod.GET)
+	public @ResponseBody Information informationList(HttpServletRequest request, HttpServletResponse response, @PathVariable("news_id") Long news_id) {
+		System.out.println("newsDetails api");
+		Information data = informationService.getDetails(news_id);
+		data.setReadCount(data.getReadCount() + 1);
+		informationService.updateInformation(data);
 		return data;
 	}
 	

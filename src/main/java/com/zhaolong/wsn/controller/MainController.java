@@ -110,6 +110,13 @@ public class MainController {
 		return "newsList";
 	}
 
+	// 新闻详情
+	@RequestMapping(value = "newsDetails/{news_id}", method = RequestMethod.GET)
+	public String newsDetails(@PathVariable("news_id") int news_id, ModelMap map) {
+		map.put("news_id", news_id);
+		return "newsDetails";
+	}
+
 	// 新增节点页面
 	@RequestMapping(value = "node_add", method = RequestMethod.GET)
 	public String nodeAdd() {

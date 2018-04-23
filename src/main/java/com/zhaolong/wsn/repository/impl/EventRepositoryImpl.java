@@ -44,7 +44,7 @@ public class EventRepositoryImpl implements EventRepository{
 
 	public void saveOrUpdate(Event entity) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void delete(Long id) {

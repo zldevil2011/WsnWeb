@@ -24,7 +24,10 @@ public class InformationRepositoryImpl implements InformationRepository {
 
 	public Information get(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		Session currentSession = getCurrentSession();
+		Information res = (Information) currentSession.get(Information.class,id);
+		currentSession.close();
+		return res;
 	}
 
 	public List<Information> findAll() {
@@ -47,7 +50,14 @@ public class InformationRepositoryImpl implements InformationRepository {
 
 	public void saveOrUpdate(Information entity) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("entity.setReadCoun");
+		System.out.println(entity.getReadCount());
+		System.out.println(entity.getId());
+
+		Session currentSession = getCurrentSession();
+		currentSession.saveOrUpdate(entity);
+		currentSession.flush();
+		currentSession.close();
 	}
 
 	public void delete(Long id) {

@@ -49,7 +49,7 @@
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
-                                    @click="handleView(scope.$index, scope.row)">查看</el-button>
+                                    @click="handleView(scope.row.id)">查看</el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
@@ -111,6 +111,9 @@
                 }, function(err){
                     this.$message.error('拉取数据失败' + String(err));
                 });
+            },
+            handleView: function(newsId){
+                window.open("/WsnWeb/newsDetails/" + newsId);
             }
         }
     })

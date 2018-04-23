@@ -8,7 +8,7 @@
 		<div class="right-head">热门新闻</div>
 		<div class="news-list">
 			<ul>
-				<li v-for="news in hotNews">{{news.title}}</li>
+				<li v-for="news in hotNews" @click="handleViewInfo(news.id)" style="cursor: pointer;">{{news.title}}</li>
 				<li style="text-align:right;">更多>></li>
 			</ul>
 		</div>
@@ -17,7 +17,7 @@
 	<div class="left-news-list">
 		<div class="left-head">最新新闻</div>
 		<div class="news-list">
-			<div class="news" v-for="news in latestNews">
+			<div class="news" v-for="news in latestNews" @click="handleViewInfo(news.id)" style="cursor: pointer;">
 				<div class="left-img" style="float:left;width:150px;border-radius:5px;">
 					<img v-bind:src="news.headImg" width = "150" height="110" style="border-radius:15px;">
 				</div>
@@ -59,6 +59,9 @@
 	  					this.tip = true;
 	  				}
 	  			});
+			},
+            handleViewInfo:function(newsId){
+			    window.location.href="/WsnWeb/newsDetails/" + newsId;
 			}
 		}
 	})

@@ -20,9 +20,17 @@ public class InformationServiceImpl implements InformationService{
 		return informationRepository.findAll();
 	}
 
+	public Information getDetails(Long newsId) {
+		return informationRepository.get(newsId);
+	}
+
 	public Long saveInformation(Information information) {
 		// TODO Auto-generated method stub
 		return informationRepository.save(information);
+	}
+
+	public void updateInformation(Information information) {
+		informationRepository.saveOrUpdate(information);
 	}
 
 }
