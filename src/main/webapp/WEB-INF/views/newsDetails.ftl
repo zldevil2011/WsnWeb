@@ -13,12 +13,13 @@
 <body>
 <#include "headerMenu.ftl"/>
 <div class="body-container content-body-container" id="newsDetail" style="margin-top: 100px;">
-	<div v-if="news.newsAddress.length > 0"> <!-- 外网 -->
+	<div v-if="news.newsAddress && news.newsAddress.length > 0"> <!-- 外网 -->
         <iframe v-bind:src="'http://www.pm25.com'+news.newsAddress" height="100%" width="100%"></iframe>
 	</div>
 	<div v-else>
 		<div>
-			I am test
+			<h2 style="border-bottom: 1px dotted black;padding: 10px 0;">{{news.title}}</h2>
+			<p>{{news.content}}</p>
 		</div>
 	</div>
 </div>

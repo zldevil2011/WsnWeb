@@ -50,4 +50,9 @@ public class AdminSite {
         System.out.println("admin informationList template");
         return "admin/informationList";
     }
+    @RequestMapping(value = "/createNews", method = RequestMethod.GET)
+    public String CreateNews() {
+        System.out.println("admin createNews template");
+        return "admin/informationEdit";
+    }
 }

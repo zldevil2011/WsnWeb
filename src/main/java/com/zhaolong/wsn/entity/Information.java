@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.awt.*;
 
 @Entity
 @Table(name = "Information")
@@ -43,6 +44,9 @@ public class Information {
     
     @Column(name = "newsAddress", nullable=true)
     private String newsAddress;
+
+	@Column(name = "content", nullable=true)
+	private String content;
 
 	public Long getId() {
 		return id;
@@ -130,5 +134,13 @@ public class Information {
 
 	public void setNewsAddress(String newsAddress) {
 		this.newsAddress = newsAddress;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 }

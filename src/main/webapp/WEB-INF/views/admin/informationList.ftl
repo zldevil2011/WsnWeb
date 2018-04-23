@@ -12,6 +12,7 @@
 <#include "adminHeader.ftl"/>
     <div class="row clearfix">
         <div>
+            <el-button type="primary" @click="handleCreate" style="float: right;" round icon="el-icon-edit" size="medium">新建</el-button>
             <div class="table-container">
                 <el-table
                         :data="dataList"
@@ -43,6 +44,14 @@
                             <span v-if="scope.row.isDeleted==0">是</span><span v-else>否</span>
                         </template>
                     </el-table-column>
+                    <el-table-column
+                            prop="newsAddress"
+                            label="引用"
+                            width="100">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.newsAddress && scope.row.newsAddress.length > 0">是</span><span v-else>否</span>
+                        </template>
+                    </el-table-column>
                     </el-table-column>
                     <el-table-column label="操作"
                             width="200">
@@ -50,7 +59,7 @@
                             <el-button
                                     size="mini"
                                     @click="handleView(scope.row.id)">查看</el-button>
-                            <el-button
+                            <el-button v-if="!scope.row.newsAddress"
                                     size="mini"
                                     type="danger"
                                     @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -114,6 +123,9 @@
             },
             handleView: function(newsId){
                 window.open("/WsnWeb/newsDetails/" + newsId);
+            },
+            handleCreate: function(){
+                window.open("/WsnWeb/adminWsn/createNews");
             }
         }
     })

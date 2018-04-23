@@ -50,10 +50,6 @@ public class InformationRepositoryImpl implements InformationRepository {
 
 	public void saveOrUpdate(Information entity) {
 		// TODO Auto-generated method stub
-		System.out.println("entity.setReadCoun");
-		System.out.println(entity.getReadCount());
-		System.out.println(entity.getId());
-
 		Session currentSession = getCurrentSession();
 		currentSession.saveOrUpdate(entity);
 		currentSession.flush();

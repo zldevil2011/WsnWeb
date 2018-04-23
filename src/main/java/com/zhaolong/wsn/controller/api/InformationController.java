@@ -1,7 +1,10 @@
 package com.zhaolong.wsn.controller.api;
 
+import java.awt.*;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -48,6 +51,36 @@ public class InformationController {
 		data.setReadCount(data.getReadCount() + 1);
 		informationService.updateInformation(data);
 		return data;
+	}
+
+	@RequestMapping(value = "informationAdd", method = RequestMethod.POST)
+	public void InformationAdd(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
+		try {
+			String title = request.getParameter("title");
+			String upload = request.getParameter("upload");
+			String content = request.getParameter("content");
+
+			System.out.println(title);
+			System.out.println(upload);
+			System.out.println(content);
+			Information w = new Information();
+			w.setTitle(title);
+			w.setContent(content);
+			if(upload.equals("true")){
+				w.setIsDeleted(0);
+			}else{
+				w.setIsDeleted(1);
+			}
+			informationService.saveInformation(w);
+			response.setStatus(200);
+		}catch (Exception e){
+			System.out.println(e);
+			response.setStatus(500);
+		}
+		PrintWriter pWriter = response.getWriter();
+		pWriter.println("success");
 	}
 	
 //	@RequestMapping(value = "information_spider", method = RequestMethod.GET)
