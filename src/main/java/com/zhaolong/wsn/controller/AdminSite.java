@@ -45,4 +45,9 @@ public class AdminSite {
         System.out.println("admin warningRule template");
         return "admin/warningRule";
     }
+    @RequestMapping(value = "/informationList", method = RequestMethod.GET)
+    public String InformationList() {
+        System.out.println("admin informationList template");
+        return "admin/informationList";
+    }
 }

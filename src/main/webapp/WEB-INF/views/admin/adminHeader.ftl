@@ -38,7 +38,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">文档信息<strong class="caret"></strong></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#">文档列表</a>
+                                <a href="informationList">文档列表</a>
                             </li>
                             <li>
                                 <a href="#">文档爬取</a>
