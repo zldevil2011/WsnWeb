@@ -45,7 +45,7 @@ public class InformationController {
 	}
 
 	@RequestMapping(value = "newsDetails/{news_id}", method = RequestMethod.GET)
-	public @ResponseBody Information informationList(HttpServletRequest request, HttpServletResponse response, @PathVariable("news_id") Long news_id) {
+	public @ResponseBody Information informatioDetails(HttpServletRequest request, HttpServletResponse response, @PathVariable("news_id") Long news_id) {
 		System.out.println("newsDetails api");
 		Information data = informationService.getDetails(news_id);
 		data.setReadCount(data.getReadCount() + 1);
@@ -74,6 +74,23 @@ public class InformationController {
 				w.setIsDeleted(1);
 			}
 			informationService.saveInformation(w);
+			response.setStatus(200);
+		}catch (Exception e){
+			System.out.println(e);
+			response.setStatus(500);
+		}
+		PrintWriter pWriter = response.getWriter();
+		pWriter.println("success");
+	}
+
+	@RequestMapping(value = "informationDelete", method = RequestMethod.POST)
+	public void InformationDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
+		try {
+			String newsId = request.getParameter("news_id");
+			System.out.println("newsId" + newsId);
+			informationService.deleteInformation(Long.valueOf(newsId));
 			response.setStatus(200);
 		}catch (Exception e){
 			System.out.println(e);

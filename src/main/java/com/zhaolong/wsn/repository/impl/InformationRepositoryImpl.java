@@ -58,7 +58,13 @@ public class InformationRepositoryImpl implements InformationRepository {
 
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
-		
+		Information information = get(id);
+		System.out.println("The Information which was deleted: ");
+		System.out.println(information);
+        Session currentSession = getCurrentSession();
+        currentSession.delete(information);
+        currentSession.flush();
+        currentSession.close();
 	}
 
 	public void flush() {
