@@ -65,7 +65,14 @@ public class getAirInformation {
         this.stationData.clear();
         Spider s = new Spider();
         String url = "http://hbj.chizhou.gov.cn/hjsj.html";
-        String result = s.SendGet(url);
+        System.out.println("starting.....");
+        String result = "";
+        try {
+            result = s.SendGet(url);
+            System.out.println(result);
+        }catch (Exception e){
+            System.out.println("error....." + e);
+        }
         String regRsult = this.RegexString(result, "height=\"26px\">(.*?)</td>");
         String regRsult2 = this.RegexString(result, "<td widtd=\"80px\" algin=\"center\">(.*?)</td>");
         for(int i = 0; i < this.stationData.size(); ++i){
@@ -132,9 +139,10 @@ public class getAirInformation {
                 row.createCell(j).setCellValue(t.get(j) );
             }
         }
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");//设置日期格式
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH");//设置日期格式
         String currentTime = df.format(new Date());// new Date()为获取当前系统时间
-        String fileName = currentTime + "-环保数据.xls";
+        String fileName = currentTime + ".xls";
+        System.out.println(fileName);
         FileOutputStream os= new FileOutputStream(fileName);
         wb.write(os);
         os.flush();
