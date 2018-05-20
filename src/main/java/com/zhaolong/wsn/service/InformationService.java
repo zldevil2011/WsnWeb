@@ -11,4 +11,5 @@ public interface InformationService {
 	Information getDetails(Long newsId);
 	Long saveInformation(Information information);
 	void updateInformation(Information information);
+	void deleteInformation(Long newsId);
 }

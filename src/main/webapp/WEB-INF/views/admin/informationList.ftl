@@ -53,12 +53,14 @@
                         </template>
                     </el-table-column>
                     </el-table-column>
-                    <el-table-column label="操作"
-                            width="200">
+                    <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
                                     @click="handleView(scope.row.id)">查看</el-button>
+                            <el-button
+                                    size="mini"
+                                    @click="handleDelete(scope.row.id)">删除</el-button>
                             <el-button v-if="!scope.row.newsAddress"
                                     size="mini"
                                     type="danger"
@@ -124,8 +126,44 @@
             handleView: function(newsId){
                 window.open("/WsnWeb/newsDetails/" + newsId);
             },
-            handleCreate: function(){
+            handleCreate: function() {
                 window.open("/WsnWeb/adminWsn/createNews");
+            },
+            handleDelete: function(newsId) {
+                console.log('handleDelete...........');
+                this.$confirm('此操作将永久删除文档, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                    }).then(() => {
+                        let data = {
+                            news_id: newsId
+                        }
+                        this.$http.post('/WsnWeb/api/informationDelete/', data ,{
+                            'headers': {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }).then(function(res){
+                            if(res.status != 200){
+                                this.$message.error('拉取数据失败');
+                            }else{
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                                window.location.reload();
+                            }
+                        }, function(err){
+                            if(err.status != 200){
+                                this.$message.error('拉取数据失败' + String(err));
+                            }
+                        });
+                }).catch(() => {
+                        this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         }
     })

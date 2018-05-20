@@ -40,9 +40,9 @@
                             <li>
                                 <a href="informationList">文档列表</a>
                             </li>
-                            <li>
-                                <a href="#">文档爬取</a>
-                            </li>
+                            <#--<li>-->
+                                <#--<a href="#">文档爬取</a>-->
+                            <#--</li>-->
                         </ul>
                     </li>
                 </ul>

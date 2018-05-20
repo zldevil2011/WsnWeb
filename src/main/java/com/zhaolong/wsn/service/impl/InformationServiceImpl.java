@@ -33,4 +33,8 @@ public class InformationServiceImpl implements InformationService{
 		informationRepository.saveOrUpdate(information);
 	}
 
+	public void deleteInformation(Long newsId) {
+		informationRepository.delete(newsId);
+	}
+
 }
