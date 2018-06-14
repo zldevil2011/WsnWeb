@@ -1,0 +1,52 @@
+html, body{
+    height: 100%;
+}
+body{
+    background: -webkit-gradient(linear, 0% 50%, 0% 100%,from(rgba(176, 210, 255, 0.5)), to(rgba(34, 170, 249, 0.5)));
+    #container{
+        display: flex;
+        // align-items: center;
+        justify-content: center;
+        height: 100%;
+        &>div{
+            width: 100%;
+        }
+    }
+    .login-form{
+        position: relative;
+        height: auto;
+        width: 100%;
+        .weui-cells__title{
+            text-align: center;
+            font-size: 24px;
+            
+        }
+        .weui-cell{
+            margin: 10px 0;
+        }
+    }
+    .personalInfo{
+        position: relative;
+        height: auto;
+        width: 80%;
+    }
+    .device-latest{
+        width: 100%;
+        .abstract{
+            .my-carousel .v-item {
+                height: 36px;
+                line-height: 36px;
+                padding-left: 10px;
+            }
+        }
+        .level1_color{ background: #67cb01;  }
+        .level2_color{ background: #f6e202;  }
+        .level3_color{ background: #fb890f;  }
+        .level4_color{ background: #e02d00;  }
+        .level5_color{ background: #b414bb;  }
+        .level6_color{ background: #6f0473;  }
+        .media-box-header{
+            border-radius: 10px;
+        }
+    }
+}
