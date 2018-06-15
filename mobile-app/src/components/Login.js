@@ -16,23 +16,24 @@ class Login extends Component {
     render(){
         return (
             this.props.children ? this.props.children:
-            <div style={{height:'100%',display: 'flex',alignItems: 'center'}}>
+            <div className="login-form" style={{height:'100%',display: 'flex',alignItems: 'center'}}>
                 <List style={{width:'100%'}}>
                     <InputItem
                         clear
-                        placeholder="auto focus in Alipay client"
+                        placeholder=""
                         autoFocus
-                    >标题</InputItem>
+                    >用户名</InputItem>
                     <InputItem
                         clear
-                        placeholder="click the button below to focus"
+                        type="password"
+                        placeholder=""
                         focused={this.state.focused}
                         onFocus={() => {
                         this.setState({
                             focused: false,
                         });
                         }}
-                    >标题</InputItem>
+                    >密码</InputItem>
                     <List.Item>
                         <div
                         style={{ width: '100%', color: '#108ee9', textAlign: 'center' }}

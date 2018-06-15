@@ -5,6 +5,7 @@ body{
     background: -webkit-gradient(linear, 0% 50%, 0% 100%,from(rgba(176, 210, 255, 0.5)), to(rgba(34, 170, 249, 0.5)));
     #container{
         display: flex;
+        display: -webkit-flex;
         // align-items: center;
         justify-content: center;
         height: 100%;
@@ -13,16 +14,12 @@ body{
         }
     }
     .login-form{
-        position: relative;
-        height: auto;
-        width: 100%;
-        .weui-cells__title{
-            text-align: center;
-            font-size: 24px;
-            
-        }
-        .weui-cell{
-            margin: 10px 0;
+        .am-list-body{
+            background-color: rgba(191, 210, 236, 0.6);
+            .am-list-item{
+                background-color: transparent;
+                padding: 10px;
+            }
         }
     }
     .personalInfo{
