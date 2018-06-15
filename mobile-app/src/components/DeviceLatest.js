@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import ReactHighcharts from 'react-highcharts';
 import Highcharts from 'highcharts'
 
@@ -22,6 +23,19 @@ class DeviceLatest extends Component {
     }
   }
   componentDidMount(){
+    try{
+      let userLogin = localStorage.getItem("userLogin");
+      console.log(userLogin);
+      if(userLogin === null){
+          // 未登陆状态，跳转到登陆页面
+          browserHistory.push('/');
+      }else{
+          // 已经登陆
+          console.log(localStorage.getItem("userLogin"));
+      }
+    }catch(e){
+      console.log(e);
+    }
     Highcharts.theme = {
       colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
         '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],

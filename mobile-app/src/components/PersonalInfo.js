@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 import axios from 'axios'
 //import using commonJS Module *Require Plugins
 //import { Button } from 'react-weui'
@@ -23,6 +24,21 @@ class PersonalInfo extends Component {
         }
     }
     componentDidMount() {
+        try{
+            let userLogin = localStorage.getItem("userLogin");
+            console.log(userLogin);
+            if(userLogin === null){
+                // 未登陆状态，跳转到登陆页面
+                let a1=document.createElement('a');
+                a1.setAttribute('href','/');
+                a1.click();
+            }else{
+                // 已经登陆
+                console.log(localStorage.getItem("userLogin"));
+            }
+        }catch(e){
+        console.log(e);
+        }
         axios.get(`https://www.baidu.com/`)
           .then(res => {
             console.log(res);
