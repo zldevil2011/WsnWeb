@@ -33,20 +33,32 @@ public class UserController {
 		String password = request.getParameter("password");
 		String telephone = request.getParameter("telephone");
 		String address = request.getParameter("address");
-		Person person = new Person();
-        person.setUsername(username);
-        person.setPassword(password);
-        person.setPhone(telephone);
-        person.setAddress(address);
-        
-        System.out.println("zhaolong_debug_000");
-        System.out.println(request.getHeader("Content-Type"));
-        System.out.println(request.getQueryString());
-		System.out.println(person.getUsername());
-        personService.register(person);
-        response.setStatus(200);
-		PrintWriter pWriter = response.getWriter();
-		pWriter.println("success");
+		System.out.println(request.getHeader("Content-Type"));
+		System.out.println(username);
+		System.out.println(password);
+		try{
+			Person pre = personService.getPerson(username);
+			if(pre == null){
+				// 没有同名的用户，可以注册
+				Person person = new Person();
+				person.setUsername(username);
+				person.setPassword(password);
+				person.setPhone(telephone);
+				person.setAddress(address);
+				personService.register(person);
+				response.setStatus(200);
+				PrintWriter pWriter = response.getWriter();
+				pWriter.println("success");
+			} else {
+				response.setStatus(400);
+				PrintWriter pWriter = response.getWriter();
+				pWriter.println("error");
+			}
+		}catch (Exception e){
+			response.setStatus(500);
+			PrintWriter pWriter = response.getWriter();
+			pWriter.println("service error");
+		}
     }
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)

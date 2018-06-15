@@ -28,4 +28,13 @@ public class PersonServiceImpl implements PersonService{
 		return null;
 	}
 
+	public Person getPerson(String username) {
+		try {
+			return personRepository.getPersonByUsername(username);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+
 }
