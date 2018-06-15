@@ -28,7 +28,9 @@ class DeviceLatest extends Component {
       console.log(userLogin);
       if(userLogin === null){
           // 未登陆状态，跳转到登陆页面
-          browserHistory.push('/');
+          let a1=document.createElement('a');
+          a1.setAttribute('href','/');
+          a1.click();
       }else{
           // 已经登陆
           console.log(localStorage.getItem("userLogin"));

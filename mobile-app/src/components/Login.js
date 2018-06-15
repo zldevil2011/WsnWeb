@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router'
+import axios from 'axios'
 import List from 'antd-mobile/lib/list';
 import InputItem from 'antd-mobile/lib/input-item';
 import WhiteSpace from 'antd-mobile/lib/white-space';
@@ -11,8 +12,20 @@ class Login extends Component {
         this.state = {
             showToptips: true
         }
+        this.handleClick = this.handleClick.bind(this)
     }
-
+    handleClick (){
+        console.log('loginFunc');
+        // axios.get(`http://139.199.125.158:3000/`)
+        //   .then(res => {
+        //     console.log(res);
+        //     localStorage.setItem('userLogin', 'zhaolong');
+        // });
+        localStorage.setItem('userLogin', 'zhaolong');
+        let a1=document.createElement('a');
+        a1.setAttribute('href','/personalInfo/');
+        a1.click();
+    }
     render(){
         return (
             this.props.children ? this.props.children:
@@ -43,6 +56,8 @@ class Login extends Component {
                             });
                         }}
                         >
+                        <Button type="primary" onClick={this.handleClick}>登陆</Button><WhiteSpace />
+                        <WhiteSpace/>
                         <Button type="primary" onClick={() => window.location.href='/personalInfo/'}>个人中心</Button><WhiteSpace />
                         <WhiteSpace/>
                         <Button type="ghost" onClick={() => window.location.href='/deviceHistory/'}>历史数据</Button><WhiteSpace />

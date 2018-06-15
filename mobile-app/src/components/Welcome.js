@@ -28,7 +28,7 @@ class Welcome extends Component {
     }
     render(){
         return (
-            <div style={{height:'100%',display: 'flex',alignItems: 'center', justifyContent:'center', flexDirection:'column'}}>
+            <div style={{height:'100%',display: '-webkit-flex',alignItems: 'center', justifyContent:'center', flexDirection:'column'}}>
                 <p style={{fontSize:'48px'}}>关注环境</p>
                 <br/>
                 <p style={{fontSize:'48px'}}>关注生活</p>
