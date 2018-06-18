@@ -34,7 +34,7 @@ class LoginForm extends Component {
         data.append('password', formData.password);
         // 验证通过，则提交服务器验证是否正确
         // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        axios.post('http://localhost:8080/WsnWeb/api/login', data)
+        axios.post('http://139.199.125.158:8080/WsnWeb/api/login', data)
             .then(res=>{
                 console.log(res);
                 console.log(res.data);

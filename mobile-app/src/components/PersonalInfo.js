@@ -50,7 +50,7 @@ class PersonalInfo extends Component {
             }else{
                 // 已经登陆，获取个人信息
                 let userId = localStorage.getItem("userLogin");
-                axios.get(`http://localhost:8080/WsnWeb/api/personalInfo/${userId}`)
+                axios.get(`http://139.199.125.158:8080/WsnWeb/api/personalInfo/${userId}`)
                     .then(res => {
                         let userInfo = res.data;
                         this.setState({
@@ -85,7 +85,7 @@ class PersonalInfo extends Component {
         }
         // 验证通过，则提交服务器验证是否正确
         // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        axios.post(`http://localhost:8080/WsnWeb/api/updateUserInfo/${userId}`, data)
+        axios.post(`http://139.199.125.158:8080/WsnWeb/api/updateUserInfo/${userId}`, data)
             .then(res=>{
                 console.log(res);
                 console.log(res.data);
