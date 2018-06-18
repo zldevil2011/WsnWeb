@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
-
+import '../index.less';
 class Welcome extends Component {
 	constructor(props){
         super(props);
-        this.state = {
-            showToptips: true
-        }
     }
     componentDidMount(){
         try{
@@ -28,7 +24,7 @@ class Welcome extends Component {
     }
     render(){
         return (
-            <div style={{height:'100%',display: '-webkit-flex',alignItems: 'center', justifyContent:'center', flexDirection:'column'}}>
+            <div style={{height:'100%',display: 'flex',display: '-webkit-flex',alignItems: 'center', justifyContent:'center', flexDirection:'column'}}>
                 <p style={{fontSize:'48px'}}>关注环境</p>
                 <br/>
                 <p style={{fontSize:'48px'}}>关注生活</p>
