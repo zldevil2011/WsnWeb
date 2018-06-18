@@ -2,11 +2,15 @@ package com.zhaolong.wsn.controller.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.zhaolong.wsn.entity.Node;
+import com.zhaolong.wsn.service.NodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +25,13 @@ public class UserController {
 	/*
 	register：用户注册请求
 	login：用户登陆
+	updateUserInfo：更新用户信息
+	personalInfo：获取个人信息
+	getPersonNodes: 获取个人管理的节点列表
 	 */
+	@Autowired
+	private NodeService nodeService;
+
 	@Autowired
 	private PersonService personService;
 	
@@ -114,5 +124,27 @@ public class UserController {
 	public @ResponseBody Person personalInfo(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") Long user_id) {
 		// TODO Auto-generated method stub
 		return personService.getPerson(user_id);
+	}
+
+	@RequestMapping(value = "getPersonNodes/{user_id}", method = RequestMethod.GET)
+	public @ResponseBody List<Node> getPersonNodes(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") Long user_id){
+		try{
+			List<Node> nodesList = new ArrayList<Node>();
+			Person person = personService.getPerson(user_id);
+			String[] userNodeIdList = person.getNodes().split(",");
+			// 根据节点的ID获取具体的节点信息返回
+			for(int i = 0; i < userNodeIdList.length; ++i){
+				try {
+					Node node = nodeService.nodeInfo(Long.valueOf(userNodeIdList[i]));
+					nodesList.add(node);
+				}catch (Exception e){
+
+				}
+			}
+			return nodesList;
+		}catch (Exception e){
+			System.out.println(e);
+			return null;
+		}
 	}
 }

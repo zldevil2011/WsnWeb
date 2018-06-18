@@ -52,21 +52,21 @@ public class DataRepositoryImpl implements DataRepository{
 	public List<Data> findAllByIdTime(Long nodeId, Date today) {
 		// TODO Auto-generated method stub
 		Session currentSession = getCurrentSession();
-		List<Data> res = (List<Data>) currentSession.createQuery("from Data where nodeId = " + nodeId + " and dataDate ='" + today+"'").list();
+		List<Data> res = (List<Data>) currentSession.createQuery("from Data where nodeId = " + nodeId + " and dataDate ='" + today+"' order by dataTime asc").list();
 		currentSession.close();
 		return res;
 	}
 	public List<Data> findAllByIdTimeRange(Long nodeId, Date startDay, Date endDay) {
 		// TODO Auto-generated method stub
 		Session currentSession = getCurrentSession();
-		List<Data> res = (List<Data>)currentSession.createQuery("from Data where nodeId = " + nodeId + " and dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+		List<Data> res = (List<Data>)currentSession.createQuery("from Data where nodeId = " + nodeId + " and dataDate >='" + startDay + "' and dataDate < '" + endDay+"' order by dataDate desc, dataTime desc").list();
 		currentSession.close();
 		return res;
 	}
 	public List<Data> findAllByTimeRange(Date startDay, Date endDay) {
 		// TODO Auto-generated method stub
 		Session currentSession = getCurrentSession();
-		List<Data> res = (List<Data>) currentSession.createQuery("from Data where dataDate >='" + startDay + "' and dataDate < '" + endDay+"'").list();
+		List<Data> res = (List<Data>) currentSession.createQuery("from Data where dataDate >='" + startDay + "' and dataDate < '" + endDay+"' order by dataDate desc, dataTime desc").list();
 		currentSession.close();
 		return res;
 	}

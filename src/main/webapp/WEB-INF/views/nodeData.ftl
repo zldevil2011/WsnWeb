@@ -407,8 +407,8 @@
             nodeDataList: '',
 			search_info: {
                 requestType: 'all',
-                startTime: '2018-01-11',
-                endTime: '2018-01-12'
+                startTime: '2018-06-18',
+                endTime: '2018-06-19'
 			}
 		},
         created:function(){

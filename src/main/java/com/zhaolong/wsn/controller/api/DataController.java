@@ -26,10 +26,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.zhaolong.wsn.entity.Data;
 import com.zhaolong.wsn.entity.Node;
@@ -276,6 +273,7 @@ class WarningData{
 		return false;
 	}
 }
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping(value = "/api/*") 
 public class DataController {
@@ -492,13 +490,27 @@ public class DataController {
 					}
 				}
 				if(tCnt > 0){
-					pm25.add(tPm25Sum / tCnt);
-					pm10.add(tPm10Sum / tCnt);
-					so2.add(tSo2Sum / tCnt);
-					no2.add(tNo2Sum / tCnt);
-					o3.add(tO3Sum / tCnt);
-					co.add(tCoSum / tCnt);
-					aqi.add(tAqiSum / tCnt);
+					try {
+						pm25.add(tPm25Sum / tCnt);
+					}catch (Exception e){pm25.add(null);}
+					try {
+						pm10.add(tPm10Sum / tCnt);
+					}catch (Exception e){pm10.add(null);}
+					try {
+						so2.add(tSo2Sum / tCnt);
+					}catch (Exception e){so2.add(null);}
+					try{
+						no2.add(tNo2Sum / tCnt);
+					}catch (Exception e){no2.add(null);}
+					try{
+						o3.add(tO3Sum / tCnt);
+					}catch (Exception e){o3.add(null);}
+					try{
+						co.add(tCoSum / tCnt);
+					}catch (Exception e){co.add(null);}
+					try{
+						aqi.add(tAqiSum / tCnt);
+					}catch (Exception e){aqi.add(null);}
 				}else{
 					pm25.add(null);
 					pm10.add(null);
@@ -589,13 +601,34 @@ public class DataController {
 					}
 				}
 				if(tCnt > 0){
-					pm25.add(tPm25Sum / tCnt);
-					pm10.add(tPm10Sum / tCnt);
-					so2.add(tSo2Sum / tCnt);
-					no2.add(tNo2Sum / tCnt);
-					o3.add(tO3Sum / tCnt);
-					co.add(tCoSum / tCnt);
-					aqi.add(tAqiSum / tCnt);
+					try {
+						pm25.add(tPm25Sum / tCnt);
+					}catch (Exception e){pm25.add(null);}
+					try {
+						pm10.add(tPm10Sum / tCnt);
+					}catch (Exception e){pm10.add(null);}
+					try {
+						so2.add(tSo2Sum / tCnt);
+					}catch (Exception e){so2.add(null);}
+					try{
+						no2.add(tNo2Sum / tCnt);
+					}catch (Exception e){no2.add(null);}
+					try{
+						o3.add(tO3Sum / tCnt);
+					}catch (Exception e){o3.add(null);}
+					try{
+						co.add(tCoSum / tCnt);
+					}catch (Exception e){co.add(null);}
+					try{
+						aqi.add(tAqiSum / tCnt);
+					}catch (Exception e){aqi.add(null);}
+//					pm25.add(tPm25Sum / tCnt);
+//					pm10.add(tPm10Sum / tCnt);
+//					so2.add(tSo2Sum / tCnt);
+//					no2.add(tNo2Sum / tCnt);
+//					o3.add(tO3Sum / tCnt);
+//					co.add(tCoSum / tCnt);
+//					aqi.add(tAqiSum / tCnt);
 				}else{
 					pm25.add(null);
 					pm10.add(null);
