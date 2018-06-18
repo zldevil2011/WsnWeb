@@ -30,6 +30,10 @@ public class Person {
     @Column(name = "nodes")
     private String nodes;
 
+	public Long getId() {
+		return id;
+	}
+
 	public Long getCreated() {
 		return created;
 	}

@@ -50,7 +50,11 @@ public class PersonRepositoryImpl implements PersonRepository {
 
 	public void saveOrUpdate(Person entity) {
 		// TODO Auto-generated method stub
-		getCurrentSession().saveOrUpdate(entity);
+//		getCurrentSession().saveOrUpdate(entity);
+		Session currentSession = getCurrentSession();
+		currentSession.saveOrUpdate(entity);
+		currentSession.flush();
+		currentSession.close();
 	}
 
 	public void delete(Long id) {

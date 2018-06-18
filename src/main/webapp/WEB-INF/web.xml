@@ -49,6 +49,10 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>contextFilter</filter-name>
+        <filter-class>com.zhaolong.wsn.util.WebContextFilter</filter-class>
+    </filter>
 </web-app>
 
 

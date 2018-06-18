@@ -37,4 +37,12 @@ public class PersonServiceImpl implements PersonService{
 		return null;
 	}
 
+	public Person getPerson(Long userId) {
+		return personRepository.get(userId);
+	}
+
+	public void updatePerson(Person person) {
+		personRepository.saveOrUpdate(person);
+	}
+
 }

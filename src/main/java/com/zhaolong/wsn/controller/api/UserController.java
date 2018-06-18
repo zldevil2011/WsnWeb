@@ -9,12 +9,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import com.zhaolong.wsn.entity.Person;
 import com.zhaolong.wsn.service.PersonService;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping(value = "/api/*") 
 public class UserController {
@@ -64,13 +64,55 @@ public class UserController {
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public void login(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession)
 			throws IOException {
+		System.out.println("Login Info");
+		System.out.println(request.getParameter("username"));
+		System.out.println(request.getParameter("password"));
 		Person person = personService.login(request.getParameter("username"), request.getParameter("password"));
 		System.out.println(person);
 		if(person == null){
 			response.setStatus(401);
+			PrintWriter pWriter = response.getWriter();
+			pWriter.println("error");
 		}else{
 			response.setStatus(200);
 			httpSession.setAttribute("person", person);
+			PrintWriter pWriter = response.getWriter();
+			pWriter.println(person.getId());
 		}
+	}
+	@RequestMapping(value = "updateUserInfo/{user_id}", method = RequestMethod.POST)
+	public void updateUserInfo(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") Long user_id)
+			throws IOException {
+		System.out.println("updateUserInfo Info");
+		System.out.println(request.getParameter("username"));
+		System.out.println(request.getParameter("password"));
+		System.out.println(user_id);
+		try {
+			Long userId = Long.valueOf(user_id);
+			Person person = personService.getPerson(userId);
+			if (request.getParameter("phone") != null) person.setPhone(request.getParameter("phone"));
+			if (request.getParameter("address") != null) person.setAddress(request.getParameter("address"));
+			if (request.getParameter("password") != null) person.setPassword(request.getParameter("password"));
+			try {
+				personService.updatePerson(person);
+				response.setStatus(200);
+				PrintWriter pWriter = response.getWriter();
+				pWriter.println(person.getId());
+			} catch (Exception e) {
+				response.setStatus(401);
+				PrintWriter pWriter = response.getWriter();
+				pWriter.println("error");
+			}
+		}catch (Exception e){
+			System.out.println(e);
+			response.setStatus(500);
+			PrintWriter pWriter = response.getWriter();
+			pWriter.println("service error");
+		}
+	}
+	@RequestMapping(value = "personalInfo/{user_id}", method = RequestMethod.GET)
+	public @ResponseBody Person personalInfo(HttpServletRequest request, HttpServletResponse response, @PathVariable("user_id") Long user_id) {
+		// TODO Auto-generated method stub
+		return personService.getPerson(user_id);
 	}
 }
