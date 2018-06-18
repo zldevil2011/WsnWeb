@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import IP from './utils'
 import { browserHistory } from 'react-router';
-import axios from 'axios'
+import axios from 'axios';
 //import using commonJS Module *Require Plugins
 //import { Button } from 'react-weui'
 
@@ -29,7 +30,8 @@ class PersonalInfo extends Component {
             realPassword: '',
             pPassword: '',
             pNewPassword: '',
-            pNewRepeatPassword: ''
+            pNewRepeatPassword: '',
+            userNodesList: []
         }
         this.handleLogoutClick = this.handleLogoutClick.bind(this);
         this.handlePhoneChange = this.handlePhoneChange.bind(this);
@@ -50,7 +52,7 @@ class PersonalInfo extends Component {
             }else{
                 // 已经登陆，获取个人信息
                 let userId = localStorage.getItem("userLogin");
-                axios.get(`http://139.199.125.158:8080/WsnWeb/api/personalInfo/${userId}`)
+                axios.get(`http://${IP}/WsnWeb/api/personalInfo/${userId}`)
                     .then(res => {
                         let userInfo = res.data;
                         this.setState({
@@ -60,6 +62,23 @@ class PersonalInfo extends Component {
                             pPhone: userInfo.phone,
                             pAddress: userInfo.address,
                             realPassword: userInfo.password
+                        })
+                    });
+                axios.get(`http://${IP}/WsnWeb/api/getPersonNodes/${userId}`)
+                    .then(res => {
+                        let userNodesInfo = res.data;
+                        console.log(userNodesInfo);
+                        let nodesTmp = [];
+                        for(let i = 0; i < userNodesInfo.length; ++i){
+                            let obj = {
+                                value: userNodesInfo[i].id,
+                                label: userNodesInfo[i].nodeName
+                            }
+                            nodesTmp.push(obj);
+                        }
+                        console.log(nodesTmp);
+                        this.setState({
+                            userNodesList: nodesTmp
                         })
                     });
             }
@@ -85,7 +104,7 @@ class PersonalInfo extends Component {
         }
         // 验证通过，则提交服务器验证是否正确
         // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        axios.post(`http://139.199.125.158:8080/WsnWeb/api/updateUserInfo/${userId}`, data)
+        axios.post(`http://${IP}/WsnWeb/api/updateUserInfo/${userId}`, data)
             .then(res=>{
                 console.log(res);
                 console.log(res.data);
@@ -134,7 +153,7 @@ class PersonalInfo extends Component {
     render(){
         const appMsgIcon = <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAAeFBMVEUAwAD///+U5ZTc9twOww7G8MYwzDCH4YcfyR9x23Hw+/DY9dhm2WZG0kbT9NP0/PTL8sux7LFe115T1VM+zz7i+OIXxhes6qxr2mvA8MCe6J6M4oz6/frr+us5zjn2/fa67rqB4IF13XWn6ad83nxa1loqyirn+eccHxx4AAAC/klEQVRo3u2W2ZKiQBBF8wpCNSCyLwri7v//4bRIFVXoTBBB+DAReV5sG6lTXDITiGEYhmEYhmEYhmEYhmEY5v9i5fsZGRx9PyGDne8f6K9cfd+mKXe1yNG/0CcqYE86AkBMBh66f20deBc7wA/1WFiTwvSEpBMA2JJOBsSLxe/4QEEaJRrASP8EVF8Q74GbmevKg0saa0B8QbwBdjRyADYxIhqxAZ++IKYtciPXLQVG+imw+oo4Bu56rjEJ4GYsvPmKOAB+xlz7L5aevqUXuePWVhvWJ4eWiwUQ67mK51qPj4dFDMlRLBZTqF3SDvmr4BwtkECu5gHWPkmDfQh02WLxXuvbvC8ku8F57GsI5e0CmUwLz1kq3kD17R1In5816rGvQ5VMk5FEtIiWislTffuDpl/k/PzscdQsv8r9qWq4LRWX6tQYtTxvI3XyrwdyQxChXioOngH3dLgOFjk0all56XRi/wDFQrGQU3Os5t0wJu1GNtNKHdPqYaGYQuRDfbfDf26AGLYSyGS3ZAK4S8XuoAlxGSdYMKwqZKM9XJMtyqXi7HX/CiAZS6d8bSVUz5J36mEMFDTlAFQzxOT1dzLRljjB6+++ejFqka+mXIe6F59mw22OuOw1F4T6lg/9VjL1rLDoI9Xzl1MSYDNHnPQnt3D1EE7PrXjye/3pVpr1Z45hMUdcACc5NVQI0bOdS1WA0wuz73e7/5TNqBPhQXPEFGJNV2zNqWI7QKBd2Gn6AiBko02zuAOXeWIXjV0jNqdKegaE/kJQ6Bfs4aju04lMLkA2T5wBSYPKDGF3RKhFYEa6A1L1LG2yacmsaZ6YPOSAMKNsO+N5dNTfkc5Aqe26uxHpx7ZirvgCwJpWq/lmX1hA7LyabQ34tt5RiJKXSwQ+0KU0V5xg+hZrd4Bn1n4EID+WkQdgLfRNtvil9SPfwy+WQ7PFBWQz6dGWZBLkeJFXZGCfLUjCgGgqXo5TuSu3cugdcTv/HjqnBTEMwzAMwzAMwzAMwzAMw/zf/AFbXiOA6frlMAAAAABJRU5ErkJggg==" />;
         console.log(this.state);
-        const { pUsername, pPhone, pAddress, pPassword, pNewPassword, pNewRepeatPassword } = this.state;
+        const { userNodesList, pUsername, pPhone, pAddress, pPassword, pNewPassword, pNewRepeatPassword } = this.state;
         return (
         <Page className="personalInfo">
             <CellsTitle>个人信息</CellsTitle>
@@ -208,20 +227,7 @@ class PersonalInfo extends Component {
                         <Label>管理节点</Label>
                     </CellHeader>
                     <CellBody>
-                        <Select data={[
-                            {
-                                value: 1,
-                                label: 'China'
-                            },
-                            {
-                                value: 2,
-                                label: 'United States'
-                            },
-                            {
-                                value: 3,
-                                label: 'Germany'
-                            }
-                        ]} />
+                        <Select data={userNodesList} />
                     </CellBody>
                 </FormCell>
             </Form>

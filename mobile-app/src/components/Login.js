@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import IP from './utils'
 import List from 'antd-mobile/lib/list';
 import { InputItem, WhiteSpace, Button } from 'antd-mobile/lib/';
 import { createForm } from 'rc-form';
@@ -34,7 +35,7 @@ class LoginForm extends Component {
         data.append('password', formData.password);
         // 验证通过，则提交服务器验证是否正确
         // axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        axios.post('http://139.199.125.158:8080/WsnWeb/api/login', data)
+        axios.post(`http://${IP}/WsnWeb/api/login`, data)
             .then(res=>{
                 console.log(res);
                 console.log(res.data);
