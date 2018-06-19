@@ -222,47 +222,61 @@ class WarningData{
 			// 检查是否是数据超出阈值
 			int cnt = 0;
 			if(parameter.equals("pm25")){
-				if(data.getPm25() > 150){
-					this.setParameter("pm25");
-					this.setDataType("预警");
-					this.setContent("pm25数据超过150");
-					cnt += 1;
+				try {
+					if (data.getPm25() > 150) {
+						this.setParameter("pm25");
+						this.setDataType("预警");
+						this.setContent("pm25数据超过150");
+						cnt += 1;
+					}
+				}catch (Exception e){
+
 				}
 			}else if(parameter.equals("pm10")){
-				if(data.getPm10()  > 150){
-					this.setParameter("pm10");
-					this.setDataType("预警");
-					this.setContent("pm10数据超过150");
-					cnt += 1;
-				}
+				try{
+					if(data.getPm10()  > 150){
+						this.setParameter("pm10");
+						this.setDataType("预警");
+						this.setContent("pm10数据超过150");
+						cnt += 1;
+					}
+				}catch (Exception e){}
 			}else if(parameter.equals("so2")){
-				if(data.getSo2() > 150){
-					this.setParameter("so2");
-					this.setDataType("预警");
-					this.setContent("so2数据超过150");
-					cnt += 1;
-				}
+				try{
+					if(data.getSo2() > 150){
+						this.setParameter("so2");
+						this.setDataType("预警");
+						this.setContent("so2数据超过150");
+						cnt += 1;
+					}
+				}catch (Exception e){}
 			}else if(parameter.equals("no2")){
-				if(data.getNo2()  > 150l){
-					this.setParameter("no2");
-					this.setDataType("预警");
-					this.setContent("no2数据超过150");
-					cnt += 1;
-				}
+				try{
+					if(data.getNo2()  > 150){
+						this.setParameter("no2");
+						this.setDataType("预警");
+						this.setContent("no2数据超过150");
+						cnt += 1;
+					}
+				}catch (Exception e){}
 			}else if(parameter.equals("co")){
-				if(data.getCo()  > 150){
-					this.setParameter("co");
-					this.setDataType("预警");
-					this.setContent("co数据超过150");
-					cnt += 1;
-				}
+				try{
+					if(data.getCo()  > 150){
+						this.setParameter("co");
+						this.setDataType("预警");
+						this.setContent("co数据超过150");
+						cnt += 1;
+					}
+				}catch (Exception e){}
 			}else if(parameter.equals("o3")){
-				if(data.getO3()  > 150){
-					this.setParameter("o3");
-					this.setDataType("预警");
-					this.setContent("o3数据超过150");
-					cnt += 1;
-				}
+				try {
+					if(data.getO3()  > 150){
+						this.setParameter("o3");
+						this.setDataType("预警");
+						this.setContent("o3数据超过150");
+						cnt += 1;
+					}
+				}catch (Exception e){}
 			}
 			this.setWarningTime(String.valueOf(data.getDataDate()) + " " + data.getDataTime());
 			if(cnt > 0){
